@@ -13,3 +13,5 @@ wheels/
 # cache and outputs
 cache/*
 outputs/*
+claude-session.txt
+data/*
