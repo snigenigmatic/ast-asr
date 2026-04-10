@@ -26,6 +26,8 @@ import yaml
 from torch.utils.data import Dataset
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from data_loader import _resolve_hf_token as _rht  # noqa: E402
+_rht()  # load HF_TOKEN from .env if present
 from models import HybridAdversarialASR, HybridConfig  # noqa: E402
 from spire_loader import (  # noqa: E402
     apply_split,
@@ -197,8 +199,15 @@ def _derive_family_map(manifest: pd.DataFrame) -> dict[str, int]:
     return {fam: i for i, fam in enumerate(families)}
 
 
-def train(config_path: str, max_train_samples: int | None, max_eval_samples: int | None) -> None:
+def train(
+    config_path: str,
+    max_train_samples: int | None,
+    max_eval_samples: int | None,
+    output_dir: str | None = None,
+) -> None:
     cfg = _load_config(config_path)
+    if output_dir:
+        cfg["training"]["output_dir"] = output_dir
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(message)s",
@@ -247,6 +256,7 @@ def train(config_path: str, max_train_samples: int | None, max_eval_samples: int
         lambda_adv=0.0,  # callback will schedule
         adversary_hidden=cfg["adversary"]["hidden"],
         adversary_dropout=cfg["adversary"]["dropout"],
+        use_adversary=cfg["adversary"].get("use_adversary", True),
         lora_r=m_cfg["lora_r"],
         lora_alpha=m_cfg["lora_alpha"],
         lora_dropout=m_cfg["lora_dropout"],
@@ -360,12 +370,13 @@ def _parse_args() -> argparse.Namespace:
     ap.add_argument("--config", default="configs/train_hybrid.yaml")
     ap.add_argument("--max-train-samples", type=int, default=None)
     ap.add_argument("--max-eval-samples", type=int, default=None)
+    ap.add_argument("--output-dir", default=None, help="Override training.output_dir from config")
     return ap.parse_args()
 
 
 def main() -> None:
     args = _parse_args()
-    train(args.config, args.max_train_samples, args.max_eval_samples)
+    train(args.config, args.max_train_samples, args.max_eval_samples, args.output_dir)
 
 
 if __name__ == "__main__":

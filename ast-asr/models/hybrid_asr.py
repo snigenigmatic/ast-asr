@@ -46,6 +46,7 @@ class HybridConfig:
         default_factory=lambda: ("q_proj", "k_proj", "v_proj", "out_proj")
     )
     freeze_feature_extractor: bool = True
+    use_adversary: bool = True  # False = pure CTC fine-tune, no GRL loss term
 
 
 def _masked_mean(hidden: torch.Tensor, mask: torch.Tensor | None) -> torch.Tensor:
@@ -194,13 +195,15 @@ class HybridAdversarialASR(nn.Module):
 
         pooled = _masked_mean(hidden, hidden_mask)  # [B, D]
 
-        reversed_pooled = self.grl(pooled)
-        accent_logits = self.adversary(reversed_pooled)
-
-        if accent_labels is not None:
-            adv_loss = F.cross_entropy(accent_logits, accent_labels)
-        else:
-            adv_loss = torch.tensor(0.0, device=pooled.device)
+        adv_loss = torch.tensor(0.0, device=pooled.device)
+        accent_logits = torch.zeros(
+            hidden.size(0), self.cfg.num_accent_classes, device=pooled.device
+        )
+        if self.cfg.use_adversary:
+            reversed_pooled = self.grl(pooled)
+            accent_logits = self.adversary(reversed_pooled)
+            if accent_labels is not None:
+                adv_loss = F.cross_entropy(accent_logits, accent_labels)
 
         total = ctc_loss + adv_loss
 

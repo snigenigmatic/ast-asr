@@ -14,7 +14,9 @@ Supported model keys (pass as model_name arg):
 """
 
 import logging
+import sys
 import time
+from pathlib import Path
 from typing import Literal
 
 import numpy as np
@@ -22,6 +24,14 @@ import pandas as pd
 import torch
 
 logger = logging.getLogger(__name__)
+
+# Load HF_TOKEN from project .env if present (for authenticated HF API calls)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+try:
+    from data_loader import _resolve_hf_token
+    _resolve_hf_token()
+except ImportError:
+    pass
 
 MODEL_REGISTRY = {
     "whisper-tiny":    ("openai/whisper-tiny",              "whisper"),

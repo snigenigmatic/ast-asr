@@ -12,10 +12,11 @@ model:
 adversary:
   hidden: 256
   dropout: 0.1
+  use_adversary: true        # false = pure CTC fine-tune (ft-W2V2 baseline)
   # num_classes is derived from the training data's language_family set
 
 grl:
-  target_lambda: 0.1        # main ablation knob; sweep {0.05, 0.1, 0.3, 1.0}
+  target_lambda: 0.1        # main ablation knob; sweep {0.05, 0.1, 0.3}
   warmup_steps_fraction: 0.2  # linear ramp from 0 over first 20% of steps
 
 data:

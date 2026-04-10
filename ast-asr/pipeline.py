@@ -133,7 +133,7 @@ def run_pipeline(
 
 def _overall_wer(df: pd.DataFrame) -> float:
     from jiwer import wer
-    return wer(df["reference"].tolist(), df["hypothesis"].tolist())
+    return wer([r.lower() for r in df["reference"]], [h.lower() for h in df["hypothesis"]])
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
