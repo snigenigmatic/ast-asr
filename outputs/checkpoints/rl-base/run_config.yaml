@@ -1,0 +1,73 @@
+checkpoint:
+  path: outputs/checkpoints/ft-w2v2/final
+curriculum:
+  stages:
+  - families:
+    - Indo-Aryan
+    family_weights:
+      Indo-Aryan: 1.0
+    max_duration: 5.0
+    max_step: 500
+    min_step: 0
+    name: easy
+    noise_prob: 0.0
+  - families:
+    - Indo-Aryan
+    - Dravidian
+    family_weights:
+      Dravidian: 1.0
+      Indo-Aryan: 1.0
+    max_duration: 10.0
+    max_step: 1500
+    min_step: 500
+    name: medium
+    noise_prob: 0.3
+    noise_snr_range:
+    - 10.0
+    - 20.0
+  - families:
+    - Indo-Aryan
+    - Dravidian
+    family_weights:
+      Dravidian: 1.0
+      Indo-Aryan: 1.0
+    max_duration: 15.0
+    max_step: 3000
+    min_step: 1500
+    name: hard
+    noise_prob: 0.5
+    noise_snr_range:
+    - 5.0
+    - 15.0
+data:
+  languages: null
+  max_duration: 20.0
+  min_duration: 1.0
+  min_words: 3
+  raw_root: data/spire-sies/raw
+  seed: 42
+  split_path: data/spire-sies/splits.json
+eval:
+  eval_every: 200
+  save_every: 500
+  svarah_samples: 50
+output:
+  dir: outputs/checkpoints/rl-base
+  log_every: 10
+reward:
+  alpha_fairness: 0.0
+  cer_weight: 0.6
+  fairness_threshold: 0.05
+  rejection_wer_threshold: 0.9
+  wer_weight: 0.4
+rl:
+  algorithm: grpo
+  batch_size: 4
+  beam_width: 8
+  beta_kl: 0.1
+  bf16: true
+  grad_clip: 1.0
+  gradient_accumulation: 4
+  lr: 5.0e-06
+  max_steps: 3000
+  temperature: 1.2

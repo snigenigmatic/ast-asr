@@ -1,0 +1,21 @@
+{
+  "wav2vec2_id": "facebook/wav2vec2-base-960h",
+  "ast_id": "MIT/ast-finetuned-audioset-10-10-0.4593",
+  "num_accent_classes": 2,
+  "lambda_adv": 0.0,
+  "use_ast_cosine": false,
+  "aux_weight": 0.1,
+  "adversary_hidden": 256,
+  "adversary_dropout": 0.1,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "lora_target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "out_proj"
+  ],
+  "freeze_feature_extractor": true,
+  "use_adversary": true
+}

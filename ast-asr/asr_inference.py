@@ -45,6 +45,7 @@ MODEL_REGISTRY = {
     # dir. The first tuple entry is the default checkpoint dir; callers can
     # override via the `model_path` kwarg in run_inference().
     "hybrid-w2v2-grl": ("outputs/checkpoints/hybrid_w2v2_lora_grl/final", "hybrid"),
+    "rl-grpo":         ("outputs/checkpoints/rl-grpo/final",             "hybrid"),
 }
 
 

@@ -1,0 +1,2 @@
+model,n_utterances,overall_wer,delta_dp,delta_eo,max_noise_gap,poisson_p,systematic_gap,worst_dp_pair,wer_dravidian,wer_indo_aryan,wer_sino_tibetan
+hybrid-w2v2-grl,500,0.4219685628742515,0.10653846153846158,0.11576923076923085,0.5423076923076924,0.009292846510503328,True,Dravidian vs Sino-Tibetan,0.35846153846153844,0.441207075962539,0.465

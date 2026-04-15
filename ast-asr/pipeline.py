@@ -145,7 +145,8 @@ def main():
     parser.add_argument(
         "--model", default="whisper-tiny",
         choices=["whisper-tiny", "whisper-base", "whisper-small", "whisper-medium",
-                 "wav2vec2-base", "wav2vec2-large", "hubert-large", "hybrid-w2v2-grl"],
+                 "wav2vec2-base", "wav2vec2-large", "hubert-large", "hybrid-w2v2-grl",
+                 "rl-grpo"],
         help="Model to evaluate",
     )
     parser.add_argument(
