@@ -46,6 +46,7 @@ MODEL_REGISTRY = {
     # override via the `model_path` kwarg in run_inference().
     "hybrid-w2v2-grl": ("outputs/checkpoints/hybrid_w2v2_lora_grl/final", "hybrid"),
     "rl-grpo":         ("outputs/checkpoints/rl-grpo/final",             "hybrid"),
+    "whisper-small-rl": ("outputs/checkpoints/whisper-small-rl/final",   "whisper-lora"),
 }
 
 
@@ -221,9 +222,30 @@ def _infer_hybrid(
                 attention_mask=attention_mask,
             ).logits
         predicted_ids = torch.argmax(logits, dim=-1)
-        decoded = processor.batch_decode(predicted_ids)
+        decoded = processor.batch_decode(predicted_ids, skip_special_tokens=True)
         hypotheses.extend(decoded)
     return hypotheses
+
+
+# ── Whisper + LoRA inference ─────────────────────────────────────────────────
+
+def _load_whisper_lora(ckpt_dir: str, device: torch.device):
+    """Load a Whisper model with a PEFT LoRA adapter."""
+    from peft import PeftModel
+    from transformers import WhisperProcessor, WhisperForConditionalGeneration
+
+    ckpt = Path(ckpt_dir)
+    if not ckpt.exists():
+        raise FileNotFoundError(f"Whisper LoRA checkpoint not found: {ckpt}")
+
+    logger.info("Loading Whisper + LoRA from %s", ckpt)
+    base_id = "openai/whisper-small"
+    processor = WhisperProcessor.from_pretrained(base_id)
+    base_model = WhisperForConditionalGeneration.from_pretrained(base_id)
+    model = PeftModel.from_pretrained(base_model, str(ckpt))
+    model = model.merge_and_unload()
+    model.to(device).eval()
+    return processor, model
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
@@ -252,6 +274,12 @@ def run_inference(
 
     if model_type == "whisper":
         processor, model = _load_whisper(hf_id, device)
+        infer_fn = lambda arrays: _infer_whisper(
+            arrays, processor, model, device, batch_size
+        )
+    elif model_type == "whisper-lora":
+        ckpt_dir = model_path or hf_id
+        processor, model = _load_whisper_lora(ckpt_dir, device)
         infer_fn = lambda arrays: _infer_whisper(
             arrays, processor, model, device, batch_size
         )

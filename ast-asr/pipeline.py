@@ -44,6 +44,7 @@ def run_pipeline(
     output_csv:  str   = None,
     cache_dir:   str   = "cache",
     model_path:  str   = None,
+    svarah_split: str  = "all",
 ) -> dict:
     """
     Full evaluation pipeline:
@@ -59,7 +60,7 @@ def run_pipeline(
     logger.info("=" * 55)
     logger.info("STEP 1 — Loading Svarah")
     logger.info("=" * 55)
-    df = load_svarah(max_samples=max_samples, cache_dir=cache_dir)
+    df = load_svarah(max_samples=max_samples, cache_dir=cache_dir, svarah_split=svarah_split)
 
     # ── 2. Inference on clean audio ───────────────────────────────────────────
     logger.info("=" * 55)
@@ -146,7 +147,7 @@ def main():
         "--model", default="whisper-tiny",
         choices=["whisper-tiny", "whisper-base", "whisper-small", "whisper-medium",
                  "wav2vec2-base", "wav2vec2-large", "hubert-large", "hybrid-w2v2-grl",
-                 "rl-grpo"],
+                 "rl-grpo", "whisper-small-rl"],
         help="Model to evaluate",
     )
     parser.add_argument(
@@ -179,6 +180,11 @@ def main():
         "--cache-dir", default="cache",
         help="HuggingFace dataset cache directory",
     )
+    parser.add_argument(
+        "--svarah-split", default="all",
+        choices=["all", "train", "eval"],
+        help="Svarah split to use (default: all). Use 'eval' for held-out evaluation.",
+    )
     args = parser.parse_args()
 
     run_pipeline(
@@ -190,6 +196,7 @@ def main():
         output_csv  = args.output,
         cache_dir   = args.cache_dir,
         model_path  = args.model_path,
+        svarah_split = args.svarah_split,
     )
 
 

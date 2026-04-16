@@ -124,8 +124,11 @@ def grpo_step(
         )
 
     # 5. GRPO loss: -advantage * log_pi + beta * KL
-    #    KL(pi || pi_ref) ≈ log_pi - log_pi_ref (per-sample)
-    kl = policy_log_probs - ref_log_probs  # [B, K]
+    # K3 estimator (DeepSeek GRPO, Schulman 2020): unbiased and always ≥ 0,
+    # unlike the signed k1 estimator (log_pi - log_pi_ref) which the optimizer
+    # exploits by driving log_pi arbitrarily negative.
+    log_ratio = (ref_log_probs - policy_log_probs).clamp(-20.0, 20.0)
+    kl = torch.exp(log_ratio) - log_ratio - 1.0   # [B, K], ≥ 0
 
     # Policy gradient: weighted by advantage
     pg_loss = -(advantages * policy_log_probs).mean()
