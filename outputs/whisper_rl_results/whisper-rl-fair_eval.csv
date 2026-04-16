@@ -1,0 +1,142 @@
+uid,accent,language_family,gender,age,reference,hypothesis,model
+1,Kannada,Dravidian,Female,30-45,There is a gradual shift in the mentality, there is a gradual shift in the mentality,whisper-small-rl
+6,Bodo,Sino-Tibetan,Male,45-60,There are many big rivers, There are many big rivers.,whisper-small-rl
+15,Malayalam,Dravidian,Male,30-45,Can you speak 5 numbers, Can you speak five numbers?,whisper-small-rl
+20,Konkani,Indo-Aryan,Female,18-30,"literally feel how the people live in villages, how difficult their lives are, what all circumstances they go through, and I could sympathize with them."," I could literally feel how the people live in villages, how difficult their lives are, what all circumstances they go through and I could sympathize with them.",whisper-small-rl
+22,Urdu,Indo-Aryan,Male,30-45,it is not only restricted to school books the school goers are asked by their RSS appointed teachers to attend the RSS shakhas from a young age thus enabling the Sangh Parivar to indoctrinate young impressionable minds, It is not only restricted to school books. The school goers are asked by their RSS appointed teachers to attend the RSS shakhas from a young age. Thus enabling the Sangh Pariva to indoctrinate young impressionable minds,whisper-small-rl
+29,Tamil,Dravidian,Female,18-30,"And also, people speaking English have different accents in different regions.", and also people speaking English have different accents in different regions.,whisper-small-rl
+30,Punjabi,Indo-Aryan,Male,30-45,"Education, Health, Care, Poverty, Reduction, Women's Empowerment", District Education Health Care Poverty Reduction Women's Empowerment,whisper-small-rl
+32,Telugu,Dravidian,Female,45-60,"trains,", dreams,whisper-small-rl
+38,Nepali,Indo-Aryan,Female,45-60,Are there any vaccination centres available in South Goa district for age group 18+ years, Are there any vaccination centers available in South Goa district for age group 18 plus years?,whisper-small-rl
+39,Marathi,Indo-Aryan,Female,30-45,hang on the rock. I find it useful and best because it helps me that we climb faster., hang on the rock and I find it useful and best because it helped me to climb faster.,whisper-small-rl
+48,Urdu,Indo-Aryan,Female,45-60,the colleges of art literature," the colleges of art, literature,",whisper-small-rl
+49,Tamil,Dravidian,Female,18-30,"the change in season. For example, it is extremely cold during the winters and is extremely hot during the summer; so this shift"," the change in season. For example, it is extremely cold during the winters and is extremely hot during the summer. So this shift",whisper-small-rl
+53,Gujarati,Indo-Aryan,Female,30-45,"The radiation, the chemotherapy, everything, every every option for cancer treatment is available over here and it is largely used not only by the people of Gujarat but also by the nearby states."," the radiation, the chemotherapy, everything, every option for cancer treatment is available over here and it is largely used not only by the people of Gujarat but also by the nearby states.",whisper-small-rl
+54,Konkani,Indo-Aryan,Female,18-30,"how difficult their lives are, what all circumstances they go through,"," how difficult their lives are, what all circumstances they go through.",whisper-small-rl
+55,Telugu,Dravidian,Female,45-60,You are 2 hours late than the delivery time for my products Pantene Bamboo Shampoo and 24 Mantra Chana Dal, You are two hours late than the delivery time for my products Pantene Bamboo Shampoo and 24 Mantra Chana Dal.,whisper-small-rl
+61,Malayalam,Dravidian,Female,30-45,It's about an abused Malayali migrant worker employed in Saudi Arabia as a Goddard against his will., It's about abused a Malayali migrant worker employed in Saudi Arabia as a goatherd against his will.,whisper-small-rl
+62,Kashmiri,Indo-Aryan,Female,30-45,The intricate yet beautiful floral motifs on paper mashi products are in, The intricate yet beautiful floral motifs on paper marshy products are in,whisper-small-rl
+65,Maithili,Indo-Aryan,Female,45-60,I use some words, I use some words.,whisper-small-rl
+67,Maithili,Indo-Aryan,Female,30-45,Biodiversity actually plays a very important role in my garden, Biodiversity actually plays a very important role in my garden.,whisper-small-rl
+78,Odia,Indo-Aryan,Male,18-30,and, and,whisper-small-rl
+79,Kannada,Dravidian,Female,18-30,mint tea is a very great refreshing drink and this vandalaga and dodapathre can be used in preparation of a regional delicacy called one thambuli, Mint tea is a very great refreshing drink and this Vandalaga and Dodapathre can be used in preparation of a regional delicacy called Thambuli.,whisper-small-rl
+85,Hindi,Indo-Aryan,Male,18-30,invest in mutual funds where risk is low., invest in mutual funds where risk is low.,whisper-small-rl
+87,Urdu,Indo-Aryan,Male,30-45,on both the sides of river, on both the sides of river.,whisper-small-rl
+89,Gujarati,Indo-Aryan,Female,30-45,main medium of communication has been Gujarati, The main medium of communication has been Gujarati.,whisper-small-rl
+91,Nepali,Indo-Aryan,Male,45-60,What's my Fin care is Small Finance Bank account balance?, What's my FinCARE small finance bank account balance?,whisper-small-rl
+95,Bengali,Indo-Aryan,Female,30-45,Forward, Forward,whisper-small-rl
+96,Kannada,Dravidian,Female,30-45,for higher education they have to travel or shift to a, For higher education they have to travel or shift to a,whisper-small-rl
+106,Gujarati,Indo-Aryan,Male,18-30,this incident was the third major attack this week., This incident was the third major attack this week.,whisper-small-rl
+118,Tamil,Dravidian,Female,18-30,The season or the climate in my district is generally dry and it's a comfortable weather. It's not very sunny or very cold., The season or the climate in my district is generally dry and it's a comfortable weather. It's not very sunny or very cold.,whisper-small-rl
+123,Assamese,Indo-Aryan,Male,18-30,Stop, stop,whisper-small-rl
+128,Hindi,Indo-Aryan,Male,18-30,Cat, guys.,whisper-small-rl
+129,Kashmiri,Indo-Aryan,Female,30-45,My favorite genre to write in is poetry or verse., My favourite Joan to write in is poetry or worse.,whisper-small-rl
+147,Urdu,Indo-Aryan,Male,30-45,Wow, Wow!,whisper-small-rl
+164,Odia,Indo-Aryan,Male,60+,Can you check if the OTP 647399 is still valid for vaccine registration for user with phone number 71615084958, Can you check if the OTP 647-399 is still valid for vaccine registration for user with the phone number 7161-5084-958?,whisper-small-rl
+170,Tamil,Dravidian,Male,30-45,Off, Thank you.,whisper-small-rl
+176,Bengali,Indo-Aryan,Female,30-45,Bed, bed,whisper-small-rl
+177,Malayalam,Dravidian,Male,30-45,Dog, dog,whisper-small-rl
+179,Dogri,Indo-Aryan,Male,18-30,and energy, and energy.,whisper-small-rl
+181,Sindhi,Indo-Aryan,Male,30-45,As India is a country full of diversities," As India is a country full of diversity,",whisper-small-rl
+182,Urdu,Indo-Aryan,Male,18-30,Can you check my total holdings in APY account having PRAN number 652922439958, Can you check my total holdings in apy account having prn number 65292243958,whisper-small-rl
+185,Assamese,Indo-Aryan,Male,18-30,Stop processing the payment for Amazon, Stop processing the payment for Amazon.,whisper-small-rl
+186,Sindhi,Indo-Aryan,Female,30-45,"I am totally quiet. So that is also an indicator of my happiness and sadness or something, you know. Something wrong has happened. This is how it goes."," I am totally quite. So that is also an indicator of my happiness and sadness or something, you know, something wrong has happened. This is how it goes.",whisper-small-rl
+197,Kannada,Dravidian,Female,18-30,"you can enjoy the Himalayan forests, gushing river waters, a serene Himalayan lake, clear view of snow-clad mountain ranges, widely spread cool bagyals"," You can enjoy the Himalayan forests, gushing river waters, a serene Himalayan lake, clear view of snow-clad mountain ranges, widely spread cool baguials,",whisper-small-rl
+202,Malayalam,Dravidian,Female,18-30,Can you check if the Banaras Hindu University is an AICTE approved institute?, Can you check if the Banaras Hindu University is an AICTE-approved institute?,whisper-small-rl
+204,Gujarati,Indo-Aryan,Male,45-60,Can you list all the Paid vaccination centres for age group 18+ years in district Chatra, Can you list all the paid vaccination centers for age group 18 plus years in district Chatra?,whisper-small-rl
+205,Malayalam,Dravidian,Female,18-30,"Coming up with a career goal is somewhat adventurous, can be rewarding in the long run", Coming up with career call is somewhat adventurous can be rewarding in the long run.,whisper-small-rl
+209,Tamil,Dravidian,Female,30-45,Can you list all the vaccination centres where Booster Dose of COVOVAX is available for age groups 15-17 years, Can you list all the vaccination centres where booster dose of COVOVACS is available for age groups 15-17 years?,whisper-small-rl
+212,Telugu,Dravidian,Male,18-30,Disable Autopay for my Electricity bill for July and April, Disable auto pay for my electricity bill for July and April.,whisper-small-rl
+214,Dogri,Indo-Aryan,Female,45-60,"Has the payment been confirmed for my order containing Farmveda Choco Peanuts , American Garden Microwave Popcorn and Natureland Organics Black Pepper"," has the payment been confirmed for my order containing, form with dark cocoa peanuts, American garden microwave, popcorn and Natureland organic black pepper.",whisper-small-rl
+215,Odia,Indo-Aryan,Female,60+,Remove my finger print from PayPal and keep PIN option only!, Remove my fingerprint from PayPal and keep pin option only.,whisper-small-rl
+220,Urdu,Indo-Aryan,Female,18-30,"There are several escape rooms, there are various adventure games that are nature themed Like one has to cross a forest to"," There are several escape rooms, there are various adventure games that are nature themed like one has to cross a forest to",whisper-small-rl
+225,Bodo,Sino-Tibetan,Female,18-30,Wow, Wow.,whisper-small-rl
+227,Telugu,Dravidian,Female,45-60,How has your practice of yoga changed or evolved over time?, How has your practice of yoga changed or evolved over time?,whisper-small-rl
+229,Bengali,Indo-Aryan,Female,45-60,House, how,whisper-small-rl
+231,Marathi,Indo-Aryan,Female,18-30,The rainfall we receive is moderate., rainfall we receive is moderate.,whisper-small-rl
+235,Bengali,Indo-Aryan,Male,18-30,Two, too.,whisper-small-rl
+237,Malayalam,Dravidian,Male,30-45,How do you practice and work on your singing technique?, How do you practice and work on your singing technique?,whisper-small-rl
+238,Malayalam,Dravidian,Female,18-30,"still here, like that the Roman and Greek gods are still among us even in the modern"," still here, like you know that the Roman and Greek gods are still among us even in the modern",whisper-small-rl
+239,Punjabi,Indo-Aryan,Female,30-45,"I think it is easy, humble and very polite language."," I think it is easy, humble and very polite language.",whisper-small-rl
+248,Odia,Indo-Aryan,Female,18-30,"where there was no mobile networks and we enjoyed for around three, four days out of technology, out of office"," where there was no mobile networks and we enjoyed for around 3-4 days out of technology, out of office.",whisper-small-rl
+251,Nepali,Indo-Aryan,Female,30-45,what's the weather forecast for today, What's the weather forecast for today?,whisper-small-rl
+258,Dogri,Indo-Aryan,Male,18-30,"highly suffer due to social and environmental impacts,", highly suffer due to social and environmental impacts.,whisper-small-rl
+265,Sindhi,Indo-Aryan,Male,30-45,in yoga helps to stabilize our body, Yoga helps to stabilize our body,whisper-small-rl
+267,Bengali,Indo-Aryan,Male,60+,"English is the preferred medium, but", English is the preferred medium but,whisper-small-rl
+272,Malayalam,Dravidian,Male,45-60,"it goes, and it goes into the practicality of feeling one with everything that's around", it goes and it goes into the practicality of feeling one with everything that's around you.,whisper-small-rl
+273,Gujarati,Indo-Aryan,Female,30-45,Bhajan, Virgin.,whisper-small-rl
+275,Odia,Indo-Aryan,Male,18-30,I think English plays a very crucial role in the communication between the, I think English plays a very crucial role in the communication between the,whisper-small-rl
+280,Bodo,Sino-Tibetan,Female,30-45,Two, too.,whisper-small-rl
+282,Kashmiri,Indo-Aryan,Male,45-60,so that the plants can be saved during the winter, so that the plants can be saved during the winter.,whisper-small-rl
+283,Bengali,Indo-Aryan,Female,18-30,Down, Down.,whisper-small-rl
+294,Odia,Indo-Aryan,Female,60+,because there aren't enough colleges in accordance with the demand for college education., because there aren't enough colleges in accordance with the demand for college education.,whisper-small-rl
+296,Kashmiri,Indo-Aryan,Female,30-45,Cat, catch.,whisper-small-rl
+298,Urdu,Indo-Aryan,Female,45-60,Andhra Pradesh, Andhra Pradesh,whisper-small-rl
+299,Marathi,Indo-Aryan,Female,18-30,the interest of my sport., the interest of my sport.,whisper-small-rl
+300,Urdu,Indo-Aryan,Male,30-45,there is a discrimination also and more challenges that the education system is experiencing today talking of saffronization, that is discrimination also and more challenges that the education system is experiencing today. Talking of Saffronization,whisper-small-rl
+304,Punjabi,Indo-Aryan,Female,18-30,Set a reminder for my pending payment to contact Mahnoor, Set a reminder for my pending payment to contact Mahanur.,whisper-small-rl
+308,Bengali,Indo-Aryan,Female,18-30,Backward, Backward.,whisper-small-rl
+309,Kashmiri,Indo-Aryan,Female,30-45,"in achieving these goals, but the government is trying hard to provide good living conditions to all the citizens."," in achieving these goals, but the government is trying hard to provide good living conditions to all the citizens.",whisper-small-rl
+317,Telugu,Dravidian,Female,45-60,how would i use formidable in a sentence, How would I use formidable in a sentence?,whisper-small-rl
+319,Malayalam,Dravidian,Male,30-45,And they also give scholarships for students, and they also give scholarships for students.,whisper-small-rl
+321,Punjabi,Indo-Aryan,Male,30-45,Three, Yes.,whisper-small-rl
+323,Urdu,Indo-Aryan,Female,45-60,There are various subjects taught in various colleges, There are various subjects taught in various colleges.,whisper-small-rl
+324,Urdu,Indo-Aryan,Male,30-45,when is the last time i contacted John Smith, When is the last time I contacted John Smith?,whisper-small-rl
+327,Hindi,Indo-Aryan,Female,30-45,if your future, If your future,whisper-small-rl
+328,Nepali,Indo-Aryan,Female,30-45,to enable West Bengal to transform into a knowledge-driven welfare society with extensive use of IT, to enable West Bengal to transform into a knowledge driven welfare society with extensive use of IT.,whisper-small-rl
+331,Telugu,Dravidian,Female,45-60,"Actually, there's a book called a boy in the striped pajamas and I once read the book, but I didn't like it that much. But then I got to see the movie which came in the YouTube. And then once I saw the movie, I was so impressed by it and I went back to read the book again. And that is when I started liking it so much.", Actually there's a book called Boy in the Striped Pajamas and I once read the book but I didn't like it that much but then I got to see the movie which came in the YouTube and then once I saw the movie I was so impressed by it and I went back to read the book again and that is when I started liking it so much.,whisper-small-rl
+334,Konkani,Indo-Aryan,Male,60+,or we should remain an independent union territory that time., or we should remain an independent Union territory that time.,whisper-small-rl
+340,Urdu,Indo-Aryan,Male,30-45,orderly development and progress, orderly development and progress.,whisper-small-rl
+342,Urdu,Indo-Aryan,Male,30-45,and regular municipal administration introduced in 1858, and regular municipal administration introduced in 1858.,whisper-small-rl
+346,Urdu,Indo-Aryan,Male,18-30,Repeat my my, Repeat my,whisper-small-rl
+347,Maithili,Indo-Aryan,Female,45-60,Will there be Rs. 1000 in my Karnataka Gramin Bank account?, Will there be Rs 1000 in my Karnataka Grameen bank account?,whisper-small-rl
+348,Bengali,Indo-Aryan,Female,18-30,"These tools include onomatopoeia, imagery, metaphor, simile, alliteration"," These tools include onomatopoeia, imagery, metaphor, simile, alliteration,",whisper-small-rl
+349,Kannada,Dravidian,Female,18-30,"Multi-specialty hospitals are being built in all urban centers, and there are many private hospitals and hospital chains which have their branches in many parts of the state", Multispecialty hospitals are being built in all urban centres and there are many private hospitals and hospital chains which have their branches in many parts of the state.,whisper-small-rl
+351,Maithili,Indo-Aryan,Male,60+,"In March 2009, he joined Praja Rajyam Party, founded by Chiranjeevi."," In March 2009, he joined Prasad Rajyam party founded by Chiranjeevi.",whisper-small-rl
+354,Odia,Indo-Aryan,Male,60+,Which is the nearest vacccination center in district Yamunanagar, which is the nearest vaccination center in district Jamananagar.,whisper-small-rl
+356,Odia,Indo-Aryan,Female,60+,you can talk about things that are of common interest., you can talk about things that are of common interest.,whisper-small-rl
+357,Kashmiri,Indo-Aryan,Female,30-45,Is there any nearby facility around PIN Code 608464 which is giving second dose for people of age group 15-17 years?, Is there any nearby facility around Pincode 608464 which is giving second dose for people of age group 15 to 17 years?,whisper-small-rl
+362,Kannada,Dravidian,Female,30-45,on, on.,whisper-small-rl
+367,Kannada,Dravidian,Female,18-30,"Veeragase, Kamsale", Veerakase kam salai,whisper-small-rl
+368,Konkani,Indo-Aryan,Female,18-30,Clara, Clara.,whisper-small-rl
+372,Bodo,Sino-Tibetan,Male,18-30,Agree, agree,whisper-small-rl
+374,Hindi,Indo-Aryan,Male,30-45,Should I say," Should I say,",whisper-small-rl
+384,Tamil,Dravidian,Male,30-45,Can I know the nearest vaccination center to my current location in district Meerut?, Can I know the nearest vaccination center to my current location in District Meere?,whisper-small-rl
+388,Telugu,Dravidian,Female,45-60,"According to the 2011 census report, there are 93,411 people who follow Buddhism in Mizoram."," According to the 2011 census report, there are 93,411 people who follow Buddhism in Mizoram.",whisper-small-rl
+392,Urdu,Indo-Aryan,Male,30-45,"in Jeddah, Saudi Arabia with UNEP as a partner adopted the Jeddah Declaration on the Environment"," in Jeddah, Saudi Arabia, with UNEP as a partner, adopted the Jeddah declaration on the environment",whisper-small-rl
+395,Marathi,Indo-Aryan,Male,60+,When will Hersheys Dark Chocolate Bar be available for orderings?, When will Hershey's dark chocolate bar be available for ordering?,whisper-small-rl
+402,Maithili,Indo-Aryan,Male,30-45,Do I have more than Rs. 700 in my Google Pay account?, Do I have more than Rs 700 in my Google Pay account?,whisper-small-rl
+405,Assamese,Indo-Aryan,Female,30-45,"What are the main cultural and social issues faced by your state and how are they being addressed? Hint - poverty, inequality, discrimination, social justice."," What are the main cultural and social issues faced by your state and how are they being addressed? Hint, poverty, inequality, discrimination, social justice.",whisper-small-rl
+409,Tamil,Dravidian,Female,30-45,"After this controversy ran its course, the prominence of the holiday declined for a few centuries."," After this controversy ran its course, the prominence of the holiday declined for a few centuries.",whisper-small-rl
+412,Telugu,Dravidian,Male,45-60,"Almost all religions practiced in our state encourage dialogue, encourage peace and interfaith cooperation, as well as help develop mutual understanding."," Almost all religions practiced in our state encouraged dialogue, encouraged peace and interfaith cooperation as well as help develop mutual understanding.",whisper-small-rl
+420,Telugu,Dravidian,Female,45-60,what is a cookie recipe, What is a cookie recipe?,whisper-small-rl
+423,Marathi,Indo-Aryan,Male,60+,Kerala, error.,whisper-small-rl
+426,Nepali,Indo-Aryan,Male,18-30,"Dak Bungalow of Darjeeling, Kothiyar Bungalow of different Singonad Plantations,"," plantations, dark bungalow of dazzling, coattier bungalow of different singhuna plantations.",whisper-small-rl
+428,Punjabi,Indo-Aryan,Male,60+,on By Nature Coconut Flour, on by nature coconut flour.,whisper-small-rl
+429,Kashmiri,Indo-Aryan,Female,30-45,"Due to this turmoil, the schools remain shut for prolonged periods of time."," Due to this turmoil, the schools remain shut for prolonged periods of time.",whisper-small-rl
+432,Urdu,Indo-Aryan,Male,45-60,Resend the OTP for linking Zomato to my account., Resend the OTP for linking Zomato to my account.,whisper-small-rl
+433,Bodo,Sino-Tibetan,Female,18-30,Backward, backward.,whisper-small-rl
+437,Bodo,Sino-Tibetan,Female,18-30,"So, there are four types of mandalas that are used for different purposes. Like, the first one is outer mandala. So it's a basic kind of mandala that represents the universe"," So, there are four types of mandalas that are used for different purposes like first one is outer mandala. So, it is a basic kind of mandala that represents the universe.",whisper-small-rl
+441,Assamese,Indo-Aryan,Male,30-45,Can you show recommendation on Fragrances ?, Can you show recommendation on fragrances?,whisper-small-rl
+443,Urdu,Indo-Aryan,Female,45-60,socially weaker sections of the society, socially weaker section of the society.,whisper-small-rl
+445,Urdu,Indo-Aryan,Male,45-60,On, on,whisper-small-rl
+447,Urdu,Indo-Aryan,Male,30-45,"Furthermore, the concept of protected areas i.e. haram is intrinsic to Islam."," Furthermore, the concept of protected areas that is haram is intrinsic to Islam.",whisper-small-rl
+451,Kannada,Dravidian,Female,18-30,On a daily basis we use curry bevu and kothamri in cooking, On a daily basis we use curry bevu and kothambri in cooking.,whisper-small-rl
+453,Maithili,Indo-Aryan,Female,45-60,"So I poured some in the starting, then again I poured and finally it happened that it became so wet", So I poured some in the starting then again I poured and finally it happened that it became so wet,whisper-small-rl
+455,Odia,Indo-Aryan,Female,60+,how long should you cook a whole chicken in a three hundred and seventy five degree oven, How long should you cook a whole chicken in a 375 degree oven?,whisper-small-rl
+457,Dogri,Indo-Aryan,Male,30-45,"I watched the short film on the story of Mata Vaishno Devi at Clark in Suit, Qatar.", I watched the short film on the story of Mata Vaishwadevi at Clarkin's suit Katra during,whisper-small-rl
+465,Nepali,Indo-Aryan,Male,18-30,And on that day Nepali women come and visit at program by wearing their cultural costumes," And on that day, Nepali women come and visit at program by wearing their cultural costumes",whisper-small-rl
+466,Malayalam,Dravidian,Female,18-30,put an order in for two pizzas from domino's, Put an order in for two pizzas from Domino's.,whisper-small-rl
+469,Telugu,Dravidian,Male,45-60,Two, too.,whisper-small-rl
+470,Malayalam,Dravidian,Female,30-45,"As Christianity spread and handwritten copies of the Christian scriptures multiplied, the Bible was translated into vernacular languages, including Syriac, Coptic, Ethiopian, Armenian, even in my native language Malayalam"," As Christianity spread and handwritten copies of the Christian scriptures multiplied, the Bible was translated into vernacular languages, including Syriacoptic Ethiopian Armenian, even in my native language Malayalam.",whisper-small-rl
+471,Gujarati,Indo-Aryan,Female,30-45,Show me all the donations, Show me all the donations.,whisper-small-rl
+475,Malayalam,Dravidian,Male,45-60,"We keep Hindi as the national language, as the only national language, which is not the case now", We keep Hindi as a national language as the only national language. Just not the case now.,whisper-small-rl
+477,Tamil,Dravidian,Female,60+,show me the picture of the singer, Show me the picture of the singer.,whisper-small-rl
+479,Dogri,Indo-Aryan,Male,18-30,"The major arts and crafts in our state, Jammu and Kashmir, are weaving"," The major arts and crafts in our state, Jamun, Kashmir are weaving",whisper-small-rl
+480,Telugu,Dravidian,Female,45-60,"Nowadays, all the movies have English words in that and schools also.", Nowadays all the movies have English words in that and schools also,whisper-small-rl
+481,Maithili,Indo-Aryan,Male,30-45,which has given rise to fishy culture., which has given rise to pissy culture.,whisper-small-rl
+482,Kashmiri,Indo-Aryan,Female,30-45,Zero, zero.,whisper-small-rl
+483,Urdu,Indo-Aryan,Female,30-45,"As Kuwampu described in Jai Bharata Jananiya Tanujaate, Karnataka state anthem, that is aspiration has been to see it as Sarva Janan Gada Sahaan Shantiya Doda, a garden of peace for all communities. The statue of Bahubali, a messenger for non-violence in Shravanapillai Gola or the shrine of Baba Buddha and the Tatraya, sacred for both Muslims and Hindus, are symbolic of this."," As Kuvampu described in Jaya Bharata Jananiya Tanuja, the Kanada's state anthem, i.e. aspiration has been to see it as Sarva Janangadha Sahal Shantya Dota, a garden of peace for all communities. The statue of Bahabali, a messenger for non-violence, in Shravana Bila Gula or the Shreya Napa Baba Buddha and Dattatraya, sacred for both Muslims and Hindus, are symbolic of this.",whisper-small-rl
+489,Bodo,Sino-Tibetan,Male,45-60,"mental stamina is more stable than before, where I have been doing yoga on a regular basis", mental stamina is more stable than before after I have been doing yoga on a regular basis.,whisper-small-rl
+491,Gujarati,Indo-Aryan,Male,30-45,of course in India English is not spoken with one accent," Of course, in India, English is not spoken with one accent.",whisper-small-rl
+496,Punjabi,Indo-Aryan,Female,45-60,Dog, dog,whisper-small-rl
