@@ -1,0 +1,55 @@
+# Hybrid Wav2Vec2 + LoRA + GRL training configuration
+# Evaluated on Svarah via the existing fairness pipeline.
+
+model:
+  wav2vec2_id: facebook/wav2vec2-base-960h
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  lora_target_modules: [q_proj, k_proj, v_proj, out_proj]
+  freeze_feature_extractor: true
+
+adversary:
+  hidden: 256
+  dropout: 0.1
+  use_adversary: true        # false = pure CTC fine-tune (ft-W2V2 baseline)
+  # num_classes is derived from the training data's language_family set
+
+grl:
+  target_lambda: 0.1        # main ablation knob; sweep {0.05, 0.1, 0.3}
+  warmup_steps_fraction: 0.2  # linear ramp from 0 over first 20% of steps
+
+data:
+  raw_root: data/spire-sies/raw
+  split_path: data/spire-sies/splits.json
+  # Leave languages null to train on every SPIRE-SIES language present in
+  # ACCENT_TO_FAMILY. Restrict for quick experiments.
+  languages: null
+  min_duration: 1.0
+  max_duration: 20.0
+  min_words: 3
+  val_ratio: 0.15
+  seed: 42
+
+training:
+  output_dir: outputs/checkpoints/hybrid_w2v2_lora_grl
+  num_train_epochs: 2
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 8
+  gradient_accumulation_steps: 2
+  learning_rate: 1.0e-4
+  adversary_learning_rate: 3.0e-4
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  bf16: true
+  fp16: false
+  logging_steps: 25
+  eval_steps: 500
+  save_steps: 500
+  save_total_limit: 5
+  load_best_model_at_end: true
+  metric_for_best_model: eval_loss
+  greater_is_better: false
+  dataloader_num_workers: 0
+  gradient_checkpointing: true
+  report_to: []

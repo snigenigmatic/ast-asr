@@ -43,6 +43,8 @@ def run_pipeline(
     group_col:   str   = "language_family",
     output_csv:  str   = None,
     cache_dir:   str   = "cache",
+    model_path:  str   = None,
+    svarah_split: str  = "all",
 ) -> dict:
     """
     Full evaluation pipeline:
@@ -58,20 +60,20 @@ def run_pipeline(
     logger.info("=" * 55)
     logger.info("STEP 1 — Loading Svarah")
     logger.info("=" * 55)
-    df = load_svarah(max_samples=max_samples, cache_dir=cache_dir)
+    df = load_svarah(max_samples=max_samples, cache_dir=cache_dir, svarah_split=svarah_split)
 
     # ── 2. Inference on clean audio ───────────────────────────────────────────
     logger.info("=" * 55)
     logger.info("STEP 2 — ASR inference (clean) with %s", model_name)
     logger.info("=" * 55)
-    df_clean = run_inference(df, model_name=model_name)
+    df_clean = run_inference(df, model_name=model_name, model_path=model_path)
 
     # ── 3. Inference on noisy audio ───────────────────────────────────────────
     logger.info("=" * 55)
     logger.info("STEP 3 — Adding %s noise at %d dB SNR", noise_type, snr_db)
     logger.info("=" * 55)
     df_noisy_audio = add_noise(df, snr_db=snr_db, noise_type=noise_type)
-    df_noisy = run_inference(df_noisy_audio, model_name=model_name)
+    df_noisy = run_inference(df_noisy_audio, model_name=model_name, model_path=model_path)
 
     # ── 4. Fairness metrics ───────────────────────────────────────────────────
     logger.info("=" * 55)
@@ -132,7 +134,7 @@ def run_pipeline(
 
 def _overall_wer(df: pd.DataFrame) -> float:
     from jiwer import wer
-    return wer(df["reference"].tolist(), df["hypothesis"].tolist())
+    return wer([r.lower() for r in df["reference"]], [h.lower() for h in df["hypothesis"]])
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
@@ -144,8 +146,13 @@ def main():
     parser.add_argument(
         "--model", default="whisper-tiny",
         choices=["whisper-tiny", "whisper-base", "whisper-small", "whisper-medium",
-                 "wav2vec2-base", "wav2vec2-large", "hubert-large"],
+                 "wav2vec2-base", "wav2vec2-large", "hubert-large", "hybrid-w2v2-grl",
+                 "rl-grpo", "whisper-small-rl"],
         help="Model to evaluate",
+    )
+    parser.add_argument(
+        "--model-path", default=None,
+        help="Override checkpoint directory (used for hybrid-w2v2-grl variants)",
     )
     parser.add_argument(
         "--max-samples", type=int, default=None,
@@ -173,6 +180,11 @@ def main():
         "--cache-dir", default="cache",
         help="HuggingFace dataset cache directory",
     )
+    parser.add_argument(
+        "--svarah-split", default="all",
+        choices=["all", "train", "eval"],
+        help="Svarah split to use (default: all). Use 'eval' for held-out evaluation.",
+    )
     args = parser.parse_args()
 
     run_pipeline(
@@ -183,6 +195,8 @@ def main():
         group_col   = args.group,
         output_csv  = args.output,
         cache_dir   = args.cache_dir,
+        model_path  = args.model_path,
+        svarah_split = args.svarah_split,
     )
 
 

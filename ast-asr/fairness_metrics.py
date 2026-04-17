@@ -34,9 +34,9 @@ def _group_wer(df: pd.DataFrame, group_col: str) -> pd.Series:
     """Compute WER per group. Returns a Series indexed by group value."""
     results = {}
     for grp, sub in df.groupby(group_col):
-        refs  = sub["reference"].tolist()
-        hyps  = sub["hypothesis"].tolist()
-        # jiwer expects lists of strings
+        refs  = [r.lower() for r in sub["reference"].tolist()]
+        hyps  = [h.lower() for h in sub["hypothesis"].tolist()]
+        # jiwer expects lists of strings; normalize case for fair comparison
         results[grp] = compute_wer(refs, hyps)
     return pd.Series(results, name="wer")
 
@@ -52,8 +52,8 @@ def _group_tpr(df: pd.DataFrame, group_col: str) -> pd.Series:
 
     results = {}
     for grp, sub in df.groupby(group_col):
-        refs = sub["reference"].tolist()
-        hyps = sub["hypothesis"].tolist()
+        refs = [r.lower() for r in sub["reference"].tolist()]
+        hyps = [h.lower() for h in sub["hypothesis"].tolist()]
         out  = process_words(refs, hyps)
         # hits = reference words that are correct (not substituted or deleted)
         total_ref_words = sum(len(r.split()) for r in refs)

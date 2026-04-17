@@ -1,0 +1,2 @@
+model,n_utterances,overall_wer,delta_dp,delta_eo,max_noise_gap,poisson_p,systematic_gap,worst_dp_pair,wer_dravidian,wer_indo_aryan,wer_sino_tibetan
+whisper-small,1998,0.1835946924004825,0.020313791039676732,0.0248342279104502,0.17959527824620575,0.02003906786144194,True,Dravidian vs Sino-Tibetan,0.17024270137179037,0.18847902981303688,0.1905564924114671

@@ -1,0 +1,114 @@
+07:03:23 | INFO | =======================================================
+07:03:23 | INFO | STEP 1 — Loading Svarah
+07:03:23 | INFO | =======================================================
+07:03:24 | INFO | HF_TOKEN detected; attempting authenticated dataset access.
+07:03:24 | INFO | Loading Svarah (test split) from HuggingFace …
+07:03:24 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/svarah/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+07:03:24 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/Svarah/resolve/main/README.md "HTTP/1.1 200 OK"
+07:03:25 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/svarah.py "HTTP/1.1 307 Temporary Redirect"
+07:03:25 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/Svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/svarah.py "HTTP/1.1 404 Not Found"
+07:03:26 | INFO | HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/ai4bharat/svarah/ai4bharat/svarah.py "HTTP/1.1 404 Not Found"
+07:03:26 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/svarah/revision/ebbf7777fe771490696a3f7b007097606fa8c924 "HTTP/1.1 307 Temporary Redirect"
+07:03:26 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/Svarah/revision/ebbf7777fe771490696a3f7b007097606fa8c924 "HTTP/1.1 200 OK"
+07:03:27 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/.huggingface.yaml "HTTP/1.1 307 Temporary Redirect"
+07:03:27 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/Svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/.huggingface.yaml "HTTP/1.1 404 Not Found"
+07:03:27 | INFO | HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=ai4bharat/svarah "HTTP/1.1 404 Not Found"
+07:03:27 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/svarah/tree/ebbf7777fe771490696a3f7b007097606fa8c924/data?recursive=true&expand=false "HTTP/1.1 307 Temporary Redirect"
+07:03:28 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/Svarah/tree/ebbf7777fe771490696a3f7b007097606fa8c924/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+07:03:28 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/svarah/tree/ebbf7777fe771490696a3f7b007097606fa8c924?recursive=false&expand=false "HTTP/1.1 307 Temporary Redirect"
+07:03:28 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/Svarah/tree/ebbf7777fe771490696a3f7b007097606fa8c924?recursive=false&expand=false "HTTP/1.1 200 OK"
+07:03:28 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+07:03:29 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/Svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/dataset_infos.json "HTTP/1.1 404 Not Found"
+07:03:29 | INFO | Loaded 500 utterances across 19 accent groups (3 language families)
+07:03:29 | INFO |   Indo-Aryan       350 utterances
+07:03:29 | INFO |   Dravidian        124 utterances
+07:03:29 | INFO |   Sino-Tibetan     26 utterances
+07:03:29 | INFO | =======================================================
+07:03:29 | INFO | STEP 2 — ASR inference (clean) with hybrid-w2v2-grl
+07:03:29 | INFO | =======================================================
+07:03:29 | INFO | Using GPU: NVIDIA GeForce RTX 4090
+07:03:30 | INFO | Loading hybrid (Wav2Vec2 + LoRA + GRL) checkpoint: outputs/checkpoints/hybrid-lam0.05/final
+07:03:31 | INFO | HTTP Request: HEAD https://huggingface.co/facebook/wav2vec2-base-960h/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:03:31 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/facebook/wav2vec2-base-960h/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/config.json "HTTP/1.1 200 OK"
+07:03:31 | INFO | HTTP Request: HEAD https://huggingface.co/facebook/wav2vec2-base-960h/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:03:31 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/facebook/wav2vec2-base-960h/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/config.json "HTTP/1.1 200 OK"
+07:03:31 | INFO | HTTP Request: HEAD https://huggingface.co/facebook/wav2vec2-base-960h/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+Loading weights:   0%|          | 0/212 [00:00<?, ?it/s]Loading weights: 100%|██████████| 212/212 [00:00<00:00, 11667.66it/s]
+[1mWav2Vec2ForCTC LOAD REPORT[0m from: facebook/wav2vec2-base-960h
+Key                        | Status  | 
+---------------------------+---------+-
+wav2vec2.masked_spec_embed | MISSING | 
+
+Notes:
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+/home/mluser/ast-asr/.venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:285: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+07:03:32 | INFO | Loaded hybrid adapter + adversary from outputs/checkpoints/hybrid-lam0.05/final
+07:03:32 | INFO | Running inference with hybrid-w2v2-grl on 500 utterances (batch_size=8) …
+07:03:36 | INFO | Inference done in 4.2 s (0.01 s/utt)
+07:03:36 | INFO | =======================================================
+07:03:36 | INFO | STEP 3 — Adding white noise at 10 dB SNR
+07:03:36 | INFO | =======================================================
+07:03:36 | INFO | Added white noise at 10 dB SNR to 500 utterances
+07:03:36 | INFO | Using GPU: NVIDIA GeForce RTX 4090
+07:03:36 | INFO | Loading hybrid (Wav2Vec2 + LoRA + GRL) checkpoint: outputs/checkpoints/hybrid-lam0.05/final
+07:03:36 | INFO | HTTP Request: HEAD https://huggingface.co/facebook/wav2vec2-base-960h/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:03:37 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/facebook/wav2vec2-base-960h/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/config.json "HTTP/1.1 200 OK"
+07:03:37 | INFO | HTTP Request: HEAD https://huggingface.co/facebook/wav2vec2-base-960h/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+07:03:37 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/facebook/wav2vec2-base-960h/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/config.json "HTTP/1.1 200 OK"
+07:03:37 | INFO | HTTP Request: HEAD https://huggingface.co/facebook/wav2vec2-base-960h/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+Loading weights:   0%|          | 0/212 [00:00<?, ?it/s]Loading weights: 100%|██████████| 212/212 [00:00<00:00, 9406.86it/s]
+[1mWav2Vec2ForCTC LOAD REPORT[0m from: facebook/wav2vec2-base-960h
+Key                        | Status  | 
+---------------------------+---------+-
+wav2vec2.masked_spec_embed | MISSING | 
+
+Notes:
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+/home/mluser/ast-asr/.venv/lib/python3.12/site-packages/peft/tuners/tuners_utils.py:285: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+07:03:37 | INFO | Loaded hybrid adapter + adversary from outputs/checkpoints/hybrid-lam0.05/final
+07:03:37 | INFO | Running inference with hybrid-w2v2-grl on 500 utterances (batch_size=8) …
+07:03:41 | INFO | Inference done in 3.9 s (0.01 s/utt)
+07:03:41 | INFO | =======================================================
+07:03:41 | INFO | STEP 4 — Computing fairness metrics
+07:03:41 | INFO | =======================================================
+07:03:41 | INFO | ΔDP = 0.1065 (10.7 pp) | worst pair: Dravidian vs Sino-Tibetan | flagged: True
+07:03:41 | WARNING | ΔDP exceeds 5 pp threshold — this disparity requires explanation.
+07:03:41 | INFO | ΔEO = 0.1158 (11.6 pp) | worst pair: Dravidian vs Sino-Tibetan
+07:03:41 | INFO | Noise robustness gap per group:
+Dravidian       0.542308
+Indo-Aryan      0.521332
+Sino-Tibetan    0.470000
+07:03:41 | INFO | Most noise-sensitive group: Dravidian (Δ=0.5423)
+07:03:41 | INFO | Poisson drop-in-deviance: Δdeviance=9.357 (df=2) → p=0.0093 | systematic=True
+07:03:41 | INFO | Per-utterance results saved → outputs/results_hybrid-lam0.05_clean.csv
+07:03:41 | INFO | Summary saved → outputs/summary_hybrid-w2v2-grl.csv
+
+────────────────────────────────────────────────────────────
+  FAIRNESS REPORT  hybrid-w2v2-grl
+────────────────────────────────────────────────────────────
+
+[Metric 1] Demographic Parity Gap (ΔDP)
+    Dravidian             WER = 0.3585 (35.8%)
+    Indo-Aryan            WER = 0.4412 (44.1%)
+    Sino-Tibetan          WER = 0.4650 (46.5%)
+  → ΔDP = 0.1065 (10.7 pp)  ⚠ FLAGGED
+
+[Metric 2] Equal Opportunity Gap (ΔEO)
+    Dravidian             TPR = 0.7108 (71.1%)
+    Indo-Aryan            TPR = 0.6569 (65.7%)
+    Sino-Tibetan          TPR = 0.5950 (59.5%)
+  → ΔEO = 0.1158 (11.6 pp)
+
+[Metric 3] Per-Group Noise Robustness Gap (Δg_noise)
+    Dravidian             Δnoise = +0.5423 (+54.2 pp)
+    Indo-Aryan            Δnoise = +0.5213 (+52.1 pp)
+    Sino-Tibetan          Δnoise = +0.4700 (+47.0 pp)
+  → Most affected: Dravidian
+
+[Significance] Poisson Drop-in-Deviance
+  p-value = 0.0093  → SYSTEMATIC disparity (p < 0.05)
+
+────────────────────────────────────────────────────────────
+

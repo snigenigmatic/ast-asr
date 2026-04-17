@@ -136,11 +136,16 @@ def load_svarah(
     split: str = "test",
     max_samples: int | None = None,
     cache_dir: str | None = None,
+    svarah_split: str = "all",
+    split_manifest_dir: str = "data/svarah_split",
 ) -> pd.DataFrame:
     """
     Returns a DataFrame with columns:
         uid, accent, language_family, gender, age,
         audio_array (np.ndarray @ 16kHz), reference
+
+    svarah_split: "train", "eval", or "all" (default). When non-"all",
+        filters to UIDs listed in split_manifest_dir/{train,eval}_uids.txt.
     """
     try:
         from datasets import Audio, load_dataset
@@ -217,6 +222,19 @@ def load_svarah(
         )
 
     df = pd.DataFrame(records)
+
+    # Optional train/eval split filtering
+    if svarah_split in ("train", "eval"):
+        manifest = Path(split_manifest_dir) / f"{svarah_split}_uids.txt"
+        if not manifest.exists():
+            raise FileNotFoundError(
+                f"Split manifest not found: {manifest}. "
+                "Run: python scripts/make_svarah_split.py"
+            )
+        keep_uids = set(int(u) for u in manifest.read_text().strip().split("\n"))
+        df = df[df["uid"].isin(keep_uids)].reset_index(drop=True)
+        logger.info("Filtered to svarah_split='%s': %d utterances", svarah_split, len(df))
+
     logger.info(
         "Loaded %d utterances across %d accent groups (%d language families)",
         len(df),

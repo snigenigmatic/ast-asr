@@ -1,0 +1,135 @@
+11:29:52 | INFO | =======================================================
+11:29:52 | INFO | STEP 1 — Loading Svarah
+11:29:52 | INFO | =======================================================
+11:29:52 | INFO | HF_TOKEN detected; attempting authenticated dataset access.
+11:29:52 | INFO | Loading Svarah (test split) from HuggingFace …
+11:29:53 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/svarah/resolve/main/README.md "HTTP/1.1 307 Temporary Redirect"
+11:29:53 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/Svarah/resolve/main/README.md "HTTP/1.1 200 OK"
+11:29:53 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/svarah.py "HTTP/1.1 307 Temporary Redirect"
+11:29:54 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/Svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/svarah.py "HTTP/1.1 404 Not Found"
+11:29:55 | INFO | HTTP Request: HEAD https://s3.amazonaws.com/datasets.huggingface.co/datasets/datasets/ai4bharat/svarah/ai4bharat/svarah.py "HTTP/1.1 404 Not Found"
+11:29:55 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/svarah/revision/ebbf7777fe771490696a3f7b007097606fa8c924 "HTTP/1.1 307 Temporary Redirect"
+11:29:56 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/Svarah/revision/ebbf7777fe771490696a3f7b007097606fa8c924 "HTTP/1.1 200 OK"
+11:29:56 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/.huggingface.yaml "HTTP/1.1 307 Temporary Redirect"
+11:29:56 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/Svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/.huggingface.yaml "HTTP/1.1 404 Not Found"
+11:29:57 | INFO | HTTP Request: GET https://datasets-server.huggingface.co/info?dataset=ai4bharat/svarah "HTTP/1.1 404 Not Found"
+11:29:58 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/svarah/tree/ebbf7777fe771490696a3f7b007097606fa8c924/data?recursive=true&expand=false "HTTP/1.1 307 Temporary Redirect"
+11:30:02 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/Svarah/tree/ebbf7777fe771490696a3f7b007097606fa8c924/data?recursive=true&expand=false "HTTP/1.1 200 OK"
+11:30:03 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/svarah/tree/ebbf7777fe771490696a3f7b007097606fa8c924?recursive=false&expand=false "HTTP/1.1 307 Temporary Redirect"
+11:30:11 | INFO | HTTP Request: GET https://huggingface.co/api/datasets/ai4bharat/Svarah/tree/ebbf7777fe771490696a3f7b007097606fa8c924?recursive=false&expand=false "HTTP/1.1 200 OK"
+11:30:12 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/dataset_infos.json "HTTP/1.1 307 Temporary Redirect"
+11:30:12 | INFO | HTTP Request: HEAD https://huggingface.co/datasets/ai4bharat/Svarah/resolve/ebbf7777fe771490696a3f7b007097606fa8c924/dataset_infos.json "HTTP/1.1 404 Not Found"
+11:30:14 | INFO | Filtered to svarah_split='eval': 1998 utterances
+11:30:14 | INFO | Loaded 1998 utterances across 19 accent groups (3 language families)
+11:30:14 | INFO |   Indo-Aryan       1337 utterances
+11:30:14 | INFO |   Dravidian        540 utterances
+11:30:14 | INFO |   Sino-Tibetan     121 utterances
+11:30:14 | INFO | =======================================================
+11:30:14 | INFO | STEP 2 — ASR inference (clean) with whisper-small-rl
+11:30:14 | INFO | =======================================================
+11:30:14 | INFO | Using GPU: NVIDIA GeForce RTX 4090
+11:30:15 | INFO | Loading Whisper + LoRA from outputs/checkpoints/whisper-rl-fair/final
+11:30:16 | INFO | HTTP Request: GET https://huggingface.co/api/models/openai/whisper-small/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+11:30:16 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+11:30:17 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+11:30:17 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+11:30:18 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+11:30:18 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+11:30:19 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+11:30:19 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/preprocessor_config.json "HTTP/1.1 200 OK"
+11:30:19 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+11:30:19 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+11:30:19 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/preprocessor_config.json "HTTP/1.1 200 OK"
+11:30:20 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+11:30:20 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/config.json "HTTP/1.1 200 OK"
+11:30:20 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+11:30:20 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/tokenizer_config.json "HTTP/1.1 200 OK"
+11:30:20 | INFO | HTTP Request: GET https://huggingface.co/api/models/openai/whisper-small/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+11:30:21 | INFO | HTTP Request: GET https://huggingface.co/api/models/openai/whisper-small/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+11:30:21 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+11:30:21 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/config.json "HTTP/1.1 200 OK"
+11:30:21 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+11:30:21 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/config.json "HTTP/1.1 200 OK"
+11:30:22 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+Loading weights:   0%|          | 0/479 [00:00<?, ?it/s]Loading weights: 100%|██████████| 479/479 [00:00<00:00, 23205.07it/s]
+11:30:22 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+11:30:22 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/generation_config.json "HTTP/1.1 200 OK"
+11:30:23 | INFO | Running inference with whisper-small-rl on 1998 utterances (batch_size=8) …
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+A custom logits processor of type <class 'transformers.generation.logits_process.SuppressTokensLogitsProcessor'> has been passed to `.generate()`, but it was also created in `.generate()`, given its parameterization. The custom <class 'transformers.generation.logits_process.SuppressTokensLogitsProcessor'> will take precedence. Please check the docstring of <class 'transformers.generation.logits_process.SuppressTokensLogitsProcessor'> to see related `.generate()` flags.
+A custom logits processor of type <class 'transformers.generation.logits_process.SuppressTokensAtBeginLogitsProcessor'> has been passed to `.generate()`, but it was also created in `.generate()`, given its parameterization. The custom <class 'transformers.generation.logits_process.SuppressTokensAtBeginLogitsProcessor'> will take precedence. Please check the docstring of <class 'transformers.generation.logits_process.SuppressTokensAtBeginLogitsProcessor'> to see related `.generate()` flags.
+11:31:34 | INFO | Inference done in 71.2 s (0.04 s/utt)
+11:31:34 | INFO | =======================================================
+11:31:34 | INFO | STEP 3 — Adding white noise at 10 dB SNR
+11:31:34 | INFO | =======================================================
+11:31:35 | INFO | Added white noise at 10 dB SNR to 1998 utterances
+11:31:35 | INFO | Using GPU: NVIDIA GeForce RTX 4090
+11:31:35 | INFO | Loading Whisper + LoRA from outputs/checkpoints/whisper-rl-fair/final
+11:31:36 | INFO | HTTP Request: GET https://huggingface.co/api/models/openai/whisper-small/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+11:31:36 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+11:31:36 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/chat_template.json "HTTP/1.1 404 Not Found"
+11:31:37 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/chat_template.jinja "HTTP/1.1 404 Not Found"
+11:31:37 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/audio_tokenizer_config.json "HTTP/1.1 404 Not Found"
+11:31:37 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+11:31:38 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+11:31:38 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/preprocessor_config.json "HTTP/1.1 200 OK"
+11:31:38 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/processor_config.json "HTTP/1.1 404 Not Found"
+11:31:38 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/preprocessor_config.json "HTTP/1.1 307 Temporary Redirect"
+11:31:38 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/preprocessor_config.json "HTTP/1.1 200 OK"
+11:31:38 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+11:31:38 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/config.json "HTTP/1.1 200 OK"
+11:31:39 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+11:31:39 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/tokenizer_config.json "HTTP/1.1 200 OK"
+11:31:39 | INFO | HTTP Request: GET https://huggingface.co/api/models/openai/whisper-small/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+11:31:39 | INFO | HTTP Request: GET https://huggingface.co/api/models/openai/whisper-small/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+11:31:40 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+11:31:40 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/config.json "HTTP/1.1 200 OK"
+11:31:40 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+11:31:40 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/config.json "HTTP/1.1 200 OK"
+11:31:40 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+Loading weights:   0%|          | 0/479 [00:00<?, ?it/s]Loading weights: 100%|██████████| 479/479 [00:00<00:00, 13701.64it/s]
+11:31:41 | INFO | HTTP Request: HEAD https://huggingface.co/openai/whisper-small/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+11:31:41 | INFO | HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/openai/whisper-small/973afd24965f72e36ca33b3055d56a652f456b4d/generation_config.json "HTTP/1.1 200 OK"
+11:31:41 | INFO | Running inference with whisper-small-rl on 1998 utterances (batch_size=8) …
+11:32:57 | INFO | Inference done in 75.8 s (0.04 s/utt)
+11:32:57 | INFO | =======================================================
+11:32:57 | INFO | STEP 4 — Computing fairness metrics
+11:32:57 | INFO | =======================================================
+11:32:57 | INFO | ΔDP = 0.0264 (2.6 pp) | worst pair: Dravidian vs Sino-Tibetan | flagged: False
+11:32:57 | INFO | ΔEO = 0.0339 (3.4 pp) | worst pair: Dravidian vs Sino-Tibetan
+11:32:57 | INFO | Noise robustness gap per group:
+Dravidian       0.065600
+Indo-Aryan      0.153180
+Sino-Tibetan    0.168634
+11:32:57 | INFO | Most noise-sensitive group: Sino-Tibetan (Δ=0.1686)
+11:32:57 | INFO | Poisson drop-in-deviance: Δdeviance=5.102 (df=2) → p=0.0780 | systematic=False
+11:32:57 | INFO | Per-utterance results saved → outputs/whisper_rl_results/whisper-rl-fair_eval.csv
+11:32:57 | INFO | Summary saved → outputs/whisper_rl_results/summary_whisper-small-rl.csv
+
+────────────────────────────────────────────────────────────
+  FAIRNESS REPORT  whisper-small-rl
+────────────────────────────────────────────────────────────
+
+[Metric 1] Demographic Parity Gap (ΔDP)
+    Dravidian             WER = 0.1616 (16.2%)
+    Indo-Aryan            WER = 0.1627 (16.3%)
+    Sino-Tibetan          WER = 0.1880 (18.8%)
+  → ΔDP = 0.0264 (2.6 pp)  ✓ within threshold
+
+[Metric 2] Equal Opportunity Gap (ΔEO)
+    Dravidian             TPR = 0.8568 (85.7%)
+    Indo-Aryan            TPR = 0.8548 (85.5%)
+    Sino-Tibetan          TPR = 0.8229 (82.3%)
+  → ΔEO = 0.0339 (3.4 pp)
+
+[Metric 3] Per-Group Noise Robustness Gap (Δg_noise)
+    Dravidian             Δnoise = +0.0656 (+6.6 pp)
+    Indo-Aryan            Δnoise = +0.1532 (+15.3 pp)
+    Sino-Tibetan          Δnoise = +0.1686 (+16.9 pp)
+  → Most affected: Sino-Tibetan
+
+[Significance] Poisson Drop-in-Deviance
+  p-value = 0.0780  → not statistically significant
+
+────────────────────────────────────────────────────────────
+
