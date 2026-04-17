@@ -13,7 +13,7 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_DIR"
 
 CONFIG="configs/train_rl_whisper.yaml"
-MAX_STEPS=3000
+MAX_STEPS=1500
 RESULTS_DIR="outputs/whisper_rl_results"
 
 mkdir -p "$RESULTS_DIR"

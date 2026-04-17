@@ -21,6 +21,9 @@ import numpy as np
 import pandas as pd
 import torch
 import yaml
+from transformers import logging as hf_logging
+
+hf_logging.set_verbosity_error()
 
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -47,6 +50,7 @@ def load_whisper_policy_and_ref(model_id: str, lora_cfg: dict, device: torch.dev
     logger.info("Loading base Whisper model: %s", model_id)
     processor = WhisperProcessor.from_pretrained(model_id)
     base_model = WhisperForConditionalGeneration.from_pretrained(model_id)
+    base_model.generation_config.max_length = None
 
     # Frozen reference (before LoRA)
     ref = copy.deepcopy(base_model)
