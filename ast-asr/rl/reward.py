@@ -4,7 +4,13 @@ Multi-component reward computation for GRPO-based RL post-training.
 
 Components:
   r_transcript : per-hypothesis accuracy reward (CER + WER blend)
-  r_fairness   : batch-level demographic parity penalty
+  r_fairness   : per-utterance family-aware scaling (NOT a batch constant)
+
+The fairness reward must vary per-utterance to survive GRPO's group-relative
+advantage normalization. A batch-level constant c added to all r_{i,k} cancels
+in A_{i,k} = (r_{i,k} - mean_k) / std_k. Instead, we scale transcript rewards
+by family need: utterances from high-WER families get boosted, low-WER families
+get dampened.
 """
 
 from __future__ import annotations
@@ -48,45 +54,57 @@ def compute_transcript_reward(
     return cer_weight * (1.0 - c) + wer_weight * (1.0 - w)
 
 
-def compute_fairness_reward(
+def compute_family_weights(
     rollouts: RolloutBatch,
     alpha: float = 2.0,
     threshold: float = 0.05,
-) -> float:
+) -> dict[str, float]:
     """
-    Batch-level fairness penalty based on demographic parity gap (ΔDP).
+    Compute per-family reward scaling weights based on ΔDP.
 
-    r_fairness = -alpha * max(0, ΔDP - threshold)
+    Returns a multiplier per family:
+      - Worst-performing family gets weight (1 + alpha * gap_from_mean)
+      - Best-performing family gets weight (1 - alpha * gap_from_mean)
+      - Families within threshold of each other get weight 1.0
 
-    Only penalizes when the WER gap between the best and worst family
-    in the batch exceeds the threshold (default 5pp). Uses the top-1
-    beam hypothesis per utterance to compute per-family WER.
-
-    Returns a scalar applied uniformly to all utterances in the batch.
+    This creates per-utterance reward variation that survives GRPO's
+    group-relative normalization (unlike a batch-level constant).
     """
-    # Group best hypotheses by family
     family_refs: dict[str, list[str]] = defaultdict(list)
     family_hyps: dict[str, list[str]] = defaultdict(list)
 
     for i in range(len(rollouts.references)):
         fam = rollouts.families[i]
         ref = rollouts.references[i].lower().strip()
-        hyp = rollouts.hypotheses[i][0].lower().strip()  # top-1 beam
+        hyp = rollouts.hypotheses[i][0].lower().strip()  # top-1
         if ref:
             family_refs[fam].append(ref)
             family_hyps[fam].append(hyp if hyp and hyp != "<empty>" else "")
 
     if len(family_refs) < 2:
-        return 0.0  # can't compute fairness gap with < 2 families
+        return {fam: 1.0 for fam in family_refs}
 
-    # Compute per-family WER
+    # Per-family WER
     family_wer: dict[str, float] = {}
     for fam in family_refs:
         family_wer[fam] = min(wer(family_refs[fam], family_hyps[fam]), 1.0)
 
     delta_dp = max(family_wer.values()) - min(family_wer.values())
-    penalty = -alpha * max(0.0, delta_dp - threshold)
-    return penalty
+
+    if delta_dp <= threshold:
+        return {fam: 1.0 for fam in family_wer}
+
+    # Scale: high-WER families get boosted, low-WER get dampened
+    mean_wer = sum(family_wer.values()) / len(family_wer)
+    weights = {}
+    for fam, fw in family_wer.items():
+        # gap > 0 for worse-than-average families (they need more help)
+        gap = fw - mean_wer
+        # Boost range: [1 - alpha*max_gap, 1 + alpha*max_gap]
+        # Clamped to [0.2, 3.0] to avoid sign flips or extreme scaling
+        weights[fam] = max(0.2, min(3.0, 1.0 + alpha * gap))
+
+    return weights
 
 
 def compute_rewards(
@@ -101,12 +119,16 @@ def compute_rewards(
     """
     Compute full rewards for all hypotheses in a rollout batch.
 
+    The fairness component scales per-utterance transcript rewards by
+    family need (high-WER families get boosted). This variation is
+    per-utterance and survives GRPO group-relative normalization.
+
     Args:
         rollouts: RolloutBatch from beam search
         cer_weight: weight for CER component in transcript reward
         wer_weight: weight for WER component in transcript reward
-        alpha_fairness: strength of fairness penalty
-        fairness_threshold: ΔDP threshold below which no penalty applies
+        alpha_fairness: strength of fairness scaling
+        fairness_threshold: ΔDP threshold below which no scaling applies
         rejection_wer_threshold: reject rollouts above this WER
         normalize: standardize rewards within mini-batch
 
@@ -126,11 +148,15 @@ def compute_rewards(
                 hyp, ref, cer_weight, wer_weight
             )
 
-    # Batch-level fairness reward (same for all utterances)
-    r_fair = compute_fairness_reward(
-        rollouts, alpha=alpha_fairness, threshold=fairness_threshold
-    )
-    rewards += r_fair
+    # Per-family fairness scaling (varies per utterance, not a constant)
+    if alpha_fairness > 0:
+        family_weights = compute_family_weights(
+            rollouts, alpha=alpha_fairness, threshold=fairness_threshold
+        )
+        for i in range(B):
+            fam = rollouts.families[i]
+            w = family_weights.get(fam, 1.0)
+            rewards[i, :] *= w
 
     # Rejection: mask gibberish rollouts (best-hyp WER > threshold)
     for i in range(B):

@@ -179,6 +179,8 @@ def whisper_grpo_step(
     wer_weight: float = 0.4,
     alpha_fairness: float = 2.0,
     fairness_threshold: float = 0.05,
+    grad_accum_steps: int = 1,
+    do_step: bool = True,
 ) -> dict[str, float]:
     """
     One GRPO step for Whisper.
@@ -188,6 +190,8 @@ def whisper_grpo_step(
     3. Forward pass through policy for differentiable log-probs
     4. Forward pass through frozen reference for KL penalty (K3 estimator)
     5. Compute loss and backprop
+    6. Optionally step optimizer (for gradient accumulation, set do_step=False
+       on intermediate sub-steps and True on the final one)
     """
     device = rollouts.input_values.device
     B = len(rollouts.references)
@@ -223,16 +227,18 @@ def whisper_grpo_step(
 
     pg_loss = -(advantages * policy_log_probs).mean()
     kl_loss = beta_kl * kl.mean()
-    total_loss = pg_loss + kl_loss
+    total_loss = (pg_loss + kl_loss) / grad_accum_steps
 
-    # 6. Backward + step
-    optimizer.zero_grad()
+    # 6. Backward (always) + step (only when do_step=True)
     total_loss.backward()
-    torch.nn.utils.clip_grad_norm_(
-        [p for p in policy_model.parameters() if p.requires_grad],
-        max_norm=grad_clip,
-    )
-    optimizer.step()
+
+    if do_step:
+        torch.nn.utils.clip_grad_norm_(
+            [p for p in policy_model.parameters() if p.requires_grad],
+            max_norm=grad_clip,
+        )
+        optimizer.step()
+        optimizer.zero_grad()
 
     # Metrics (raw, unnormalized rewards)
     with torch.no_grad():
@@ -246,7 +252,7 @@ def whisper_grpo_step(
         )
 
     return {
-        "loss": float(total_loss.detach().cpu()),
+        "loss": float(total_loss.detach().cpu()) * grad_accum_steps,
         "pg_loss": float(pg_loss.detach().cpu()),
         "kl_loss": float(kl_loss.detach().cpu()),
         "reward_mean": float(raw_rewards.mean()),

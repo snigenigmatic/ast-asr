@@ -13,8 +13,7 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_DIR"
 
 CONFIG="configs/train_rl_whisper.yaml"
-MAX_STEPS=1500
-EVAL_SAMPLES=500
+MAX_STEPS=3000
 RESULTS_DIR="outputs/whisper_rl_results"
 
 mkdir -p "$RESULTS_DIR"
@@ -57,7 +56,7 @@ eval_run() {
 
     echo ""
     echo "──────────────────────────────────────────────────────────────"
-    echo "  EVAL: $name on Svarah-eval ($EVAL_SAMPLES samples)"
+    echo "  EVAL: $name on Svarah-eval (full split)"
     echo "──────────────────────────────────────────────────────────────"
 
     if [ ! -d "$ckpt" ]; then
@@ -69,7 +68,6 @@ eval_run() {
         --model whisper-small-rl \
         --model-path "$ckpt" \
         --svarah-split eval \
-        --max-samples "$EVAL_SAMPLES" \
         --output "$csv_out" \
         2>&1 | tee "$summary"
 

@@ -134,6 +134,10 @@ def train_rl_whisper(config_path: str, max_steps: int | None = None, alpha_fairn
     for fam, count in train_df["language_family"].value_counts().items():
         logger.info("  %s: %d", fam, count)
 
+    # ── Load small eval probe set (for decode-level monitoring) ────────────
+    eval_df = load_svarah(max_samples=10, cache_dir="cache", svarah_split="eval")
+    logger.info("Decode probe set: %d utterances", len(eval_df))
+
     # ── Sampler ──────────────────────────────────────────────────────────────
     rl_cfg = cfg["rl"]
     batch_size = rl_cfg.get("batch_size", 2)
@@ -143,7 +147,7 @@ def train_rl_whisper(config_path: str, max_steps: int | None = None, alpha_fairn
     optimizer = torch.optim.AdamW(
         [p for p in policy.parameters() if p.requires_grad],
         lr=rl_cfg.get("lr", 1e-6),
-        weight_decay=0.01,
+        weight_decay=rl_cfg.get("weight_decay", 0.0),
     )
 
     # ── Output directory ─────────────────────────────────────────────────────
@@ -163,8 +167,8 @@ def train_rl_whisper(config_path: str, max_steps: int | None = None, alpha_fairn
     save_interval = rl_cfg.get("save_interval", 500)
 
     logger.info(
-        "Starting Whisper RL training: %d steps, batch=%d, K=%d, temp=%.1f, beta_kl=%.2f",
-        total_steps, batch_size, K, temperature, beta_kl,
+        "Starting Whisper RL training: %d steps, batch=%d×%d accum, K=%d, temp=%.1f, lr=%.1e, beta_kl=%.2f",
+        total_steps, batch_size, grad_accum, K, temperature, rl_cfg.get("lr", 1e-6), beta_kl,
     )
     logger.info(
         "Reward: cer_w=%.1f, wer_w=%.1f, alpha_fair=%.1f, threshold=%.2f",
@@ -174,44 +178,55 @@ def train_rl_whisper(config_path: str, max_steps: int | None = None, alpha_fairn
 
     metrics_log = []
     t0 = time.time()
-    accum_count = 0
+    optimizer.zero_grad()
 
     for step in range(total_steps):
-        # Sample a batch
-        batch_df = sampler.sample_batch()
-        audio_arrays = batch_df["audio_array"].tolist()
-        references = batch_df["reference"].tolist()
-        families = batch_df["language_family"].tolist()
+        # Gradient accumulation: accumulate grad_accum sub-batches per optimizer step
+        accum_results = []
+        for accum_idx in range(grad_accum):
+            batch_df = sampler.sample_batch()
+            audio_arrays = batch_df["audio_array"].tolist()
+            references = batch_df["reference"].tolist()
+            families = batch_df["language_family"].tolist()
 
-        # Generate rollouts
-        policy.eval()
-        rollouts = generate_whisper_rollouts(
-            model=policy,
-            processor=processor,
-            audio_arrays=audio_arrays,
-            references=references,
-            families=families,
-            device=device,
-            K=K,
-            temperature=temperature,
-        )
-        policy.train()
+            # Generate rollouts
+            policy.eval()
+            rollouts = generate_whisper_rollouts(
+                model=policy,
+                processor=processor,
+                audio_arrays=audio_arrays,
+                references=references,
+                families=families,
+                device=device,
+                K=K,
+                temperature=temperature,
+            )
+            policy.train()
 
-        # GRPO step
-        step_result = whisper_grpo_step(
-            policy_model=policy,
-            ref_model=ref,
-            rollouts=rollouts,
-            processor=processor,
-            optimizer=optimizer,
-            beta_kl=beta_kl,
-            grad_clip=grad_clip,
-            cer_weight=reward_cfg["cer_weight"],
-            wer_weight=reward_cfg["wer_weight"],
-            alpha_fairness=reward_cfg["alpha_fairness"],
-            fairness_threshold=reward_cfg["fairness_threshold"],
-        )
+            # GRPO backward (step only on last accumulation)
+            is_last = (accum_idx == grad_accum - 1)
+            sub_result = whisper_grpo_step(
+                policy_model=policy,
+                ref_model=ref,
+                rollouts=rollouts,
+                processor=processor,
+                optimizer=optimizer,
+                beta_kl=beta_kl,
+                grad_clip=grad_clip,
+                cer_weight=reward_cfg["cer_weight"],
+                wer_weight=reward_cfg["wer_weight"],
+                alpha_fairness=reward_cfg["alpha_fairness"],
+                fairness_threshold=reward_cfg["fairness_threshold"],
+                grad_accum_steps=grad_accum,
+                do_step=is_last,
+            )
+            accum_results.append(sub_result)
 
+        # Average metrics across accumulation steps
+        step_result = {
+            k: sum(r[k] for r in accum_results) / len(accum_results)
+            for k in accum_results[0]
+        }
         step_result["step"] = step
         step_result["elapsed"] = time.time() - t0
         metrics_log.append(step_result)
@@ -226,6 +241,30 @@ def train_rl_whisper(config_path: str, max_steps: int | None = None, alpha_fairn
                 step_result["reward_mean"], step_result["reward_std"],
                 step_result["kl_mean"], step_result["elapsed"],
             )
+
+        # Decode probe: detect "KL high but outputs unchanged" early
+        if step > 0 and step % eval_interval == 0 and len(eval_df) > 0:
+            policy.eval()
+            n_diff = 0
+            n_probed = min(5, len(eval_df))
+            with torch.no_grad():
+                for probe_idx in range(n_probed):
+                    row = eval_df.iloc[probe_idx]
+                    probe_input = processor(
+                        [row["audio_array"]], sampling_rate=16_000,
+                        return_tensors="pt", padding="max_length", truncation=True,
+                    ).input_features.to(device)
+                    # Policy decode
+                    pol_ids = policy.generate(probe_input, max_new_tokens=200, language="en", task="transcribe")
+                    pol_text = processor.batch_decode(pol_ids, skip_special_tokens=True)[0].strip()
+                    # Reference decode
+                    ref_ids = ref.generate(probe_input, max_new_tokens=200, language="en", task="transcribe")
+                    ref_text = processor.batch_decode(ref_ids, skip_special_tokens=True)[0].strip()
+                    if pol_text.lower() != ref_text.lower():
+                        n_diff += 1
+                        logger.info("  DECODE DIFF [%d]: ref='%s' → policy='%s'", probe_idx, ref_text, pol_text)
+            logger.info("  Decode probe: %d/%d differ from reference", n_diff, n_probed)
+            policy.train()
 
         # Save checkpoint
         if step > 0 and step % save_interval == 0:
