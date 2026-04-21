@@ -15,3 +15,8 @@ cache/*
 outputs/*
 claude-session.txt
 data/*
+*.pdf
+*.txt
+UE23AM320B-Capstone Project Phase-2 Report format and Guidelines/
+home-mluser-ast-asr/*
+memory-bank.md
