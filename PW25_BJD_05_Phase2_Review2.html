@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PW25_BJD_05 · Phase 2 Review #2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,200..900,0..100;1,9..144,200..900,0..100&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0e14;
+    --ink-2:#10151c;
+    --ink-3:#1a212c;
+    --line:rgba(232,228,219,.10);
+    --line-strong:rgba(232,228,219,.22);
+    --paper:#e8e4db;
+    --paper-dim:#b6b1a4;
+    --paper-fade:rgba(232,228,219,.55);
+    --amber:#d4a574;
+    --amber-glow:rgba(212,165,116,.18);
+    --coral:#c47873;
+    --sage:#8fa885;
+    --steel:#5e8ba8;
+
+    --font-display:"Fraunces",ui-serif,Georgia,serif;
+    --font-body:"Manrope",ui-sans-serif,system-ui,sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--font-body);-webkit-font-smoothing:antialiased;}
+
+  /* Subtle grain texture overlay */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;
+    background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.91, 0 0 0 0 0.89, 0 0 0 0 0.85, 0 0 0 0.025 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity:.45;mix-blend-mode:overlay;
+  }
+
+  /* Deck container */
+  .deck{position:relative;width:100vw;height:100vh;overflow:hidden;}
+
+  /* HUD */
+  .hud{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:18px 32px;font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-fade);z-index:100;pointer-events:none;}
+  .hud .left, .hud .right{display:flex;gap:24px;align-items:center;}
+  .hud .dot{width:5px;height:5px;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber-glow);}
+  .hud .nav{pointer-events:auto;display:flex;gap:8px;align-items:center;}
+  .hud .nav button{background:none;border:1px solid var(--line-strong);color:var(--paper-dim);width:28px;height:28px;border-radius:50%;cursor:pointer;font-family:var(--font-mono);font-size:11px;transition:all .2s ease;display:flex;align-items:center;justify-content:center;}
+  .hud .nav button:hover{border-color:var(--amber);color:var(--amber);}
+  .hud .counter{min-width:52px;text-align:center;color:var(--paper);}
+
+  /* Bottom bar */
+  .footbar{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-fade);z-index:100;pointer-events:none;}
+  .progress{position:fixed;bottom:0;left:0;height:1px;background:var(--amber);z-index:101;transition:width .5s cubic-bezier(.4,.1,.3,1);}
+
+  /* Slides */
+  .slide{position:absolute;inset:0;padding:80px 96px;display:flex;flex-direction:column;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .55s ease, transform .55s cubic-bezier(.4,.1,.3,1);overflow:hidden;}
+  .slide.active{opacity:1;transform:none;pointer-events:auto;}
+
+  /* Eyebrow / label */
+  .eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);margin-bottom:18px;display:inline-flex;align-items:center;gap:10px;}
+  .eyebrow::before{content:"";display:inline-block;width:24px;height:1px;background:var(--amber);}
+
+  /* Headings */
+  h1.display{font-family:var(--font-display);font-weight:300;font-style:normal;letter-spacing:-.02em;line-height:.95;font-size:clamp(48px,7.4vw,116px);font-variation-settings:"opsz" 144,"SOFT" 30;color:var(--paper);}
+  h1.display em{font-style:italic;font-weight:300;color:var(--amber);font-variation-settings:"opsz" 144,"SOFT" 60;}
+  h2.section-title{font-family:var(--font-display);font-weight:400;letter-spacing:-.015em;line-height:1.02;font-size:clamp(38px,5.4vw,76px);font-variation-settings:"opsz" 144,"SOFT" 40;color:var(--paper);max-width:18ch;}
+  h2.section-title em{font-style:italic;color:var(--amber);}
+  h3{font-family:var(--font-display);font-weight:500;font-size:22px;letter-spacing:-.005em;color:var(--paper);font-variation-settings:"opsz" 36;}
+  .lede{font-family:var(--font-display);font-weight:300;font-style:italic;font-size:clamp(20px,2vw,28px);line-height:1.35;color:var(--paper-dim);max-width:36ch;font-variation-settings:"opsz" 72,"SOFT" 80;}
+  .body{font-size:15px;line-height:1.55;color:var(--paper);max-width:62ch;}
+  .body p + p{margin-top:14px;}
+  .small{font-size:13px;color:var(--paper-dim);line-height:1.6;}
+
+  /* Mono helpers */
+  .mono{font-family:var(--font-mono);}
+  .tag{display:inline-block;font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:5px 10px;border:1px solid var(--line-strong);color:var(--paper-dim);border-radius:99px;}
+  .tag.amber{color:var(--amber);border-color:var(--amber);}
+  .tag.coral{color:var(--coral);border-color:rgba(196,120,115,.5);}
+  .tag.sage{color:var(--sage);border-color:rgba(143,168,133,.5);}
+
+  /* === SLIDE 1: Title === */
+  .slide-title{justify-content:center;}
+  .slide-title .stack{display:grid;grid-template-columns:1fr;gap:48px;}
+  .title-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;border-top:1px solid var(--line);padding-top:28px;margin-top:32px;}
+  .title-meta .field .label{color:var(--paper-fade);margin-bottom:10px;display:block;}
+  .title-meta .field .value{color:var(--paper);font-family:var(--font-body);font-size:14px;letter-spacing:0;text-transform:none;line-height:1.4;}
+  .title-asterism{font-family:var(--font-display);font-size:48px;color:var(--amber);font-weight:300;font-style:italic;line-height:1;margin-bottom:24px;}
+
+  /* === SLIDE: Outline === */
+  .outline-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px 80px;margin-top:32px;flex:1;align-content:center;}
+  .outline-row{display:grid;grid-template-columns:60px 1fr;gap:24px;align-items:baseline;padding-bottom:14px;border-bottom:1px solid var(--line);transition:border-color .3s;}
+  .outline-row:hover{border-color:var(--amber);}
+  .outline-num{font-family:var(--font-mono);font-size:12px;color:var(--amber);letter-spacing:.1em;}
+  .outline-label{font-family:var(--font-display);font-size:20px;font-weight:400;color:var(--paper);font-variation-settings:"opsz" 36;}
+  .outline-row.pivot .outline-label{color:var(--amber);font-style:italic;}
+  .outline-row.pivot .outline-num::after{content:" ◆";color:var(--amber);}
+
+  /* === SLIDE: Status / where we are === */
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;}
+  .pillar{border:1px solid var(--line);padding:32px 28px;border-radius:2px;background:var(--ink-2);position:relative;overflow:hidden;}
+  .pillar::after{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--sage);}
+  .pillar.pivot::after{background:var(--amber);}
+  .pillar.pending::after{background:var(--paper-fade);opacity:.4;}
+  .pillar .pill-status{font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--sage);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+  .pillar.pivot .pill-status{color:var(--amber);}
+  .pillar.pending .pill-status{color:var(--paper-fade);}
+  .pillar .pill-status::before{content:"●";font-size:14px;}
+  .pillar h3{margin-bottom:14px;}
+  .pillar p{font-size:13px;color:var(--paper-dim);line-height:1.55;}
+
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:auto;border:1px solid var(--line);}
+  .stat{padding:24px 28px;background:var(--ink);}
+  .stat .num{font-family:var(--font-display);font-weight:300;font-size:56px;line-height:1;color:var(--paper);font-variation-settings:"opsz" 144,"SOFT" 30;letter-spacing:-.02em;}
+  .stat .num.amber{color:var(--amber);}
+  .stat .num.coral{color:var(--coral);}
+  .stat .lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-dim);margin-top:8px;line-height:1.5;}
+
+  /* === SLIDE: Two-col with header === */
+  .two-col{display:grid;grid-template-columns:1.1fr 1fr;gap:80px;flex:1;margin-top:48px;align-items:start;}
+  .col h3{margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line);}
+  .col ul{list-style:none;display:flex;flex-direction:column;gap:14px;}
+  .col li{display:grid;grid-template-columns:18px 1fr;gap:14px;align-items:baseline;font-size:14px;line-height:1.55;color:var(--paper);}
+  .col li .marker{font-family:var(--font-mono);color:var(--amber);font-size:12px;}
+  .col li.done .marker{color:var(--sage);}
+  .col li.warn .marker{color:var(--coral);}
+  .callout-box{margin-top:32px;padding:24px 28px;border-left:2px solid var(--amber);background:linear-gradient(90deg,var(--amber-glow),transparent 60%);}
+  .callout-box .label{font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;}
+  .callout-box p{font-family:var(--font-display);font-style:italic;font-size:18px;line-height:1.45;color:var(--paper);font-variation-settings:"opsz" 36,"SOFT" 80;}
+
+  /* === SLIDE: Hero pivot story === */
+  .pivot-hero{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;flex:1;}
+  .pivot-vis{position:relative;height:100%;display:flex;align-items:center;justify-content:center;}
+  .pivot-svg{width:100%;max-width:520px;height:auto;}
+
+  /* === SLIDE: Result hero === */
+  .result-hero{flex:1;display:flex;flex-direction:column;justify-content:center;}
+  .compare{display:grid;grid-template-columns:1fr 80px 1fr;gap:0;align-items:stretch;margin-top:48px;border:1px solid var(--line);}
+  .compare > div{padding:36px 40px;}
+  .compare .before{background:var(--ink-2);}
+  .compare .after{background:linear-gradient(135deg,rgba(212,165,116,.06),transparent 70%);border-left:1px solid var(--line);}
+  .compare .arrow{display:flex;align-items:center;justify-content:center;color:var(--amber);font-family:var(--font-display);font-size:42px;font-weight:300;background:var(--ink-2);border-left:1px solid var(--line);}
+  .compare .colhead{font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--paper-fade);margin-bottom:20px;}
+  .compare .modelname{font-family:var(--font-mono);font-size:13px;color:var(--paper);margin-bottom:24px;}
+  .compare .metric-block{margin-bottom:14px;}
+  .compare .metric-block .mlabel{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-fade);margin-bottom:4px;}
+  .compare .metric-block .mvalue{font-family:var(--font-display);font-weight:300;font-size:34px;line-height:1.05;color:var(--paper);font-variation-settings:"opsz" 144,"SOFT" 40;letter-spacing:-.02em;}
+  .compare .metric-block .mvalue.amber{color:var(--amber);}
+  .compare .verdict{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;}
+  .compare .verdict.bad{color:var(--coral);}
+  .compare .verdict.good{color:var(--sage);}
+  .result-note{margin-top:36px;font-family:var(--font-display);font-style:italic;font-size:22px;line-height:1.4;color:var(--paper-dim);max-width:48ch;font-variation-settings:"opsz" 72,"SOFT" 80;}
+  .result-note strong{color:var(--paper);font-style:normal;font-weight:500;background:linear-gradient(transparent 65%,var(--amber-glow) 65%);padding:0 4px;}
+
+  /* === SLIDE: Failure mode === */
+  .fail-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:64px;flex:1;align-items:center;margin-top:32px;}
+  .data-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line);}
+  .data-row{display:grid;grid-template-columns:1fr auto;padding:18px 0;border-bottom:1px solid var(--line);align-items:baseline;gap:24px;}
+  .data-row .k{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-dim);}
+  .data-row .v{font-family:var(--font-display);font-weight:400;font-size:24px;color:var(--paper);font-variation-settings:"opsz" 36;}
+  .data-row .v.coral{color:var(--coral);}
+  .data-row .v.sage{color:var(--sage);}
+  .data-row.featured .v{color:var(--amber);font-size:36px;font-weight:300;font-variation-settings:"opsz" 144,"SOFT" 30;letter-spacing:-.01em;}
+
+  /* === SLIDE: Three reasons === */
+  .reasons{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px;flex:1;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .reason{padding:36px 36px;border-right:1px solid var(--line);display:flex;flex-direction:column;}
+  .reason:last-child{border-right:none;}
+  .reason .num{font-family:var(--font-display);font-weight:300;font-size:80px;color:var(--amber);line-height:1;font-variation-settings:"opsz" 144,"SOFT" 30;margin-bottom:16px;font-style:italic;}
+  .reason h3{font-size:20px;margin-bottom:16px;line-height:1.2;}
+  .reason p{font-size:13.5px;line-height:1.6;color:var(--paper-dim);}
+  .reason .punch{margin-top:auto;padding-top:24px;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);border-top:1px solid var(--line);margin-top:24px;padding-top:18px;}
+
+  /* === SLIDE: Architecture === */
+  .arch-wrap{display:flex;align-items:center;justify-content:center;margin-top:24px;}
+  .arch-svg{width:100%;max-width:1100px;height:auto;}
+  .grpo-loss{margin:24px auto 0;max-width:920px;text-align:center;}
+  .grpo-loss-eq{display:inline-flex;flex-wrap:wrap;align-items:baseline;justify-content:center;gap:.55em;
+    font-family:var(--font-display);font-weight:300;font-size:30px;line-height:1.15;color:var(--paper);
+    font-variation-settings:"opsz" 144,"SOFT" 40;letter-spacing:-.005em;
+    padding:18px 32px;border:1px solid rgba(212,165,116,.35);border-radius:2px;background:rgba(16,21,28,.55);}
+  .grpo-loss-eq .lhs{color:var(--amber);font-style:italic;}
+  .grpo-loss-eq em{font-style:italic;color:var(--paper);}
+  .grpo-loss-eq sub{font-size:.55em;font-style:italic;letter-spacing:0;vertical-align:baseline;position:relative;top:.35em;margin-left:.05em;color:var(--paper-fade);}
+  .grpo-loss-eq .plus{color:var(--paper-fade);font-size:.85em;}
+  .grpo-loss-eq .brk{color:var(--paper-fade);font-size:.95em;margin:0 .1em;}
+  .grpo-loss-eq .dbar{color:var(--paper-fade);margin:0 .25em;}
+  .grpo-loss-meta{margin-top:14px;font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--paper-fade);display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
+  .grpo-loss-meta em{font-style:italic;text-transform:none;letter-spacing:.05em;color:var(--paper);}
+  .grpo-loss-meta .sep{color:rgba(232,228,219,.25);}
+
+  /* === SLIDE: Three metrics === */
+  .metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px;flex:1;}
+  .metric-card{padding:36px 32px;border:1px solid var(--line);background:var(--ink-2);display:flex;flex-direction:column;border-radius:2px;}
+  .metric-card .glyph{font-family:var(--font-display);font-style:italic;font-size:56px;color:var(--amber);line-height:1;margin-bottom:24px;font-variation-settings:"opsz" 144,"SOFT" 60;}
+  .metric-card h3{margin-bottom:8px;font-size:20px;}
+  .metric-card .formula{font-family:var(--font-mono);font-size:13px;color:var(--amber);background:rgba(212,165,116,.08);padding:14px 16px;border-radius:2px;margin:18px 0;border-left:2px solid var(--amber);}
+  .metric-card p{font-size:13.5px;line-height:1.6;color:var(--paper-dim);flex:1;}
+
+  /* === SLIDE: Stats / WER table === */
+  .table-wrap{margin-top:32px;border:1px solid var(--line);}
+  table.data{width:100%;border-collapse:collapse;font-family:var(--font-body);}
+  table.data th, table.data td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line);font-size:13px;}
+  table.data thead th{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--paper-fade);font-weight:500;background:var(--ink-2);}
+  table.data tbody tr:hover{background:var(--ink-2);}
+  table.data td.num{font-family:var(--font-mono);text-align:right;color:var(--paper);}
+  table.data td.num.bad{color:var(--coral);}
+  table.data td.num.good{color:var(--sage);}
+  table.data td.tag-cell{font-family:var(--font-mono);font-size:11px;color:var(--paper-dim);}
+
+  /* === Future / IndicTTS slide === */
+  .pipeline-stages{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:48px;flex:1;align-content:center;}
+  .stage{padding:32px 28px;border:1px solid var(--line);position:relative;background:var(--ink-2);}
+  .stage:not(:last-child){border-right:none;}
+  .stage.future{border-color:var(--amber);background:linear-gradient(135deg,rgba(212,165,116,.05),transparent 60%);}
+  .stage .stage-num{font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--paper-fade);margin-bottom:12px;}
+  .stage.future .stage-num{color:var(--amber);}
+  .stage h3{font-size:18px;margin-bottom:14px;line-height:1.25;}
+  .stage p{font-size:13px;line-height:1.6;color:var(--paper-dim);}
+  .stage .badge{position:absolute;top:16px;right:16px;font-family:var(--font-mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--line-strong);color:var(--paper-fade);border-radius:99px;}
+  .stage.current .badge{color:var(--sage);border-color:rgba(143,168,133,.5);}
+  .stage.future .badge{color:var(--amber);border-color:var(--amber);}
+
+  /* === Refs slide === */
+  .refs{columns:2;column-gap:64px;font-size:11.5px;line-height:1.5;color:var(--paper-dim);margin-top:28px;flex:1;}
+  .refs .ref{break-inside:avoid;margin-bottom:11px;display:flex;gap:10px;}
+  .refs .ref .n{font-family:var(--font-mono);color:var(--amber);min-width:30px;}
+  .cite{font-family:var(--font-mono);font-size:.72em;color:var(--amber);letter-spacing:.04em;vertical-align:.35em;margin-left:.15em;}
+  .prior-art{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);
+    display:grid;grid-template-columns:auto 1fr;gap:18px 22px;align-items:start;}
+  .prior-art .pa-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--paper-fade);padding-top:2px;}
+  .prior-art .pa-items{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;line-height:1.5;color:var(--paper-dim);}
+  .prior-art .pa-items .pa-item{display:inline-flex;align-items:baseline;gap:6px;}
+  .prior-art .pa-items .pa-item .num{font-family:var(--font-mono);font-size:10px;color:var(--amber);letter-spacing:.04em;}
+  .prior-art .pa-items .pa-item em{font-style:italic;color:var(--paper);}
+
+  /* === Thank you slide === */
+  .slide-thanks{justify-content:center;align-items:flex-start;}
+  .slide-thanks h1{font-size:clamp(72px,12vw,180px);}
+
+  /* Decorative ornament */
+  .ornament{position:absolute;font-family:var(--font-display);font-style:italic;color:var(--amber);opacity:.18;font-weight:300;pointer-events:none;font-variation-settings:"opsz" 144;}
+
+  /* Quote on result slides */
+  .pull-quote{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:clamp(24px,2.4vw,36px);line-height:1.32;color:var(--paper);max-width:34ch;font-variation-settings:"opsz" 144,"SOFT" 80;letter-spacing:-.005em;}
+  .pull-quote .em{color:var(--amber);}
+
+  /* Two-col details for failure */
+  .twin{display:grid;grid-template-columns:1fr 1fr;gap:48px;flex:1;margin-top:36px;align-items:start;}
+
+  /* Smooth load */
+  .slide.active .stagger > * {opacity:0;transform:translateY(8px);animation:rise .55s cubic-bezier(.4,.1,.3,1) forwards;}
+  .slide.active .stagger > *:nth-child(1){animation-delay:.05s;}
+  .slide.active .stagger > *:nth-child(2){animation-delay:.13s;}
+  .slide.active .stagger > *:nth-child(3){animation-delay:.21s;}
+  .slide.active .stagger > *:nth-child(4){animation-delay:.29s;}
+  .slide.active .stagger > *:nth-child(5){animation-delay:.37s;}
+  .slide.active .stagger > *:nth-child(6){animation-delay:.45s;}
+  .slide.active .stagger > *:nth-child(7){animation-delay:.53s;}
+  @keyframes rise{to{opacity:1;transform:none;}}
+
+  /* Hint */
+  .key-hint{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--paper-fade);}
+  .key-hint kbd{display:inline-block;padding:2px 7px;border:1px solid var(--line-strong);border-radius:3px;color:var(--paper-dim);margin:0 2px;}
+
+  @media (max-height:720px){
+    .slide{padding:64px 80px;}
+    h1.display{font-size:clamp(40px,6.5vw,90px);}
+    h2.section-title{font-size:clamp(32px,4.8vw,60px);}
+  }
+
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <div class="hud">
+    <div class="left">
+      <span class="dot"></span>
+      <span>PW25_BJD_05</span>
+      <span style="opacity:.4">/</span>
+      <span>UE23CS320B · Phase 2 Review #2</span>
+    </div>
+    <div class="right">
+      <div class="nav">
+        <button id="prev" aria-label="Previous">‹</button>
+        <span class="counter"><span id="cur">01</span> · <span id="tot">16</span></span>
+        <button id="next" aria-label="Next">›</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footbar">
+    <div class="left">PES University · April 2026</div>
+    <div class="right key-hint"><kbd>←</kbd><kbd>→</kbd>  to navigate</div>
+  </div>
+
+  <div class="progress" id="progress" style="width:6.25%;"></div>
+
+  <!-- ========== 01 · TITLE ========== -->
+  <section class="slide slide-title active">
+    <div class="stack stagger">
+      <div class="title-asterism">✦ ✦ ✦</div>
+      <div class="eyebrow">Phase 2 · Review #2 · April 2026</div>
+      <h1 class="display">Towards <em>fair &amp; robust</em><br/>audio transformers.</h1>
+      <p class="lede">A multi-strategy approach to real-world audio understanding for Indian English ASR — and a pivot worth defending.</p>
+      <div class="title-meta">
+        <div class="field">
+          <span class="label">Project ID</span>
+          <span class="value">PW25_BJD_05</span>
+        </div>
+        <div class="field">
+          <span class="label">Guide</span>
+          <span class="value">Dr. Bhaskarjyoti Das</span>
+        </div>
+        <div class="field">
+          <span class="label">Team</span>
+          <span class="value">Aditya Sharma · Adithya V Holla<br/>C Kaustubh · Aditi Mangala Udaya</span>
+        </div>
+        <div class="field">
+          <span class="label">Department</span>
+          <span class="value">CSE / CSE-AIML<br/>PES University, Bengaluru</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 02 · OUTLINE ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">Roadmap</div>
+      <h2 class="section-title">What we will <em>walk through</em>.</h2>
+    </div>
+    <div class="outline-grid stagger">
+      <div class="outline-row"><span class="outline-num">01</span><span class="outline-label">Where we stand</span></div>
+      <div class="outline-row"><span class="outline-num">02</span><span class="outline-label">R1 suggestions &amp; status</span></div>
+      <div class="outline-row"><span class="outline-num">03</span><span class="outline-label">ACL SRW submission</span></div>
+      <div class="outline-row"><span class="outline-num">04</span><span class="outline-label">Fairness evaluation protocol</span></div>
+      <div class="outline-row pivot"><span class="outline-num">05</span><span class="outline-label">The original plan: adversarial debiasing</span></div>
+      <div class="outline-row pivot"><span class="outline-num">06</span><span class="outline-label">Why GRL widened the gap</span></div>
+      <div class="outline-row pivot"><span class="outline-num">07</span><span class="outline-label">The principled pivot to GRPO</span></div>
+      <div class="outline-row pivot"><span class="outline-num">08</span><span class="outline-label">Results: a non-systematic gap</span></div>
+      <div class="outline-row"><span class="outline-num">09</span><span class="outline-label">Remaining challenge: ST noise robustness</span></div>
+      <div class="outline-row"><span class="outline-num">10</span><span class="outline-label">Next phase: IndicTTS augmentation</span></div>
+      <div class="outline-row"><span class="outline-num">11</span><span class="outline-label">Updated timeline</span></div>
+      <div class="outline-row"><span class="outline-num">12</span><span class="outline-label">References &amp; close</span></div>
+    </div>
+  </section>
+
+  <!-- ========== 03 · WHERE WE STAND ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">01 · Status</div>
+      <h2 class="section-title">Three pillars, one <em>pivot</em>.</h2>
+    </div>
+    <div class="pillars stagger">
+      <div class="pillar">
+        <div class="pill-status">Done</div>
+        <h3>Position paper</h3>
+        <p>"Fairness Blind Spots in Transformer-Based Indian English ASR" — submitted to ACL SRW 2026 ahead of the March deadline. Documents that across 23 surveyed papers, no demographic parity gap, equal opportunity gap, or per-group noise robustness has been measured.</p>
+      </div>
+      <div class="pillar">
+        <div class="pill-status">Operational</div>
+        <h3>Evaluation pipeline</h3>
+        <p>Modular Python stack on CUDA: Svarah loader (6,656 utterances, 19 accents), multi-model ASR inference (Whisper / Wav2Vec2 / HuBERT), synthetic-noise injection, ΔDP / ΔEO / Δg<sub>noise</sub> metrics with Poisson significance testing.</p>
+      </div>
+      <div class="pillar pivot">
+        <div class="pill-status">Pivoted</div>
+        <h3>Bias-mitigation strategy</h3>
+        <p>Original adversarial-debiasing plan (GRL on Wav2Vec2) yielded a concrete empirical finding — and a reason to pivot. We replaced GRL with GRPO, an RL post-training method that operates on the actual fairness metric.</p>
+      </div>
+    </div>
+    <div class="stats-row stagger">
+      <div class="stat"><div class="num coral">20–40 %</div><div class="lbl">Reported WER gap · Indian accents vs. native English (literature)</div></div>
+      <div class="stat"><div class="num amber" style="font-size:42px;letter-spacing:-.01em;">18.4 → 16.4 %</div><div class="lbl">Overall WER on Svarah-eval · zero-shot → after GRPO post-training</div></div>
+      <div class="stat"><div class="num amber" style="font-size:42px;letter-spacing:-.01em;">0.020 → 0.078</div><div class="lbl">Poisson <em>p</em>-value · systematic disparity → not statistically systematic</div></div>
+    </div>
+  </section>
+
+  <!-- ========== 04 · R1 SUGGESTIONS ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">02 · Continuity</div>
+      <h2 class="section-title">From R1 <em>to</em> here.</h2>
+    </div>
+    <div class="two-col stagger">
+      <div class="col">
+        <h3>Suggestions from Phase 2 · Review 1</h3>
+        <ul>
+          <li><span class="marker">›</span><span>Submit the position paper to a peer-reviewed venue.</span></li>
+          <li><span class="marker">›</span><span>Begin the data preprocessing &amp; baseline evaluation pipeline.</span></li>
+          <li><span class="marker">›</span><span>Run smoke tests on baseline models to validate the metric harness.</span></li>
+          <li><span class="marker">›</span><span>Begin bias-mitigation experiments per the original adversarial-debiasing proposal.</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>What we have done</h3>
+        <ul>
+          <li class="done"><span class="marker">✓</span><span>ACL SRW 2026 submission complete.</span></li>
+          <li class="done"><span class="marker">✓</span><span>Full pipeline operational on CUDA — Whisper-tiny → small, Wav2Vec2, HuBERT.</span></li>
+          <li class="done"><span class="marker">✓</span><span>Smoke + ablation results across 4 baselines and 3 GRL λ settings.</span></li>
+          <li class="warn"><span class="marker">!</span><span>Bias mitigation pivoted from GRL to GRPO — see slides 06–08.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 05 · ACL SRW PAPER ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">03 · Publication</div>
+      <h2 class="section-title">ACL SRW 2026 — <em>submitted</em>.</h2>
+    </div>
+    <div class="two-col stagger" style="gap:64px;">
+      <div class="col">
+        <h3>Fairness Blind Spots in Transformer-Based Indian English ASR</h3>
+        <p class="body">A structured audit of why the Indian-English performance gap has persisted. We review 23 papers from 2019 to 2026 across the ACL Anthology, IEEE Xplore, and arXiv, and document a measurement absence: across all surveyed work, no study reports a demographic parity gap, an equal opportunity gap, or a per-group noise robustness score for Indian speakers.</p>
+        <div class="callout-box">
+          <div class="label">Contribution</div>
+          <p>A minimal evaluation protocol (ΔDP, ΔEO, Δg<sub>noise</sub>) with a Poisson drop-in-deviance significance test, computable on existing Indian-English corpora without additional data collection.</p>
+        </div>
+      </div>
+      <div class="col">
+        <h3>Why this paper, why now</h3>
+        <p class="body">The infrastructure exists — Svarah (AI4Bharat), SPIRE-SIES, AccentDB, RESPIN-S1.0 — and Rai et al. (2025) have shown a fairness leaderboard is tractable on US speech. None of it has been applied to Indian speakers.</p>
+        <div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="tag amber">ACL SRW 2026</span>
+          <span class="tag">23 papers reviewed</span>
+          <span class="tag">3 metrics + 1 test</span>
+          <span class="tag">No new data needed</span>
+        </div>
+        <p class="small" style="margin-top:32px;">Authors: Kaustubh, A. Sharma, A. M. Udaya, A. V. Holla · Guide: B. J. Das. Department of CSE &amp; CSE-AIML, PES University.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 06 · FAIRNESS PROTOCOL ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">04 · Methodology</div>
+      <h2 class="section-title">The evaluation <em>protocol</em>.</h2>
+      <p class="lede" style="margin-top:16px;">Three disaggregated metrics, one significance test. No new corpus required.</p>
+    </div>
+    <div class="metrics-grid stagger">
+      <div class="metric-card">
+        <div class="glyph">Δ<sub>DP</sub></div>
+        <h3>Demographic Parity Gap</h3>
+        <div class="formula">Δ<sub>DP</sub> = max<sub>i,j∈G</sub> |WER(g<sub>i</sub>) − WER(g<sub>j</sub>)|</div>
+        <p>Tests whether transcription accuracy is independent of accent-group membership. Any value above 5 pp is flagged for explanation.</p>
+      </div>
+      <div class="metric-card">
+        <div class="glyph">Δ<sub>EO</sub></div>
+        <h3>Equal Opportunity Gap</h3>
+        <div class="formula">Δ<sub>EO</sub> = max<sub>i,j∈G</sub> |TPR(g<sub>i</sub>) − TPR(g<sub>j</sub>)|</div>
+        <p>Word-level true-positive rates across groups. Complements ΔDP — a model can pass parity while failing equal opportunity.</p>
+      </div>
+      <div class="metric-card">
+        <div class="glyph">Δ<sup>g</sup><sub>noise</sub></div>
+        <h3>Per-Group Noise Robustness</h3>
+        <div class="formula">Δ<sub>noise</sub>(g<sub>i</sub>) = WER(g<sub>i</sub>, 0 dB SNR) − WER(g<sub>i</sub>, clean)</div>
+        <p>Isolates whether noise degrades certain accent groups disproportionately. Evaluated using SPIRE-SIES naturalistic noise.</p>
+      </div>
+    </div>
+    <p class="small stagger" style="margin-top:32px;">Significance: Poisson drop-in-deviance χ² test on word error counts, with utterance length as a covariate. <span class="mono" style="color:var(--amber)">p &lt; 0.05</span> threshold for systematic disparity. Following Jahan (2025) and Rai et al. (2025).</p>
+  </section>
+
+  <!-- ========== 07 · ORIGINAL PLAN: GRL ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">05 · The original plan</div>
+      <h2 class="section-title">What we <em>proposed</em>.</h2>
+    </div>
+    <div class="pivot-hero stagger">
+      <div>
+        <h3 style="margin-bottom:18px;">Adversarial debiasing via gradient reversal</h3>
+        <p class="body">A shared Wav2Vec2 encoder (with LoRA adapters on attention projections) is trained to minimise CTC loss while a gradient-reversal layer feeds an MLP adversary that tries to predict the speaker's language family. The reversed gradients push the encoder toward a representation from which demographic attributes cannot be decoded.</p>
+        <div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="tag">Ganin &amp; Lempitsky 2015</span>
+          <span class="tag">Zhang et al. 2018 (AIES)</span>
+          <span class="tag">SPIRE-SIES training</span>
+        </div>
+        <div class="callout-box" style="margin-top:32px;">
+          <div class="label">Loss</div>
+          <p style="font-family:var(--font-mono);font-style:normal;font-size:14px;">L = L<sub>CTC</sub>  +  λ · L<sub>adv-rev</sub></p>
+        </div>
+        <p class="small" style="margin-top:18px;">λ ∈ {0.05, 0.10, 0.30}, warmup over first 20% of steps. Theoretically sound; widely used in NLP and vision fairness work.</p>
+      </div>
+      <div class="pivot-vis">
+        <svg class="pivot-svg" viewBox="0 0 480 380" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#d4a574"/>
+            </marker>
+            <marker id="arrdim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#5e8ba8"/>
+            </marker>
+          </defs>
+          <!-- Audio input -->
+          <rect x="190" y="14" width="100" height="32" rx="2" fill="none" stroke="#5e8ba8" stroke-width="1"/>
+          <text x="240" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#e8e4db" letter-spacing="1.5">AUDIO</text>
+
+          <line x1="240" y1="46" x2="240" y2="74" stroke="#5e8ba8" stroke-width="1" marker-end="url(#arrdim)"/>
+
+          <!-- Encoder -->
+          <rect x="120" y="80" width="240" height="60" rx="2" fill="#10151c" stroke="#d4a574" stroke-width="1"/>
+          <text x="240" y="106" text-anchor="middle" font-family="Fraunces" font-size="14" fill="#e8e4db" font-style="italic">Wav2Vec 2.0 encoder + LoRA</text>
+          <text x="240" y="124" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#b6b1a4" letter-spacing="1.5">SHARED REPRESENTATION</text>
+
+          <!-- Split -->
+          <line x1="180" y1="140" x2="120" y2="180" stroke="#d4a574" stroke-width="1" marker-end="url(#arr)"/>
+          <line x1="300" y1="140" x2="360" y2="180" stroke="#c47873" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+
+          <!-- ASR head -->
+          <rect x="40" y="186" width="160" height="50" rx="2" fill="#10151c" stroke="#5e8ba8" stroke-width="1"/>
+          <text x="120" y="208" text-anchor="middle" font-family="Fraunces" font-size="13" fill="#e8e4db">CTC head → text</text>
+          <text x="120" y="224" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#b6b1a4" letter-spacing="1.5">L_CTC</text>
+
+          <!-- GRL -->
+          <rect x="280" y="186" width="160" height="50" rx="2" fill="#10151c" stroke="#c47873" stroke-width="1"/>
+          <text x="360" y="208" text-anchor="middle" font-family="Fraunces" font-size="13" fill="#e8e4db" font-style="italic">Gradient Reversal</text>
+          <text x="360" y="224" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#b6b1a4" letter-spacing="1.5">×(−λ)</text>
+
+          <line x1="360" y1="236" x2="360" y2="264" stroke="#c47873" stroke-width="1" marker-end="url(#arr)"/>
+
+          <!-- Adversary -->
+          <rect x="280" y="270" width="160" height="50" rx="2" fill="#10151c" stroke="#c47873" stroke-width="1"/>
+          <text x="360" y="291" text-anchor="middle" font-family="Fraunces" font-size="13" fill="#e8e4db">Family adversary</text>
+          <text x="360" y="307" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#c47873" letter-spacing="1.5">PREDICTS L1 FAMILY</text>
+
+          <!-- Caption -->
+          <text x="240" y="358" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="12" fill="#b6b1a4">encoder fights the adversary → demographic-invariant features</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 08 · WHY GRL FAILED ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">06 · The diagnosis</div>
+      <h2 class="section-title">GRL <em>widened</em> the gap.</h2>
+    </div>
+    <div class="fail-grid stagger">
+      <div>
+        <p class="lede" style="max-width:42ch;margin-bottom:32px;">Across every λ we swept on Svarah-eval, the demographic parity gap moved in the wrong direction. The intervention backfired for exactly the group most in need of correction.</p>
+        <div class="data-list">
+          <div class="data-row">
+            <span class="k">ft-w2v2 · LoRA, no GRL</span>
+            <span class="v">ΔDP 9.0 pp</span>
+          </div>
+          <div class="data-row">
+            <span class="k">Hybrid · λ = 0.05</span>
+            <span class="v coral">ΔDP 10.7 pp</span>
+          </div>
+          <div class="data-row">
+            <span class="k">Hybrid · λ = 0.10</span>
+            <span class="v coral">ΔDP 12.5 pp</span>
+          </div>
+          <div class="data-row">
+            <span class="k">Hybrid · λ = 0.30</span>
+            <span class="v coral">ΔDP 9.7 pp</span>
+          </div>
+          <div class="data-row featured">
+            <span class="k">Worst affected group</span>
+            <span class="v">Sino-Tibetan</span>
+          </div>
+        </div>
+        <p class="small" style="margin-top:14px;color:var(--paper-fade);">500-sample Svarah eval · all GRL runs degrade ΔDP relative to the LoRA-only baseline (ft-w2v2). WER stays in a tight 41–42% band.</p>
+      </div>
+      <div>
+        <h3 style="margin-bottom:18px;">Root cause</h3>
+        <p class="body">SPIRE-SIES — our adversarial-training corpus — contains <strong style="color:var(--amber)">no Sino-Tibetan speakers</strong>. The adversary was therefore trained to distinguish Indo-Aryan from Dravidian only.</p>
+        <p class="body" style="margin-top:14px;">When evaluated on Svarah, the reversed gradients pushed the encoder away from a representation that worked for ST speakers, because ST was effectively out-of-distribution from the adversary's perspective.</p>
+        <div class="callout-box" style="margin-top:24px;">
+          <div class="label">The general principle</div>
+          <p>Adversarial debiasing fails when the minority group is absent or severely underrepresented in training data. The adversary cannot form a meaningful demographic signal for that group — and the GRL then degrades the encoder for it.</p>
+        </div>
+        <p class="small" style="margin-top:18px;">A known but underdocumented failure mode. We have empirical evidence of it in our own ablation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 09 · THE PIVOT (3 reasons) ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">07 · The pivot</div>
+      <h2 class="section-title">Why <em>GRPO</em> is principled here.</h2>
+      <p class="lede" style="margin-top:14px;max-width:60ch;">We replaced gradient-reversal adversarial training with Group Relative Policy Optimisation — RL post-training on a fine-tuned Whisper-small + LoRA policy.</p>
+    </div>
+    <div class="reasons stagger">
+      <div class="reason">
+        <div class="num">01</div>
+        <h3>Operates on outputs, not latents</h3>
+        <p>GRL tries to make internal representations demographic-invariant. If the corpus lacks a group, no amount of gradient reversal can fix that. GRPO's fairness reward operates on decoded text — per-family WER on the actual evaluation distribution.</p>
+        <div class="punch">No latent contortion required</div>
+      </div>
+      <div class="reason">
+        <div class="num">02</div>
+        <h3>Optimises the metric directly</h3>
+        <p>GRL uses demographic-classification accuracy as a proxy. ΔDP is never in the loss. GRPO puts a ΔDP-derived signal directly in the reward, scaling per-utterance transcript rewards by family need. Tighter coupling between what we optimise and what we measure.</p>
+        <div class="punch">Reward = the thing we care about</div>
+      </div>
+      <div class="reason">
+        <div class="num">03</div>
+        <h3>Controls representation via sampling</h3>
+        <p>GRPO rollouts use a family-balanced batch sampler. Each batch carries every family in the curriculum stage, so the fairness reward computes meaningful per-family WER gaps in every step. Demographic balance is something we control, not something we hope a corpus provides.</p>
+        <div class="punch">Sampling, not supplication</div>
+      </div>
+    </div>
+    <div class="prior-art stagger">
+      <div class="pa-label">Prior art<br/>2024–25</div>
+      <div class="pa-items">
+        <span class="pa-item"><span class="num">[17]</span><span>Radhakrishnan et al. — first GRPO-RLHF for LLM-ASR; <em>−18.4 % rel WER</em>, reduced hallucinations, OOD-noise robustness.</span></span>
+        <span class="pa-item"><span class="num">[18]</span><span>Li et al. (R1-AQA) — RL <em>outperforms SFT</em> on audio understanding; foundational evidence for GRPO over further fine-tuning.</span></span>
+        <span class="pa-item"><span class="num">[19]</span><span>Nagpal et al. (ICASSP 2025) — RL adapts ASR to <em>under-represented</em> (disordered) speech via composite reward; semantic + WER mirrors our WER + fairness design.</span></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 10 · GRPO ARCHITECTURE ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">08 · Architecture</div>
+      <h2 class="section-title">The <em>GRPO</em> pipeline.</h2>
+    </div>
+    <div class="arch-wrap stagger">
+      <svg class="arch-svg" viewBox="0 88 1040 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#d4a574"/>
+          </marker>
+          <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#5e8ba8"/>
+          </marker>
+          <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#8fa885"/>
+          </marker>
+        </defs>
+
+        <!-- Family-balanced sampler -->
+        <rect x="20" y="180" width="180" height="100" rx="2" fill="#10151c" stroke="#5e8ba8" stroke-width="1"/>
+        <text x="110" y="206" text-anchor="middle" font-family="Fraunces" font-size="14" fill="#e8e4db" font-style="italic">Family-balanced</text>
+        <text x="110" y="224" text-anchor="middle" font-family="Fraunces" font-size="14" fill="#e8e4db" font-style="italic">sampler</text>
+        <text x="110" y="248" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#b6b1a4" letter-spacing="1">SVARAH TRAIN SPLIT</text>
+        <text x="110" y="262" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#5e8ba8" letter-spacing="1">IA · DRAV · ST</text>
+
+        <line x1="200" y1="230" x2="246" y2="230" stroke="#5e8ba8" stroke-width="1" marker-end="url(#ar2)"/>
+
+        <!-- Policy (Whisper + LoRA) -->
+        <rect x="250" y="100" width="220" height="120" rx="2" fill="#10151c" stroke="#d4a574" stroke-width="1.4"/>
+        <text x="360" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#d4a574" letter-spacing="1.5">POLICY · TRAINABLE</text>
+        <text x="360" y="156" text-anchor="middle" font-family="Fraunces" font-size="16" fill="#e8e4db">Whisper-small + LoRA</text>
+        <text x="360" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#b6b1a4">3.5M / 245M params (1.4%)</text>
+        <text x="360" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#b6b1a4">r=16, q/k/v/out_proj</text>
+
+        <!-- Reference (frozen) -->
+        <rect x="250" y="240" width="220" height="80" rx="2" fill="#10151c" stroke="#5e8ba8" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="360" y="266" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#5e8ba8" letter-spacing="1.5">REFERENCE · FROZEN</text>
+        <text x="360" y="290" text-anchor="middle" font-family="Fraunces" font-size="14" fill="#e8e4db" font-style="italic">Whisper-small (base)</text>
+        <text x="360" y="308" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#b6b1a4">for KL penalty</text>
+
+        <!-- Sampling generation -->
+        <line x1="470" y1="160" x2="520" y2="160" stroke="#d4a574" stroke-width="1" marker-end="url(#ar1)"/>
+        <rect x="525" y="120" width="200" height="80" rx="2" fill="#10151c" stroke="#d4a574" stroke-width="1"/>
+        <text x="625" y="148" text-anchor="middle" font-family="Fraunces" font-size="14" fill="#e8e4db" font-style="italic">K = 4 rollouts</text>
+        <text x="625" y="170" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#b6b1a4">temp = 1.2, top-p = 0.95</text>
+        <text x="625" y="186" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#b6b1a4">per utterance</text>
+
+        <!-- Reward -->
+        <line x1="725" y1="160" x2="775" y2="160" stroke="#d4a574" stroke-width="1" marker-end="url(#ar1)"/>
+        <rect x="780" y="100" width="240" height="120" rx="2" fill="#10151c" stroke="#d4a574" stroke-width="1.4"/>
+        <text x="900" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#d4a574" letter-spacing="1.5">MULTI-COMPONENT REWARD</text>
+        <text x="900" y="152" text-anchor="middle" font-family="Fraunces" font-size="13" fill="#e8e4db">0.6·(1−CER) + 0.4·(1−WER)</text>
+        <text x="900" y="172" text-anchor="middle" font-family="Fraunces" font-size="13" fill="#e8e4db">× family-need scaling (α=2)</text>
+        <text x="900" y="196" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#b6b1a4" letter-spacing="1">PER-UTTERANCE, NOT BATCH-CONSTANT</text>
+
+        <!-- Group-relative advantage -->
+        <line x1="900" y1="220" x2="900" y2="252" stroke="#d4a574" stroke-width="1" marker-end="url(#ar1)"/>
+        <rect x="780" y="258" width="240" height="68" rx="2" fill="#10151c" stroke="#8fa885" stroke-width="1"/>
+        <text x="900" y="282" text-anchor="middle" font-family="Fraunces" font-size="13" fill="#e8e4db" font-style="italic">Group-relative advantages</text>
+        <text x="900" y="302" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#8fa885">A = (r − μ_group) / σ_group</text>
+        <text x="900" y="316" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#b6b1a4">DEEPSEEK GRPO</text>
+
+        <!-- KL penalty: reference contributes to KL -->
+        <line x1="780" y1="292" x2="475" y2="292" stroke="#5e8ba8" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#ar2)"/>
+      </svg>
+    </div>
+
+    <div class="grpo-loss stagger">
+      <div class="grpo-loss-eq">
+        <span class="lhs">𝓛 =</span>
+        <span class="term">−<em>A</em> · log π<sub>θ</sub></span>
+        <span class="plus">+</span>
+        <span class="term">β · KL<span class="brk">[</span> π<sub>θ</sub> <span class="dbar">‖</span> π<sub>ref</sub> <span class="brk">]</span></span>
+      </div>
+      <div class="grpo-loss-meta">
+        <span><em>A</em> from group-relative advantages</span>
+        <span class="sep">·</span>
+        <span>β = 0.1 · K3 estimator (Schulman 2020)</span>
+        <span class="sep">·</span>
+        <span>1,500 steps · batch 3 × 4 grad-accum · lr 2 × 10⁻⁵ · bf16 · CUDA</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 11 · RESULTS · BEFORE/AFTER ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">09 · Result</div>
+      <h2 class="section-title">A <em>non-systematic</em> gap.</h2>
+    </div>
+    <div class="result-hero">
+      <div class="compare stagger">
+        <div class="before">
+          <div class="colhead">Baseline · before RL</div>
+          <div class="modelname">openai/whisper-small (zero-shot)</div>
+          <div class="metric-block">
+            <div class="mlabel">Overall WER</div>
+            <div class="mvalue">18.4 %</div>
+          </div>
+          <div class="metric-block">
+            <div class="mlabel">Demographic Parity Gap</div>
+            <div class="mvalue">2.03 pp</div>
+          </div>
+          <div class="metric-block">
+            <div class="mlabel">Poisson p-value</div>
+            <div class="mvalue">p = 0.020</div>
+          </div>
+          <div class="verdict bad">● Systematic disparity</div>
+        </div>
+        <div class="arrow">→</div>
+        <div class="after">
+          <div class="colhead">After GRPO post-training (1,500 steps)</div>
+          <div class="modelname">whisper-small-rl · α<sub>fair</sub> = 2</div>
+          <div class="metric-block">
+            <div class="mlabel">Overall WER</div>
+            <div class="mvalue amber">16.4 %</div>
+          </div>
+          <div class="metric-block">
+            <div class="mlabel">Demographic Parity Gap</div>
+            <div class="mvalue amber">2.64 pp</div>
+          </div>
+          <div class="metric-block">
+            <div class="mlabel">Poisson p-value</div>
+            <div class="mvalue amber">p = 0.078</div>
+          </div>
+          <div class="verdict good">● Not statistically systematic</div>
+        </div>
+      </div>
+      <p class="result-note stagger">Overall WER drops <strong>1.97 pp</strong> while ΔDP stays within the 5 pp threshold — but the headline is the p-value. The baseline showed a real, systematic gap across families; the RL model does not.</p>
+      <p class="small stagger" style="margin-top:18px;color:var(--paper-fade);">Per-family WER: Dravidian 17.0 → 16.2 % · Indo-Aryan 18.8 → 16.3 % · Sino-Tibetan 19.1 → 18.8 %. Held-out Svarah-eval split, 1,998 utterances (121 Sino-Tibetan) · Poisson drop-in-deviance test with utterance length as covariate.</p>
+    </div>
+  </section>
+
+  <!-- ========== 12 · REMAINING CHALLENGE ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">10 · What's still broken</div>
+      <h2 class="section-title">Noise robustness <em>for ST</em>.</h2>
+    </div>
+    <div class="twin stagger">
+      <div>
+        <p class="lede" style="max-width:42ch;">With ΔDP brought inside threshold and stripped of statistical systematicity, the dominant remaining failure mode is per-group noise robustness — Sino-Tibetan and Indo-Aryan both collapse under additive noise; Dravidian survives.</p>
+        <div class="callout-box" style="margin-top:32px;">
+          <div class="label">Implication for next phase</div>
+          <p>Clean-condition fairness was a reward-shaping problem; we solved it. Noise-condition fairness is a coverage problem — the RL signal cannot manufacture acoustic robustness for a family the training corpus underrepresents. That requires data: synthetic or real.</p>
+        </div>
+        <p class="small" style="margin-top:18px;color:var(--paper-fade);">Empirical precedent: FunAudio-ASR<span class="cite">[20]</span> reports <strong style="color:var(--paper);">&gt;30 % relative WER reduction</strong> in noisy environments (dinner, supermarket) when RL is added with a noise-aware reward — direct support for moving Δ<sub>noise</sub> into the GRPO reward in Stage 02. ASR-TRA<span class="cite">[21]</span> further shows test-time RL with audio-text semantic rewards reduces WER on <em>accented + noisy</em> speech specifically.</p>
+      </div>
+      <div>
+        <h3 style="margin-bottom:18px;">Per-group Δ<sub>noise</sub> · whisper-small-rl</h3>
+        <div class="data-list">
+          <div class="data-row">
+            <span class="k">Dravidian</span>
+            <span class="v sage">+6.6 pp</span>
+          </div>
+          <div class="data-row">
+            <span class="k">Indo-Aryan</span>
+            <span class="v">+15.3 pp</span>
+          </div>
+          <div class="data-row featured">
+            <span class="k">Sino-Tibetan</span>
+            <span class="v">+16.9 pp</span>
+          </div>
+        </div>
+        <p class="small" style="margin-top:18px;">Δ<sub>noise</sub>(g) = WER(g, white noise @ 10 dB SNR) − WER(g, clean), measured on the full Svarah-eval split. Sino-Tibetan exhibits the largest absolute degradation — and is the smallest training-coverage family. Closing it is the next problem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 13 · NEXT PHASE: INDICTTS ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">11 · Next phase</div>
+      <h2 class="section-title">IndicTTS &amp; the <em>3-stage</em> curriculum.</h2>
+      <p class="lede" style="margin-top:14px;max-width:62ch;">Synthesise Sino-Tibetan-accented English at scale, fold it into a noise-aware curriculum, and re-target Δg<sub>noise</sub> as the primary metric.</p>
+    </div>
+    <div class="pipeline-stages stagger">
+      <div class="stage current">
+        <span class="badge">Done</span>
+        <div class="stage-num">Stage 01 · Clean baseline</div>
+        <h3>All families · family-balanced sampler</h3>
+        <p>v5 GRPO run: 1,500 steps on Svarah-train with <span class="mono">SvarahBatchSampler</span> guaranteeing every batch contains all three families. Clean audio only. Yields the 16.4 % / 2.64 pp / p = 0.078 result.</p>
+      </div>
+      <div class="stage future">
+        <span class="badge">Next</span>
+        <div class="stage-num">Stage 02 · Noise-aware RL</div>
+        <h3>+ in-training noise augmentation</h3>
+        <p>Re-target Δg<sub>noise</sub> as the primary metric. Noise probability 0.3 at SNR 10–20 dB during rollout generation; reward computed on the noisy hypothesis so the policy learns acoustic invariance — not just clean transcription.</p>
+      </div>
+      <div class="stage future">
+        <span class="badge">Next</span>
+        <div class="stage-num">Stage 03 · Synthetic ST</div>
+        <h3>+ IndicTTS Sino-Tibetan</h3>
+        <p>Generate ST-accented English from <span class="mono" style="color:var(--amber)">tuannguyenvananh/indictts-english</span> + XTTS-v2 voice cloning on Svarah ST reference clips. ST oversampled 3× in the batch sampler; noise prob 0.5, SNR 5–15 dB.</p>
+      </div>
+    </div>
+    <p class="small stagger" style="margin-top:32px;">3-stage scheduler (<span class="mono">ast-asr/rl/curriculum.py</span>) is implemented and unit-tested; v5 used Stage-01 only. Stages 02–03 plug into the same <span class="mono">SvarahBatchSampler</span>. Quality filter for synthetic clips: discard samples whose ft-w2v2 WER exceeds 0.7.</p>
+    <p class="small stagger" style="margin-top:14px;color:var(--paper-fade);">Design choices traced to prior art: <em>error-heavy sample selection</em> during RL is more effective than random sampling<span class="cite">[22]</span> — directly motivating the 3× ST oversampling in Stage 03. Label-free per-accent adaptation via group-policy optimisation on unlabelled speech<span class="cite">[23]</span> validates synthetic-ST audio as a usable RL substrate even when ground-truth transcripts are imperfect.</p>
+  </section>
+
+  <!-- ========== 14 · UPDATED TIMELINE ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">12 · Plan</div>
+      <h2 class="section-title">Updated <em>timeline</em>.</h2>
+    </div>
+    <div class="table-wrap stagger" style="margin-top:48px;">
+      <table class="data">
+        <thead>
+          <tr>
+            <th>Window</th>
+            <th>Workstream</th>
+            <th>Deliverable</th>
+            <th style="text-align:right;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tag-cell">Sem 5 · Jul–Dec 2025</td>
+            <td>Literature survey · problem definition</td>
+            <td>23-paper review · ACL SRW draft</td>
+            <td class="num good">Done</td>
+          </tr>
+          <tr>
+            <td class="tag-cell">Sem 6 · Jan–Apr 2026</td>
+            <td>Pipeline · baseline ablations · GRL sweep</td>
+            <td>Operational eval harness · 4 baselines · ACL SRW submission</td>
+            <td class="num good">Done</td>
+          </tr>
+          <tr>
+            <td class="tag-cell">Apr 2026 (now)</td>
+            <td>RL post-training · GRPO ablation</td>
+            <td>whisper-small-rl checkpoint · ΔDP non-systematic</td>
+            <td class="num good">Done</td>
+          </tr>
+          <tr>
+            <td class="tag-cell">May–Jul 2026</td>
+            <td>IndicTTS integration · Stage-3 curriculum</td>
+            <td>Synthetic ST manifest · re-trained policy · Δg<sub>noise</sub>(ST) closed</td>
+            <td class="num">Next</td>
+          </tr>
+          <tr>
+            <td class="tag-cell">Aug–Oct 2026</td>
+            <td>Long-form eval · DISPLACE-M · adapter portability</td>
+            <td>Per-group Δg<sub>noise</sub> on real-world conversation audio</td>
+            <td class="num">Planned</td>
+          </tr>
+          <tr>
+            <td class="tag-cell">Nov 2026 – Jan 2027</td>
+            <td>Workshop submission · thesis writeup</td>
+            <td>EMNLP 2026 ARR or AIES 2026 submission · final report</td>
+            <td class="num">Planned</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small stagger" style="margin-top:24px;color:var(--paper-fade);">Viable publication targets identified: ACL SRW 2026 (submitted), AIES 2026 (May deadline), EMNLP 2026 via ARR May cycle, ICML 2026 workshops. The evaluation protocol — not a proposed system — is the primary contribution to frame.</p>
+  </section>
+
+  <!-- ========== 15 · REFERENCES ========== -->
+  <section class="slide">
+    <div class="stagger">
+      <div class="eyebrow">References</div>
+      <h2 class="section-title">Selected <em>citations</em>.</h2>
+    </div>
+    <div class="refs stagger">
+      <div class="ref"><span class="n">[1]</span><span>Javed et al. <em>Svarah: Evaluating English ASR Systems on Indian Accents.</em> Interspeech 2023.</span></div>
+      <div class="ref"><span class="n">[2]</span><span>Rai et al. <em>ASR-FAIRBENCH: Measuring &amp; benchmarking equity across speech recognition systems.</em> Interspeech 2025.</span></div>
+      <div class="ref"><span class="n">[3]</span><span>Jahan, M. <em>Detection &amp; Mitigation of Demographic Bias in Speech.</em> PhD Thesis, Johns Hopkins, 2025.</span></div>
+      <div class="ref"><span class="n">[4]</span><span>Prabhu et al. <em>Accented Speech Recognition with Accent-Specific Codebooks.</em> EMNLP 2023.</span></div>
+      <div class="ref"><span class="n">[5]</span><span>Prabhu et al. <em>Improving Self-Supervised Pre-training using Accent-Specific Codebooks.</em> Interspeech 2024.</span></div>
+      <div class="ref"><span class="n">[6]</span><span>Radford et al. <em>Robust Speech Recognition via Large-Scale Weak Supervision.</em> ICML 2023.</span></div>
+      <div class="ref"><span class="n">[7]</span><span>Baevski et al. <em>wav2vec 2.0.</em> NeurIPS 2020.</span></div>
+      <div class="ref"><span class="n">[8]</span><span>Hsu et al. <em>HuBERT.</em> IEEE/ACM TASLP 2021.</span></div>
+      <div class="ref"><span class="n">[9]</span><span>Ganin &amp; Lempitsky. <em>Domain-Adversarial Training of Neural Networks.</em> JMLR 2016.</span></div>
+      <div class="ref"><span class="n">[10]</span><span>Zhang et al. <em>Mitigating Unwanted Biases with Adversarial Learning.</em> AAAI/ACM AIES 2018.</span></div>
+      <div class="ref"><span class="n">[11]</span><span>Schulman, J. <em>Approximating KL Divergence.</em> 2020 (K3 estimator).</span></div>
+      <div class="ref"><span class="n">[12]</span><span>DeepSeek-AI. <em>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning.</em> 2025 (GRPO).</span></div>
+      <div class="ref"><span class="n">[13]</span><span>Singh et al. <em>SPIRE-SIES: A Spontaneous Indian English Speech Corpus.</em> O-COCOSDA 2023.</span></div>
+      <div class="ref"><span class="n">[14]</span><span>E et al. <em>Benchmarking Speech Systems for Frontline Health Conversations: DISPLACE-M.</em> 2026.</span></div>
+      <div class="ref"><span class="n">[15]</span><span>Hardt, Price, Srebro. <em>Equality of Opportunity in Supervised Learning.</em> NeurIPS 2016.</span></div>
+      <div class="ref"><span class="n">[16]</span><span>Hu et al. <em>LoRA: Low-Rank Adaptation of Large Language Models.</em> ICLR 2022.</span></div>
+      <div class="ref"><span class="n">[17]</span><span>Radhakrishnan, Unni, Mittal, Jyothi, Sarawagi et al. <em>Group Relative Policy Optimization for Speech Recognition.</em> arXiv:2509.01939, 2025 (Amazon).</span></div>
+      <div class="ref"><span class="n">[18]</span><span>Li, Liu, Dinkel et al. <em>Reinforcement learning outperforms supervised fine-tuning: A case study on audio question answering.</em> arXiv:2503.11197, 2025 (Xiaomi · R1-AQA).</span></div>
+      <div class="ref"><span class="n">[19]</span><span>Nagpal, Venugopalan, Tobin, Ladewig, Heller, Tomanek. <em>Speech Recognition with LLMs Adapted to Disordered Speech using Reinforcement Learning.</em> ICASSP 2025 (arXiv:2501.00039).</span></div>
+      <div class="ref"><span class="n">[20]</span><span>An, Chen, Deng, Gao et al. <em>FunAudio-ASR Technical Report.</em> arXiv:2509.12508, 2025 (Alibaba Tongyi · &gt;30 % rel WER reduction in noise via RL).</span></div>
+      <div class="ref"><span class="n">[21]</span><span>Fang, Xie, Liu. <em>Boosting ASR Robustness via Test-Time Reinforcement Learning with Audio-Text Semantic Rewards.</em> arXiv:2603.05231, 2026 (HKUST-GZ · accented + noisy speech).</span></div>
+      <div class="ref"><span class="n">[22]</span><span>Zhang, Su, Fan, Luo, Luan. <em>Thinking in cocktail party: CoT and RL for target-speaker ASR.</em> arXiv:2509.15612, 2025 (Xiaomi · error-heavy sample selection).</span></div>
+      <div class="ref"><span class="n">[23]</span><span>Wang, Chen et al. <em>Self-Improvement for Audio Large Language Model using Unlabeled Speech.</em> Interspeech 2025 (arXiv:2507.20169 · group policy optimisation, label-free).</span></div>
+      <div class="ref"><span class="n">[24]</span><span>Bai et al. <em>Seed-ASR: Understanding Diverse Speech and Contexts with LLM-based Speech Recognition.</em> arXiv:2407.04675, 2024 (ByteDance · landmark SFT→Context-SFT→RL recipe).</span></div>
+      <div class="ref"><span class="n">[25]</span><span>Prabhavalkar, Sainath, Wu et al. <em>Minimum Word Error Rate Training for Attention-based Sequence-to-Sequence Models.</em> ICASSP 2018 (arXiv:1712.01818 · pre-LLM ancestor of RL-for-ASR).</span></div>
+    </div>
+  </section>
+
+  <!-- ========== 16 · THANK YOU ========== -->
+  <section class="slide slide-thanks">
+    <div class="stagger" style="display:flex;flex-direction:column;gap:48px;align-self:center;">
+      <div class="title-asterism">✦ ✦ ✦</div>
+      <div class="eyebrow">Q &amp; A</div>
+      <h1 class="display"><em>Thank</em><br/>you.</h1>
+      <p class="lede" style="max-width:46ch;">Questions, pushback, and methodological scepticism gratefully received. The pivot is documented; the next phase is scoped; the manuscript is on its way.</p>
+      <div class="title-meta" style="grid-template-columns:repeat(3,1fr);">
+        <div class="field">
+          <span class="label">Project</span>
+          <span class="value">PW25_BJD_05 · Towards Fair &amp; Robust Audio Transformers</span>
+        </div>
+        <div class="field">
+          <span class="label">Guide</span>
+          <span class="value">Dr. Bhaskarjyoti Das, CSE-AIML</span>
+        </div>
+        <div class="field">
+          <span class="label">Department</span>
+          <span class="value">CSE / CSE-AIML, PES University, Bengaluru</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const cur = document.getElementById('cur');
+  const tot = document.getElementById('tot');
+  const prog = document.getElementById('progress');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let idx = 0;
+  tot.textContent = String(total).padStart(2,'0');
+
+  function show(i){
+    idx = Math.max(0, Math.min(total-1, i));
+    slides.forEach((s,k)=> s.classList.toggle('active', k===idx));
+    cur.textContent = String(idx+1).padStart(2,'0');
+    prog.style.width = ((idx+1)/total*100) + '%';
+  }
+  prevBtn.addEventListener('click', ()=> show(idx-1));
+  nextBtn.addEventListener('click', ()=> show(idx+1));
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') show(idx+1);
+    else if(e.key === 'ArrowLeft' || e.key === 'PageUp') show(idx-1);
+    else if(e.key === 'Home') show(0);
+    else if(e.key === 'End') show(total-1);
+  });
+  // Touch / swipe
+  let tx=null;
+  document.addEventListener('touchstart', e=> tx = e.touches[0].clientX);
+  document.addEventListener('touchend', e=>{
+    if(tx===null) return;
+    const dx = e.changedTouches[0].clientX - tx;
+    if(Math.abs(dx) > 50) show(idx + (dx<0 ? 1 : -1));
+    tx = null;
+  });
+</script>
+</body>
+</html>
