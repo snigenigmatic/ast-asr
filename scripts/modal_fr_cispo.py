@@ -515,22 +515,17 @@ def run_profile_evaluation(
     checkpoint_name: str = "",
 ) -> dict[str, object]:
     """Evaluate one base or adapter checkpoint on all protocol conditions."""
-    if arm not in {"zero-shot", "sft"}:
-        raise ValueError("profile baseline evaluation arm must be zero-shot or sft")
-    if arm == "zero-shot":
-        checkpoint = "base"
-    else:
-        components = (checkpoint_run_name, checkpoint_output_name, checkpoint_name)
-        if any(not value or Path(value).name != value for value in components):
-            raise ValueError("adapter evaluation requires three single-component paths")
-        checkpoint = str(
-            Path(OUTPUT_DIR)
-            / checkpoint_run_name
-            / checkpoint_output_name
-            / checkpoint_name
-        )
-        if not Path(checkpoint).is_dir():
-            raise FileNotFoundError(f"evaluation checkpoint is missing: {checkpoint}")
+    from ast_asr.modal_evaluation import evaluation_checkpoint
+
+    checkpoint = evaluation_checkpoint(
+        arm,
+        output_root=Path(OUTPUT_DIR),
+        checkpoint_run_name=checkpoint_run_name,
+        checkpoint_output_name=checkpoint_output_name,
+        checkpoint_name=checkpoint_name,
+    )
+    if checkpoint != "base" and not Path(checkpoint).is_dir():
+        raise FileNotFoundError(f"evaluation checkpoint is missing: {checkpoint}")
 
     output_name = f"evaluation-{arm}"
     output = Path(OUTPUT_DIR) / run_name / output_name

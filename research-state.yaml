@@ -113,5 +113,5 @@ artifacts:
 
 continuity:
   heartbeat_requested_minutes: 20
-  heartbeat_verified: false
+  heartbeat_verified: true
   last_updated: "2026-08-11"
