@@ -1,0 +1,116 @@
+project:
+  title: "FR-CISPO: fair and robust post-training for tiny Indian-English ASR"
+  question: >-
+    Can openai/whisper-tiny be adapted on Svarah to improve worst-group
+    Indian-English ASR performance under clean and noisy conditions without
+    materially degrading clean overall WER?
+  status: active
+  started: "2026-08-11"
+  branch: codex/fair-cispo-tiny
+  worktree: "C:/Kaustubh/ast-asr-worktrees/fair-cispo-tiny"
+
+research_contract:
+  model: openai/whisper-tiny
+  model_revision: 169d4a4341b33bc18d8881c4b69c2e104e1cc0af
+  transcribed_corpus: ai4bharat/Svarah
+  dataset_revision: ebbf7777fe771490696a3f7b007097606fa8c924
+  external_audio_use: "MUSAN noise only; never as transcribed speech"
+  primary_endpoint: "worst family x acoustic-condition WER from out-of-fold predictions"
+  clean_regression_limit_absolute_wer: 0.01
+  development_improvement_required_absolute_wer: 0.02
+  development_seeds: 3
+  required_authoritative_speakers: 117
+
+evidence_status:
+  speaker_identity:
+    status: blocked_external
+    observed_profile_clusters: 115
+    required_authoritative_speakers: 117
+    publication_valid: false
+    note: >-
+      Reachable official GitHub history contains no release files, and all seven
+      accessible Hugging Face Parquet revisions omit speaker_id. Current folds
+      use demographic profile clusters and support engineering smoke tests only.
+  evaluation_precision:
+    status: repaired
+    note: >-
+      FP16 Whisper decoding produced a deterministic solo-versus-batch mismatch;
+      evaluation now casts the model to FP32 and has regression coverage.
+  checkpoint_round_trip:
+    status: passing
+  policy_safety:
+    status: failed
+    note: >-
+      None of the preregistered learning rates completed 300 cycles while
+      satisfying per-token KL < 0.1.
+
+hypotheses:
+  - id: H0
+    statement: >-
+      One of {1e-5, 3e-5, 1e-4} can run FR-CISPO for 300 cycles while ratio p99
+      remains below 2 and per-token KL from SFT remains below 0.1.
+    status: refuted
+    evidence:
+      - "1e-4 probe: ratio p99 2.477, KL 0.2958"
+      - "3e-5 full run: ratio p99 1.8218, KL 43.9888"
+      - "1e-5 full run: ratio p99 1.2069, KL 1.1638"
+  - id: H1
+    statement: >-
+      Explicit KL control can preserve genuine live off-policy ratio movement
+      while keeping the policy inside the preregistered trust region.
+    status: locked_for_one_engineering_run
+    classification: exploratory_engineering
+  - id: H2
+    statement: >-
+      Replacing profile-cluster pseudo-speakers with the authoritative 117
+      Svarah speakers yields valid speaker-disjoint folds and may materially
+      change group-risk estimates.
+    status: blocked_external
+
+known_results:
+  sft:
+    seed: 2026
+    epochs_run: 5
+    selected_epoch: 1
+    validation_macro_family_wer: 0.1766945
+    checkpoint_revision: d204df40dfcd694733a171998ad5d97fdb43eecbc5dc19846d98bce012cd4c1e
+  corrected_fp32_development_evaluation:
+    zero_shot:
+      clean_wer: 0.2208472
+      white_10db_wer: 0.6218467
+      musan_babble_10db_wer: 0.5732508
+      worst_family_clean_wer: 0.6028226
+      family_gap: 0.4130455
+      worst_family_condition_wer: 1.2338710
+      worst_20_percent_speaker_wer: 0.4475079
+    sft:
+      clean_wer: 0.2417420
+      white_10db_wer: 0.5724893
+      musan_babble_10db_wer: 0.6073298
+      worst_family_clean_wer: 0.3649194
+      family_gap: 0.1405220
+      worst_family_condition_wer: 1.4616935
+      worst_20_percent_speaker_wer: 0.5540236
+    interpretation: >-
+      SFT improves white-noise WER and clean family disparity, but fails the
+      clean-regression constraint and worsens the primary worst-group endpoint.
+
+next_decision:
+  required_before_paid_training:
+    - "Label any profile-cluster run publication_valid: false"
+    - "Pass the complete local verification suite after integration"
+    - "Freeze the bounded H1 protocol in version control before observing results"
+  forbidden_shortcuts:
+    - "No heuristic speaker IDs presented as authoritative"
+    - "No silent objective pivot after observing a failed run"
+    - "No five-fold launch before the three-seed development gate passes"
+
+artifacts:
+  durable_evidence: docs/development-evidence-20260810.md
+  source_speaker_statistics: "C:/Users/C_Kaustubh/Downloads/meta_speaker_stats.csv"
+  source_speaker_statistics_sha256: e2daa48863581eb41befd1826b7b14cd80e05f3a1bab9b72d08e7814248f1f94
+
+continuity:
+  heartbeat_requested_minutes: 20
+  heartbeat_verified: false
+  last_updated: "2026-08-11"

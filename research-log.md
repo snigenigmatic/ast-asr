@@ -1,0 +1,78 @@
+# FR-CISPO research log
+
+This file is append-only. It records decisions and failures, not just successful
+runs. Engineering smoke tests using non-authoritative speaker identities must be
+labelled as such.
+
+## 2026-08-10 — Data identity audit
+
+- Svarah audio and metadata could be resolved to 6,656 utterances.
+- The available fallback formed 115 demographic profile clusters; it did not
+  recover the dataset's documented 117 speaker identities.
+- Decision: retain these manifests for engineering only. Do not use them for
+  publication claims, speaker bootstrap confidence intervals, or final folds.
+
+## 2026-08-10 — SFT baseline
+
+- Trained five epochs of rank-8 Whisper-tiny LoRA SFT with dropout disabled.
+- Selected epoch 1 by validation macro-family WER (0.1766945).
+- Reloaded checkpoint reproduced its saved predictions exactly.
+- Corrected FP32 development evaluation later showed a trade-off rather than a
+  general win: clean WER worsened by 2.09 points, white-noise WER improved by
+  4.94 points, and the worst family-condition WER worsened by 22.78 points.
+
+## 2026-08-10 — FR-CISPO learning-rate gate
+
+- 1e-4 failed in a 10-cycle probe: ratio p99 2.477 and KL 0.2958.
+- 3e-5 completed 300 cycles but failed the trust region: KL 43.9888; the first
+  recorded crossing of 0.1 occurred at cycle 10.
+- 1e-5 completed 300 cycles with ratio p99 1.2069 but KL 1.1638.
+- All runs were finite, changed adapters and predictions, and reloaded exactly.
+- Decision: none of the preregistered learning rates is development-safe. Do not
+  proceed to five-fold training.
+
+## 2026-08-10 — Evaluation invariance repair
+
+- FP16 Whisper decoding produced one deterministic solo-versus-batch mismatch
+  in an eight-example diagnostic, even though features and masks were identical.
+- Casting the model to FP32 restored equality; evaluation now does this and has
+  regression coverage plus a diagnostic CLI.
+- Recomputed zero-shot and SFT predictions in FP32; both now pass solo/batched
+  equality across 5,772 predictions.
+
+## 2026-08-11 — Research program reset
+
+- Preserved the original objective: fairness and robustness adaptation of
+  Whisper-tiny for Indian English.
+- Split the next work into three independent streams: authoritative speaker
+  recovery, policy-stability instrumentation, and a bounded execution/publication
+  runbook.
+- Decision: the next paid run must be preceded by a frozen exploratory protocol.
+  A failed gate is evidence and will be reported rather than triggering an
+  unrecorded method change.
+
+## 2026-08-11 — Authoritative identity recovery result
+
+- Audited every reachable official Svarah GitHub commit and all seven
+  data-bearing Hugging Face revisions.
+- The GitHub README documents an original `meta_speaker_stats.csv` with
+  `speaker_id`, but the file is absent from reachable Git history. Every public
+  Parquet schema omits `speaker_id`.
+- Hardened the storage gate: a filename is insufficient; a candidate table must
+  contain 117 non-empty distinct IDs and pass later utterance alignment checks.
+- Decision: publication-valid speaker folds remain externally blocked. Continue
+  only with explicitly non-publication engineering diagnostics while requesting
+  the original mapping from the maintainers.
+
+## 2026-08-11 — Policy safety instrumentation
+
+- Identified that KL was checked only after the complete run and that a
+  per-cycle-looking field stored the running maximum.
+- Added current-cycle KL, running maximum KL, full ratio distributions including
+  the state after the fourth update, group-risk/weight trajectories, and a
+  deterministic source/config hash.
+- Added hard stops for KL `>= 0.1`, ratio p99 `>= 2`, and non-finite ratios. A
+  failed later cycle restores and saves the immediately preceding safe adapter
+  state without emitting `checkpoint-final`.
+- Decision: review and freeze the 20-cycle H1 hard-stop pilot before launching a
+  new Modal task. The controller does not change the FR-CISPO objective.

@@ -1,0 +1,17 @@
+{
+  "development_fold": 0,
+  "development_seeds": [11, 17, 23],
+  "development_arms": [
+    "zero-shot",
+    "sft",
+    "live-grpo",
+    "cispo-mwer",
+    "sequence-cispo-mwer",
+    "fair-cispo",
+    "fr-cispo"
+  ],
+  "learning_rate_grid": [0.00001, 0.00003, 0.0001],
+  "post_gate_folds": [0, 1, 2, 3, 4],
+  "post_gate_arms": ["sft", "cispo-mwer", "fair-cispo", "fr-cispo"],
+  "bootstrap_samples": 10000
+}

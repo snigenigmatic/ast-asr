@@ -1,37 +1,39 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "ast-asr"
 version = "0.1.0"
-description = "Add your description here"
+description = "Fair and robust post-training for Whisper-tiny on Indian English"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 dependencies = [
-    "accelerate>=1.13.0",
-    "datasets>=4.8.4",
-    "jiwer>=4.0.0",
     "librosa>=0.11.0",
+    "numpy>=2.0.0",
     "peft>=0.18.1",
-    "python-dotenv>=1.2.2",
     "soundfile>=0.13.1",
-    "statsmodels>=0.14.6",
     "torch>=2.9.1",
-    "torchvision>=0.24.1",
     "transformers>=5.5.0",
-    "pyctcdecode>=0.5.0",
 ]
 
 [project.optional-dependencies]
-synth = ["TTS>=0.22.0"]
+dev = ["pytest>=8.3.5"]
+
+[project.scripts]
+ast-asr = "ast_asr.cli:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.uv.sources]
 torch = [
     { index = "pytorch-cpu", marker = "sys_platform != 'linux'" },
     { index = "pytorch-cu128", marker = "sys_platform == 'linux'" },
 ]
-torchvision = [
-    { index = "pytorch-cpu", marker = "sys_platform != 'linux'" },
-    { index = "pytorch-cu128", marker = "sys_platform == 'linux'" },
-]
-
 [[tool.uv.index]]
 name = "pytorch-cpu"
 url = "https://download.pytorch.org/whl/cpu"

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "model": {
+    "model_id": "openai/whisper-tiny",
+    "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.0,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "out_proj"]
+  },
+  "dataset": {
+    "dataset_id": "ai4bharat/Svarah",
+    "revision": "ebbf7777fe771490696a3f7b007097606fa8c924",
+    "prepared_manifest": "data/fr_cispo/dataset_manifest.json",
+    "fold_directory": "data/fr_cispo/folds",
+    "archive_root": "data/raw/Svarah",
+    "musan_root": "data/raw/musan",
+    "musan_revision": "md5:0c472d4fc0c5141eca47ad1ffeb2a7df"
+  },
+  "sft": {
+    "maximum_epochs": 5,
+    "learning_rate": 0.0001,
+    "train_batch_size": 8,
+    "evaluation_batch_size": 8,
+    "gradient_accumulation_steps": 2,
+    "warmup_ratio": 0.1
+  },
+  "policy": {
+    "candidates": 4,
+    "rollout_cycles": 300,
+    "inner_updates": 4,
+    "rollout_temperature": 1.0,
+    "maximum_new_tokens": 225,
+    "gradient_clip": 1.0,
+    "learning_rate_grid": [0.00001, 0.00003, 0.0001],
+    "risk_ema": 0.9,
+    "dual_learning_rate": 0.1,
+    "uniform_mix": 0.2,
+    "training_snr_db": [10.0, 20.0]
+  },
+  "evaluation": {
+    "conditions": ["clean", "white_10db", "musan_babble_10db"],
+    "bootstrap_samples": 10000
+  }
+}
