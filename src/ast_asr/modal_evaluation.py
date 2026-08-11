@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import argparse
+from collections.abc import Sequence
 from pathlib import Path
 
 from .ladder import TRAINING_LADDER
@@ -31,3 +33,39 @@ def evaluation_checkpoint(
     if any(not value or Path(value).name != value for value in components):
         raise ValueError("adapter evaluation requires three single-component paths")
     return str(output_root.joinpath(*components))
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Resolve an evaluation checkpoint from the installed project environment.
+
+    Modal imports its launcher with a Python interpreter that is separate from
+    the project's ``uv run`` environment. Keeping this small command-line
+    entry point in the package lets the launcher reuse the one arm/checkpoint
+    validation implementation without importing ``ast_asr`` directly.
+    """
+    parser = argparse.ArgumentParser(
+        description="Resolve a validated Modal evaluation checkpoint."
+    )
+    parser.add_argument("command", choices=("resolve-checkpoint",))
+    parser.add_argument("--arm", required=True)
+    parser.add_argument("--output-root", required=True)
+    parser.add_argument("--checkpoint-run-name", default="")
+    parser.add_argument("--checkpoint-output-name", default="")
+    parser.add_argument("--checkpoint-name", default="")
+    args = parser.parse_args(argv)
+    try:
+        checkpoint = evaluation_checkpoint(
+            args.arm,
+            output_root=Path(args.output_root),
+            checkpoint_run_name=args.checkpoint_run_name,
+            checkpoint_output_name=args.checkpoint_output_name,
+            checkpoint_name=args.checkpoint_name,
+        )
+    except ValueError as error:
+        parser.error(str(error))
+    print(checkpoint)
+    return 0
+
+
+if __name__ == "__main__":  # pragma: no cover - exercised through uv on Modal.
+    raise SystemExit(main())

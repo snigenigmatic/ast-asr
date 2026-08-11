@@ -2,7 +2,7 @@
 
 **Purpose.** This ledger separates a number in a prior review slide from a number that is an appropriate target for a new Whisper-tiny, speaker-disjoint experiment.
 
-**Audit date:** 2026-08-11  
+**Audit date:** 2026-08-11
 **Scope:** read-only inspection of `C:\Kaustubh\ast-asr`; no historical artifact was changed.
 
 ## Sources and provenance
@@ -43,7 +43,7 @@ All four summaries use a 500-utterance Svarah evaluation. The HTML reports that 
 | Hybrid GRL | 0.10 | 41.35% | 12.46 pp | 13.81 pp | 54.08 pp | 0.00552 | worst Delta_DP |
 | Hybrid GRL | 0.30 | 41.65% | 9.69 pp | 12.12 pp | 52.69 pp | 0.00612 | worse than baseline |
 
-**Supported conclusion:** on this 500-utterance export, tested GRL arms did not reduce the WER-spread metric relative to the LoRA-only arm.  
+**Supported conclusion:** on this 500-utterance export, tested GRL arms did not reduce the WER-spread metric relative to the LoRA-only arm.
 **Not established:** a general causal claim about adversarial debiasing. The slides attribute failure to zero Sino-Tibetan coverage in SPIRE-SIES, but this audit did not find a pinned data manifest/seed bundle demonstrating that claim end-to-end.
 
 ### B. Historical Whisper-small GRPO/CISPO presentation result

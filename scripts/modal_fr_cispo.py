@@ -93,6 +93,55 @@ def _write_text_once(path: Path, value: str) -> None:
     path.write_text(value, encoding="utf-8")
 
 
+def _resolve_evaluation_checkpoint_in_project(
+    arm: str,
+    *,
+    checkpoint_run_name: str,
+    checkpoint_output_name: str,
+    checkpoint_name: str,
+) -> str:
+    """Reuse package validation through ``uv run`` rather than Modal's importer.
+
+    The Modal wrapper is imported before its remote function executes and that
+    interpreter does not have the project package installed. The resolver runs
+    inside the already-built project environment, so it keeps the exact arm
+    semantics from ``ast_asr.modal_evaluation`` without duplicating them here.
+    """
+    command = [
+        "uv",
+        "run",
+        "--frozen",
+        "python",
+        "-m",
+        "ast_asr.modal_evaluation",
+        "resolve-checkpoint",
+        "--arm",
+        arm,
+        "--output-root",
+        OUTPUT_DIR,
+        "--checkpoint-run-name",
+        checkpoint_run_name,
+        "--checkpoint-output-name",
+        checkpoint_output_name,
+        "--checkpoint-name",
+        checkpoint_name,
+    ]
+    completed = subprocess.run(
+        command,
+        cwd=PROJECT_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=os.environ.copy(),
+    )
+    resolved = completed.stdout.splitlines()
+    if len(resolved) != 1 or not resolved[0]:
+        raise RuntimeError(
+            "checkpoint resolver must emit exactly one non-empty checkpoint path"
+        )
+    return resolved[0]
+
+
 @app.function(
     image=data_prep_image,
     cpu=4.0,
@@ -515,11 +564,8 @@ def run_profile_evaluation(
     checkpoint_name: str = "",
 ) -> dict[str, object]:
     """Evaluate one base or adapter checkpoint on all protocol conditions."""
-    from ast_asr.modal_evaluation import evaluation_checkpoint
-
-    checkpoint = evaluation_checkpoint(
+    checkpoint = _resolve_evaluation_checkpoint_in_project(
         arm,
-        output_root=Path(OUTPUT_DIR),
         checkpoint_run_name=checkpoint_run_name,
         checkpoint_output_name=checkpoint_output_name,
         checkpoint_name=checkpoint_name,
