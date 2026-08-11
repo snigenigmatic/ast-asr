@@ -58,7 +58,7 @@ hypotheses:
     statement: >-
       Explicit KL control can preserve genuine live off-policy ratio movement
       while keeping the policy inside the preregistered trust region.
-    status: locked_for_one_engineering_run
+    status: safety_signal_passed_with_artifact_naming_deviation
     classification: exploratory_engineering
   - id: H2
     statement: >-
@@ -109,6 +109,7 @@ artifacts:
   durable_evidence: docs/development-evidence-20260810.md
   source_speaker_statistics: "C:/Users/C_Kaustubh/Downloads/meta_speaker_stats.csv"
   source_speaker_statistics_sha256: e2daa48863581eb41befd1826b7b14cd80e05f3a1bab9b72d08e7814248f1f94
+  h1_engineering_result: experiments/H1-kl-control/result-20260811.md
 
 continuity:
   heartbeat_requested_minutes: 20

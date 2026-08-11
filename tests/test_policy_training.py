@@ -9,6 +9,7 @@ from ast_asr.optimization import InnerUpdateDiagnostics
 from ast_asr.policy_training import (
     _balanced_probe,
     _clone_trainable_state,
+    _execution_checkpoint_spec,
     _raise_if_stability_limit_violated,
     _ratio_stability_violation,
     _save_last_safe_adapter,
@@ -144,3 +145,23 @@ def test_source_tree_hash_is_stable_without_git_metadata() -> None:
     config = Path("configs/fr_cispo_tiny.json")
     assert _source_tree_content_hash(config) == _source_tree_content_hash(config)
     assert len(_source_tree_content_hash(config)) == 64
+
+
+def test_bounded_execution_cannot_be_labeled_as_a_final_checkpoint() -> None:
+    protocol = _execution_checkpoint_spec(
+        rollout_cycles=300,
+        configured_rollout_cycles=300,
+        probe_examples=32,
+        maximum_new_tokens=225,
+        configured_maximum_new_tokens=225,
+    )
+    bounded = _execution_checkpoint_spec(
+        rollout_cycles=2,
+        configured_rollout_cycles=300,
+        probe_examples=6,
+        maximum_new_tokens=32,
+        configured_maximum_new_tokens=225,
+    )
+
+    assert protocol == ("protocol", "checkpoint-final", "final")
+    assert bounded == ("bounded_smoke", "checkpoint-last-safe", "last_safe_bounded")

@@ -177,6 +177,25 @@ def _source_tree_content_hash(config_path: Path) -> str:
     return digest.hexdigest()
 
 
+def _execution_checkpoint_spec(
+    *,
+    rollout_cycles: int,
+    configured_rollout_cycles: int,
+    probe_examples: int,
+    maximum_new_tokens: int,
+    configured_maximum_new_tokens: int,
+) -> tuple[str, str, str]:
+    """Return execution mode, checkpoint directory, and non-ambiguous role."""
+    is_protocol = (
+        rollout_cycles == configured_rollout_cycles
+        and probe_examples == 32
+        and maximum_new_tokens == configured_maximum_new_tokens
+    )
+    if is_protocol:
+        return "protocol", "checkpoint-final", "final"
+    return "bounded_smoke", "checkpoint-last-safe", "last_safe_bounded"
+
+
 def _ratio_stability_violation(
     diagnostics: Sequence[InnerUpdateDiagnostics],
 ) -> tuple[str, str] | None:
@@ -322,6 +341,13 @@ def train_policy(args: argparse.Namespace) -> None:
     )
     if not 1 <= maximum_new_tokens <= config.policy.maximum_new_tokens:
         raise ValueError("maximum new tokens override exceeds the configured protocol")
+    execution_mode, checkpoint_name, checkpoint_role = _execution_checkpoint_spec(
+        rollout_cycles=rollout_cycles,
+        configured_rollout_cycles=config.policy.rollout_cycles,
+        probe_examples=probe_examples,
+        maximum_new_tokens=maximum_new_tokens,
+        configured_maximum_new_tokens=config.policy.maximum_new_tokens,
+    )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train_examples, validation_examples = _load_experiment_records(config, args.fold)
     examples_by_family: dict[str, list[AudioExample]] = defaultdict(list)
@@ -357,6 +383,8 @@ def train_policy(args: argparse.Namespace) -> None:
         "probe_examples": probe_examples,
         "maximum_new_tokens": maximum_new_tokens,
         "source_tree_content_hash": source_tree_content_hash,
+        "execution_mode": execution_mode,
+        "checkpoint_role": checkpoint_role,
     }
     write_immutable_json(output / "execution_overrides.json", execution_overrides)
 
@@ -598,10 +626,10 @@ def train_policy(args: argparse.Namespace) -> None:
                 source_tree_content_hash=source_tree_content_hash,
             )
 
-    final_checkpoint = output / "checkpoint-final"
-    policy_model.save_pretrained(final_checkpoint, safe_serialization=True)
-    processor.save_pretrained(final_checkpoint / "processor")
-    checkpoint_revision = directory_content_hash(final_checkpoint)
+    saved_checkpoint = output / checkpoint_name
+    policy_model.save_pretrained(saved_checkpoint, safe_serialization=True)
+    processor.save_pretrained(saved_checkpoint / "processor")
+    checkpoint_revision = directory_content_hash(saved_checkpoint)
     after_predictions = greedy_transcribe(
         policy_model,
         processor,
@@ -623,11 +651,11 @@ def train_policy(args: argparse.Namespace) -> None:
 
     reloaded = build_lora_whisper(
         config.model,
-        adapter_checkpoint=final_checkpoint,
+        adapter_checkpoint=saved_checkpoint,
         trainable=False,
         device=device,
     )
-    reloaded_processor = load_saved_processor(final_checkpoint)
+    reloaded_processor = load_saved_processor(saved_checkpoint)
     round_trip_predictions = greedy_transcribe(
         reloaded,
         reloaded_processor,
@@ -673,17 +701,24 @@ def train_policy(args: argparse.Namespace) -> None:
             "dataset_id": config.dataset.dataset_id,
             "dataset_revision": config.dataset.revision,
             "sft_checkpoint": str(args.sft_checkpoint),
-            "final_checkpoint": final_checkpoint.name,
-            "final_checkpoint_revision": checkpoint_revision,
+            "checkpoint": {
+                "path": saved_checkpoint.name,
+                "revision": checkpoint_revision,
+                "role": checkpoint_role,
+            },
+            "final_checkpoint": saved_checkpoint.name if checkpoint_role == "final" else None,
+            "final_checkpoint_revision": (
+                checkpoint_revision if checkpoint_role == "final" else None
+            ),
+            "last_safe_checkpoint": (
+                saved_checkpoint.name if checkpoint_role != "final" else None
+            ),
+            "last_safe_checkpoint_revision": (
+                checkpoint_revision if checkpoint_role != "final" else None
+            ),
             "inner_updates": config.policy.inner_updates,
             "rollout_cycles": rollout_cycles,
-            "execution_mode": (
-                "bounded_smoke"
-                if rollout_cycles != config.policy.rollout_cycles
-                or probe_examples != 32
-                or maximum_new_tokens != config.policy.maximum_new_tokens
-                else "protocol"
-            ),
+            "execution_mode": execution_mode,
             "execution_overrides": execution_overrides,
             "source_tree_content_hash": source_tree_content_hash,
             "movement_gate_passed": movement.passed,

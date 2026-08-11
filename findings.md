@@ -37,6 +37,14 @@ at the first KL or ratio breach, records both cycle and cumulative diagnostics,
 and preserves the adapter from immediately before a failing later cycle. This
 is an observability and safety repair; it is not evidence that FR-CISPO works.
 
+After that repair, one preregistered 20-cycle engineering pilot at `1e-5`
+completed inside the trust region: peak ratio p99 1.1732 and peak sampled K3 KL
+0.00916, with all update-zero ratios exactly one and 5/32 probe predictions
+changing. This supports the narrow claim that genuine short-horizon movement is
+possible. It says nothing yet about WER or fairness. The run also exposed an
+artifact-naming deviation (`checkpoint-final` instead of
+`checkpoint-last-safe`), so it cannot be promoted to a confirmatory result.
+
 ## Invalid or provisional evidence
 
 The current 115 profile-cluster identities are not the authoritative 117 Svarah

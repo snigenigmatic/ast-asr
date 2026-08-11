@@ -76,3 +76,19 @@ labelled as such.
   state without emitting `checkpoint-final`.
 - Decision: review and freeze the 20-cycle H1 hard-stop pilot before launching a
   new Modal task. The controller does not change the FR-CISPO objective.
+
+## 2026-08-11 — H1 bounded engineering pilot
+
+- Froze the protocol in commit `2cb4312` and launched the single registered
+  Modal run `profile-h1-klstop-s2026-20260811/h1-klstop-fr-cispo`.
+- Completed all 20 cycles. Peak ratio p99 was 1.1731905; peak sampled K3 KL was
+  0.0091612 at cycle 14; every update-zero ratio distribution was exactly one;
+  adapter drift was 0.1139263; and 5 of 32 probe predictions changed.
+- The checkpoint reloaded exactly. The source/config hash in the run matched a
+  local recomputation using the exact invoked remote config.
+- Protocol deviation: the successful bounded checkpoint was stored as
+  `checkpoint-final` rather than the required `checkpoint-last-safe`. The
+  original artifact remains untouched and is labelled engineering-only.
+- Decision: H1 provides a positive short-horizon safety signal but does not
+  select a learning rate, establish WER gains, unlock three seeds, or authorize
+  five folds. Repair bounded-checkpoint naming before any later run.
