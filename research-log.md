@@ -92,3 +92,20 @@ labelled as such.
 - Decision: H1 provides a positive short-horizon safety signal but does not
   select a learning rate, establish WER gains, unlock three seeds, or authorize
   five folds. Repair bounded-checkpoint naming before any later run.
+
+## 2026-08-11 — H1 FP32 checkpoint evaluation
+
+- The first registered Modal invocation failed before model loading because the
+  remote wrapper imported `ast_asr` outside the project environment. The failed
+  app, exact exception, and absence of output artifacts were preserved.
+- A separately preregistered launcher-only recovery completed 5,772 predictions
+  and passed FP32 solo-versus-batched equality with the exact historical adapter
+  hash.
+- Clean WER was 0.216564, white-10-dB WER 0.547073, MUSAN-babble WER 0.589434,
+  and worst family-condition WER 1.034274.
+- Against matched SFT, clean improved by 2.52 points and worst family-condition
+  improved by 42.74 points. Against zero-shot, unseen MUSAN worsened by 1.62
+  points while clean, white noise, worst-group, and tail metrics improved.
+- Decision: this is a useful single-seed, 20-cycle engineering signal. Select
+  H5 explicit SFT-reference KL as the next bounded training hypothesis; do not
+  unlock three seeds, five folds, or a publication claim.

@@ -45,6 +45,14 @@ possible. It says nothing yet about WER or fairness. The run also exposed an
 artifact-naming deviation (`checkpoint-final` instead of
 `checkpoint-last-safe`), so it cannot be promoted to a confirmatory result.
 
+The same immutable 20-cycle adapter has now been evaluated in FP32 on all three
+conditions. It improves clean WER from 0.2417 to 0.2166 and the provisional
+worst family-condition WER from 1.4617 to 1.0343 versus matched SFT. It also
+beats zero-shot on clean and white-noise WER, but is 1.62 WER points worse than
+zero-shot on unseen MUSAN babble. This is the first useful policy-level WER
+signal in the repaired pipeline, while remaining a one-seed profile-cluster
+engineering result rather than evidence of general fairness or robustness.
+
 ## Invalid or provisional evidence
 
 The current 115 profile-cluster identities are not the authoritative 117 Svarah
@@ -60,8 +68,9 @@ replace it; earlier FP16 metric tables should not be cited.
    without inventing a heuristic mapping?
 2. At what cycle and under which group/condition does KL escape, and is the
    movement gradual or caused by a localized update?
-3. Can a single preregistered KL-control mechanism preserve sequence-level
-   learning while satisfying the trust region and clean-WER constraint?
+3. Can an explicit SFT-reference KL penalty preserve the useful 20-cycle
+   sequence-level signal across a longer horizon while satisfying the trust
+   region and clean-WER constraint?
 4. If authoritative IDs remain unavailable, what narrower claim can be made
    honestly without speaker-level fairness conclusions?
 

@@ -58,8 +58,13 @@ hypotheses:
     statement: >-
       Explicit KL control can preserve genuine live off-policy ratio movement
       while keeping the policy inside the preregistered trust region.
-    status: safety_signal_passed_with_artifact_naming_deviation
+    status: safe_short_horizon_signal_and_exploratory_wer_improvement
     classification: exploratory_engineering
+    evidence:
+      - "20 cycles: ratio p99 1.1732, KL/token 0.00916, 5/32 probe predictions changed"
+      - "FP32 fold-0 clean WER 0.216564 and worst family-condition WER 1.034274"
+      - "Worst family-condition improved 0.427419 absolute versus matched SFT"
+      - "Unseen MUSAN remained 0.016183 absolute worse than zero-shot"
   - id: H2
     statement: >-
       Replacing profile-cluster pseudo-speakers with the authoritative 117
@@ -94,12 +99,27 @@ known_results:
     interpretation: >-
       SFT improves white-noise WER and clean family disparity, but fails the
       clean-regression constraint and worsens the primary worst-group endpoint.
+  h1_bounded_checkpoint_evaluation:
+    seed: 2026
+    cycles: 20
+    checkpoint_revision: 4654e4116cb1a9ebce142e3ccdc11ddd36ec3bb323c9a0ff879b6b0b3c987fe8
+    clean_wer: 0.2165635
+    white_10db_wer: 0.5470728
+    musan_babble_10db_wer: 0.5894336
+    worst_family_condition_wer: 1.0342742
+    worst_20_percent_profile_cluster_wer: 0.4149736
+    publication_valid: false
+    interpretation: >-
+      A useful single-seed short-horizon signal: it improves the primary
+      provisional endpoint and clean WER versus SFT, but is not a 300-cycle,
+      three-seed, authoritative-speaker, or publication-valid result.
 
 next_decision:
+  selected_next_hypothesis: H5_reference_kl_proximal_variant
   required_before_paid_training:
     - "Label any profile-cluster run publication_valid: false"
     - "Pass the complete local verification suite after integration"
-    - "Freeze the bounded H1 protocol in version control before observing results"
+    - "Freeze the bounded H5 protocol and reference-KL coefficient rule before execution"
   forbidden_shortcuts:
     - "No heuristic speaker IDs presented as authoritative"
     - "No silent objective pivot after observing a failed run"
