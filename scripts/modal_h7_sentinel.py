@@ -37,7 +37,10 @@ CACHE_ENV = {
 }
 
 image = (
-    modal.Image.from_registry("nvidia/cuda:12.8.0-devel-ubuntu22.04", add_python="3.12")
+    modal.Image.from_registry(
+        "nvidia/cuda@sha256:09d8951b943dee03cf8fc841b6ea1f201ad33f82f76567171394853c0f494054",
+        add_python="3.12",
+    )
     .apt_install("git", "ffmpeg", "libsndfile1")
     .pip_install("uv>=0.8,<0.9")
     .env(CACHE_ENV)
@@ -50,9 +53,9 @@ image = (
     )
     .add_local_dir("src", remote_path=f"{PROJECT_ROOT}/src", copy=True)
     .add_local_dir("configs", remote_path=f"{PROJECT_ROOT}/configs", copy=True)
-    .add_local_dir(
-        "experiments/H7-sentinel-kl",
-        remote_path=f"{PROJECT_ROOT}/experiments/H7-sentinel-kl",
+    .add_local_file(
+        "experiments/H7-sentinel-kl/input-lock.json",
+        remote_path=f"{PROJECT_ROOT}/experiments/H7-sentinel-kl/input-lock.json",
         copy=True,
     )
     .run_commands(

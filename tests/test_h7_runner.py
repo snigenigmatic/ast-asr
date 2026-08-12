@@ -674,5 +674,13 @@ def test_h7_modal_entrypoint_uses_existing_h6_mounts_and_a_discoverable_function
     )
     assert "def run_h7_sentinel(source_commit: str)" in script
     assert "retries=0" in script
+    assert "modal.Image.from_registry(" in script
+    assert (
+        '"nvidia/cuda@sha256:09d8951b943dee03cf8fc841b6ea1f201ad33f82f76567171394853c0f494054"'
+        in script
+    )
     assert "/data/fr_cispo_profile/raw/Svarah" in script
     assert "resolved-policy-configs/h6-beta0-fr-cispo.json" in script
+    assert '.add_local_file(\n        "experiments/H7-sentinel-kl/input-lock.json",' in script
+    assert 'remote_path=f"{PROJECT_ROOT}/experiments/H7-sentinel-kl/input-lock.json"' in script
+    assert '.add_local_dir(\n        "experiments/H7-sentinel-kl"' not in script
