@@ -99,8 +99,13 @@ def model_input_dtype(model: Any) -> torch.dtype:
 
 def directory_content_hash(directory: Path) -> str:
     digest = hashlib.sha256()
-    for path in sorted(item for item in directory.rglob("*") if item.is_file()):
-        digest.update(path.relative_to(directory).as_posix().encode("utf-8"))
+    files = (
+        (path.relative_to(directory).as_posix(), path)
+        for path in directory.rglob("*")
+        if path.is_file()
+    )
+    for relative_key, path in sorted(files, key=lambda item: item[0]):
+        digest.update(relative_key.encode("utf-8"))
         with path.open("rb") as source:
             for chunk in iter(lambda: source.read(1024 * 1024), b""):
                 digest.update(chunk)
