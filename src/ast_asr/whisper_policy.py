@@ -78,6 +78,87 @@ class ScoredHypotheses:
     token_mask: torch.Tensor
 
 
+def score_saved_target_tokens(
+    model: Any,
+    *,
+    input_features: torch.Tensor,
+    attention_mask: torch.Tensor,
+    saved_token_ids: torch.Tensor,
+    saved_token_mask: torch.Tensor,
+    prefix_token_ids: Sequence[int],
+    pad_token_id: int,
+) -> ScoredHypotheses:
+    """Teacher-force immutable saved target IDs without decoding or tokenizing.
+
+    H7 rescoring must use the original rollout token evidence verbatim.  This
+    seam accepts the saved padded ``[B, K, T]`` tensors directly and returns the
+    same IDs and mask shape; it intentionally has no processor argument, so it
+    cannot invoke a tokenizer or generation path.
+    """
+    if saved_token_ids.ndim != 3 or saved_token_mask.shape != saved_token_ids.shape:
+        raise ValueError("saved token IDs and mask must have matching shape [B, K, T]")
+    if saved_token_ids.dtype != torch.long:
+        raise ValueError("saved token IDs must use torch.long")
+    if saved_token_mask.dtype != torch.bool:
+        raise ValueError("saved token mask must use torch.bool")
+    batch_size, candidate_count, token_count = saved_token_ids.shape
+    if batch_size == 0 or candidate_count == 0 or token_count == 0:
+        raise ValueError("saved token tensor dimensions must be nonzero")
+    if input_features.shape[0] != batch_size or attention_mask.shape[0] != batch_size:
+        raise ValueError("saved targets and acoustic batch must align")
+    lengths = saved_token_mask.sum(dim=-1)
+    if bool((lengths == 0).any()):
+        raise ValueError("every saved candidate must contain a scored token")
+    expected_mask = (
+        torch.arange(token_count, device=saved_token_mask.device).view(1, 1, -1)
+        < lengths.unsqueeze(-1)
+    )
+    if not bool(torch.equal(saved_token_mask, expected_mask)):
+        raise ValueError("saved token masks must contain one contiguous target prefix")
+
+    working_ids = saved_token_ids.to(device=input_features.device)
+    working_mask = saved_token_mask.to(device=input_features.device)
+    flattened_ids = working_ids.reshape(batch_size * candidate_count, token_count)
+    flattened_mask = working_mask.reshape(batch_size * candidate_count, token_count)
+    targets = tuple(
+        tuple(int(token) for token in ids[mask].detach().cpu().tolist())
+        for ids, mask in zip(flattened_ids, flattened_mask, strict=True)
+    )
+    packed = pack_decoder_targets(
+        prefix_token_ids=prefix_token_ids,
+        target_token_ids=targets,
+        pad_token_id=pad_token_id,
+        device=input_features.device,
+    )
+    repeated_features = input_features.to(dtype=model_input_dtype(model)).repeat_interleave(
+        candidate_count, dim=0
+    )
+    repeated_attention = attention_mask.repeat_interleave(candidate_count, dim=0)
+    with deterministic_model_mode(model):
+        outputs = whisper_runtime_model(model)(
+            input_features=repeated_features,
+            attention_mask=repeated_attention,
+            decoder_input_ids=packed.decoder_input_ids,
+            decoder_attention_mask=packed.decoder_attention_mask,
+            use_cache=False,
+        )
+    distributions = F.log_softmax(outputs.logits.float(), dim=-1)
+    gathered = distributions.gather(2, packed.target_ids.unsqueeze(-1)).squeeze(-1)
+    flat_scores = torch.zeros(
+        (batch_size * candidate_count, token_count),
+        dtype=torch.float32,
+        device=input_features.device,
+    )
+    for index, mask in enumerate(flattened_mask):
+        scored = gathered[index][packed.score_mask[index]]
+        flat_scores[index][mask] = scored
+    return ScoredHypotheses(
+        token_ids=working_ids.clone(),
+        token_log_probs=flat_scores.view(batch_size, candidate_count, token_count).float(),
+        token_mask=working_mask.clone(),
+    )
+
+
 def _decoder_prefix(model: Any, processor: Any) -> tuple[int, ...]:
     prompt = processor.get_decoder_prompt_ids(language="english", task="transcribe")
     prompt_tokens = tuple(token for _, token in sorted(prompt))
