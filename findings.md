@@ -53,6 +53,20 @@ zero-shot on unseen MUSAN babble. This is the first useful policy-level WER
 signal in the repaired pipeline, while remaining a one-seed profile-cluster
 engineering result rather than evidence of general fairness or robustness.
 
+A matched 40-cycle H5 comparison now isolates a fixed-SFT sampled-K3 penalty.
+Both beta-zero and beta `0.04` runs completed safely with live ratios and exact
+checkpoint reloads. Beta `0.04` reduced peak sampled K3 by 34.1% and improved
+the provisional worst family-condition WER from 0.8528 to 0.8306 while clean
+overall WER changed only from 0.2128 to 0.2134. This is the intended proximal
+mechanism and the one-seed primary point gate is met.
+
+The result is not a uniform robustness win: white-noise WER worsened from
+0.5155 to 0.5214 and MUSAN-babble WER from 0.5641 to 0.5815. The 10,000-sample
+paired interval over 39 fold-0 demographic-profile clusters also includes no
+improvement for the registered worst-group delta. H5 therefore supports
+replication of a fairness/average-robustness trade-off; it does not confirm
+FR-CISPO efficacy.
+
 ## Invalid or provisional evidence
 
 The current 115 profile-cluster identities are not the authoritative 117 Svarah
@@ -68,9 +82,8 @@ replace it; earlier FP16 metric tables should not be cited.
    without inventing a heuristic mapping?
 2. At what cycle and under which group/condition does KL escape, and is the
    movement gradual or caused by a localized update?
-3. Can an explicit SFT-reference KL penalty preserve the useful 20-cycle
-   sequence-level signal across a longer horizon while satisfying the trust
-   region and clean-WER constraint?
+3. Does the one-seed worst-group improvement from beta `0.04` replicate over
+   two additional fixed seeds without repeating the average-noise regressions?
 4. If authoritative IDs remain unavailable, what narrower claim can be made
    honestly without speaker-level fairness conclusions?
 

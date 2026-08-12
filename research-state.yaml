@@ -39,10 +39,11 @@ evidence_status:
   checkpoint_round_trip:
     status: passing
   policy_safety:
-    status: failed
+    status: safe_bounded_h5_only
     note: >-
       None of the preregistered learning rates completed 300 cycles while
-      satisfying per-token KL < 0.1.
+      satisfying per-token KL < 0.1. Matched 40-cycle beta=0 and beta=0.04 H5
+      runs both completed safely; this does not validate a 300-cycle schedule.
 
 hypotheses:
   - id: H0
@@ -71,6 +72,20 @@ hypotheses:
       Svarah speakers yields valid speaker-disjoint folds and may materially
       change group-risk estimates.
     status: blocked_external
+  - id: H5
+    statement: >-
+      A beta=0.04 fixed-SFT sampled-K3 penalty reduces 40-cycle policy
+      divergence relative to a matched beta-zero control while retaining live
+      FR-CISPO movement and improving the provisional worst family-condition
+      endpoint without more than 0.01 clean-WER regression.
+    status: mechanism_supported_efficacy_unconfirmed
+    classification: exploratory_engineering
+    evidence:
+      - "Matched 40-cycle runs: peak K3/token 0.0249191 at beta=0 versus 0.0164290 at beta=0.04"
+      - "Both runs completed 160/160 optimizer steps with movement in all 40 cycles"
+      - "Beta=0.04 worst family-condition WER improved 0.0221774 absolute versus beta=0"
+      - "Beta=0.04 clean WER degraded 0.0006663, white WER 0.0059020, and MUSAN WER 0.0174203 versus beta=0"
+      - "A 10,000-sample paired bootstrap over 39 fold-0 profile clusters included zero/harm for every registered delta"
 
 known_results:
   sft:
@@ -113,13 +128,35 @@ known_results:
       A useful single-seed short-horizon signal: it improves the primary
       provisional endpoint and clean WER versus SFT, but is not a 300-cycle,
       three-seed, authoritative-speaker, or publication-valid result.
+  h5_matched_reference_kl_evaluation:
+    seed: 2026
+    cycles: 40
+    beta_zero_checkpoint_revision: eb519c5b60dba9573c4c56808ff9526005b5cd0e1bebae79851a1aea13e902ea
+    beta_004_checkpoint_revision: 9ac3b236270dd9a9bbce12f4b7988aac3a8e5f5942ec4b7ce7ef3e2da41cd41b
+    beta_zero:
+      clean_wer: 0.2127558
+      white_10db_wer: 0.5155164
+      musan_babble_10db_wer: 0.5640647
+      worst_family_condition_wer: 0.8528226
+    beta_004:
+      clean_wer: 0.2134222
+      white_10db_wer: 0.5214184
+      musan_babble_10db_wer: 0.5814850
+      worst_family_condition_wer: 0.8306452
+    publication_valid: false
+    interpretation: >-
+      The proximal term reduced sampled divergence and improved the one-seed
+      provisional worst group by 2.22 points within the clean-WER tolerance,
+      but worsened both aggregate noise conditions and has wide profile-cluster
+      uncertainty. This supports replication, not an efficacy claim.
 
 next_decision:
-  selected_next_hypothesis: H5_reference_kl_proximal_variant
+  selected_next_hypothesis: H6_two_additional_seed_replication_pending_protocol
   required_before_paid_training:
     - "Label any profile-cluster run publication_valid: false"
-    - "Pass the complete local verification suite after integration"
-    - "Freeze the bounded H5 protocol and reference-KL coefficient rule before execution"
+    - "Commit the complete H5 result and paired profile-cluster uncertainty"
+    - "Freeze an H6 replication protocol without changing beta, LR, cycles, data, or endpoints"
+    - "Predeclare the two additional seeds and a stop rule before execution"
   forbidden_shortcuts:
     - "No heuristic speaker IDs presented as authoritative"
     - "No silent objective pivot after observing a failed run"
@@ -130,8 +167,9 @@ artifacts:
   source_speaker_statistics: "C:/Users/C_Kaustubh/Downloads/meta_speaker_stats.csv"
   source_speaker_statistics_sha256: e2daa48863581eb41befd1826b7b14cd80e05f3a1bab9b72d08e7814248f1f94
   h1_engineering_result: experiments/H1-kl-control/result-20260811.md
+  h5_matched_result: experiments/H5-reference-kl/result-20260812.md
 
 continuity:
   heartbeat_requested_minutes: 20
   heartbeat_verified: true
-  last_updated: "2026-08-11"
+  last_updated: "2026-08-12"

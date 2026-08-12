@@ -109,3 +109,29 @@ labelled as such.
 - Decision: this is a useful single-seed, 20-cycle engineering signal. Select
   H5 explicit SFT-reference KL as the next bounded training hypothesis; do not
   unlock three seeds, five folds, or a publication claim.
+
+## 2026-08-12 — H5 matched fixed-reference KL experiment
+
+- Froze H5 before execution as a matched 40-cycle beta-zero control versus a
+  beta `0.04` sampled-K3 SFT-reference penalty. Seed, SFT checkpoint, data,
+  batches, LR `1e-5`, candidates, inner updates, and decoding were identical.
+- The first beta-zero invocation failed before cycle zero because the Modal
+  wrapper imported Torch outside the project environment. Preserved the failed
+  app as launcher-only evidence, committed a one-retry recovery protocol, and
+  moved the probe under `uv run --frozen` without changing H5.
+- Both matched training arms completed 40/40 cycles and 160/160 optimizer
+  steps. Beta `0.04` reduced peak/cycle-40 sampled K3 from `0.0249191` to
+  `0.0164290` while retaining movement in every cycle. Peak ratio p99 remained
+  safe (`1.17210` control, `1.18770` treatment).
+- Both immutable FP32 evaluations produced 5,772 predictions and passed
+  solo-versus-batched equality. Treatment versus control changed clean WER
+  `0.212756 -> 0.213422`, white-10 WER `0.515516 -> 0.521418`, MUSAN WER
+  `0.564065 -> 0.581485`, and worst family-condition WER `0.852823 -> 0.830645`.
+- The one-seed point estimate therefore clears the proposed two-point
+  worst-group threshold and clean-regression tolerance, but aggregate noise
+  robustness worsens. A 10,000-sample paired bootstrap over the 39 fold-0
+  demographic-profile clusters includes zero or harm for every registered
+  delta; these are not authoritative speakers.
+- Decision: H5 supports the proximal mechanism and justifies drafting a locked
+  two-seed replication protocol. It does not establish efficacy, unlock five
+  folds, or support a publication-valid fairness claim.
