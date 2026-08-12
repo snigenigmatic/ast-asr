@@ -1,0 +1,2800 @@
+{
+  "banks": [
+    {
+      "cycle": 0,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "4141273994f54aa33cd4cb7893b5237e3669c0f20b7fc7af724ea2d47bb9146e",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "4c925a1a76f0c5bc077fdc783f3e712cc6ee6bf9a97738badd9eaaa978d41a8f",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976891410_f2257_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "How has technology impacted the entertainment scene in your state",
+            "source_audio_sha256": "9ee3855e15e9e39c9ca1f78c376e17c2002d133bbb5f24852767d417548150fd",
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-8e1685bfefba02847c1d",
+            "waveform_sha256": "00a3aeee1795ae4611bf9fb163189022956bbab0f3748a029609b671566f0f2e"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "How has technology impacted the entertainment scene in your state",
+            "seed": 2028006084,
+            "snr_db": 13.66676926612854,
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-8e1685bfefba02847c1d@white-13.6668db",
+            "waveform_sha256": "68b88ee4f4cbee005c9e2ac0e53ed0bcea3b45cdff31d9ca580e3e1b021e8430"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893041_f2066_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Punjabi",
+            "reference": "Education system in our state is not so good. There is a shortage of teachers and there is a lack of training due to lack of funds. Nowadays private schools are replacing government schools as they are imparting good education.",
+            "source_audio_sha256": "c72dd4df52d4ec0b418f25722fc98b716f89978f8788c8a1324e5d8c49b00e83",
+            "speaker_id": "profile-2ba1091d52befceffe97",
+            "utterance_id": "svarah-f89f45f00dec977aa6da",
+            "waveform_sha256": "98bebe3f9a72069c87c4c4c925d98ced681731475dfeb2303da4fbc99a217798"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Punjabi",
+            "reference": "Education system in our state is not so good. There is a shortage of teachers and there is a lack of training due to lack of funds. Nowadays private schools are replacing government schools as they are imparting good education.",
+            "seed": 2028006085,
+            "snr_db": 10.863988399505615,
+            "speaker_id": "profile-2ba1091d52befceffe97",
+            "utterance_id": "svarah-f89f45f00dec977aa6da@white-10.8640db",
+            "waveform_sha256": "7a9369e1e454978992860334299d44bd8e251659b0ba4e3f55d79649028b3ef1"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893912_f2185_chunk_5.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "and motivated staff with years of experience in",
+            "source_audio_sha256": "f0dbaf23acacad9ea680bc7c002d8be178ff1333f38ce7887a9d4b15ce0552d7",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-58e70e19990da299a26e",
+            "waveform_sha256": "9f26893834edfd1ac2b83f5f49d7fc0e3de38e1719370c99c8f1bdeb856e4437"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "and motivated staff with years of experience in",
+            "seed": 2028006086,
+            "snr_db": 10.346245169639587,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-58e70e19990da299a26e@white-10.3462db",
+            "waveform_sha256": "fbb9c462c7a25211b9fb4b777f03d0d721faea4f2b59709861795534e4e3ead4"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 1,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "43738b1905c31ec63c12fe5e17c1b672a465ea96d333a107e988a1795329a67c",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "0ab0493bf0ed4d9f61b6baa837b65abbfcc2e6cdbdbd690cfde918676b5891b4",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976893982_f270_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Telugu",
+            "reference": "Help",
+            "source_audio_sha256": "40f5713e72c27c01fc13b97b7f7202c003cd433abd23cb5eb82c15dcdca9d5db",
+            "speaker_id": "profile-75381d61bc76b3fa46f2",
+            "utterance_id": "svarah-0dc56f17398cfb5da574",
+            "waveform_sha256": "b1028cdf7b6c9078268890887f13ceff63ac591c1534cc59ed2b76a5b0e65910"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Telugu",
+            "reference": "Help",
+            "seed": 2028006185,
+            "snr_db": 19.8738294839859,
+            "speaker_id": "profile-75381d61bc76b3fa46f2",
+            "utterance_id": "svarah-0dc56f17398cfb5da574@white-19.8738db",
+            "waveform_sha256": "cb9534f86d89f1a8de76c941f616fbceefa82e24ab4783e5968a16f48349f128"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976925736_f3275_chunk_12.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Dogri",
+            "reference": "There are other schemes also",
+            "source_audio_sha256": "3ba41662f92f9ab2e5102f41956f35a7797c0a556d6b72959b1225ac80f28f40",
+            "speaker_id": "profile-3e99f8ddabb1b86190bb",
+            "utterance_id": "svarah-6caeb270bceefd61705b",
+            "waveform_sha256": "12b4bd9528fcf7809045d70f17a2ca576430960bc17f8fe4285a9fb353069396"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Dogri",
+            "reference": "There are other schemes also",
+            "seed": 2028006186,
+            "snr_db": 17.134206891059875,
+            "speaker_id": "profile-3e99f8ddabb1b86190bb",
+            "utterance_id": "svarah-6caeb270bceefd61705b@white-17.1342db",
+            "waveform_sha256": "3e8273ac7a7d80c9924430d62d70276ac994d92aef5da47cd7eff53223381b25"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893807_f188_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Show the list of restaurants I paid through PayPal last Year",
+            "source_audio_sha256": "750ea2c374c5838565bc4dd609476ec0925739fa4048d6b60ccc193d0d78ad00",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-b62d365860852771744c",
+            "waveform_sha256": "b434311339df2e664a76ee05c9b1d8775d3c3da7b48def39703f9f38971d5582"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Show the list of restaurants I paid through PayPal last Year",
+            "seed": 2028006187,
+            "snr_db": 17.070776224136353,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-b62d365860852771744c@white-17.0708db",
+            "waveform_sha256": "109082fd6e1930455bb7733e427f3a437fddbec253443abe1ca7e950d7e57847"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 2,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "a90ffd6619f2efae4f2e95c1587fadfb69bb575e13d0bce65186e1c12d525e25",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "5f998ac7823ca207acd20c783e1bf648a7de870cf4869762348d7a1d2a853351",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976891399_f2256_chunk_3.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "10000",
+            "source_audio_sha256": "6ab6e2bb41538c4d683836d71ca2fce36cd56f1ab7f4c4de018bafa65b1973ff",
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-5fc359f145b82b993e65",
+            "waveform_sha256": "41dc8aec46d707dd00f4c3e3b42c4c5348c29e40a87a1682697a9ea2f7bcce6a"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "10000",
+            "seed": 2028006286,
+            "snr_db": 15.930735468864441,
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-5fc359f145b82b993e65@white-15.9307db",
+            "waveform_sha256": "bcc208a8b7138b5f595783cff440a684f5c15b6110f70a9ddee8478471c1f145"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976894273_f3279_chunk_20.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Kashmiri",
+            "reference": "choose whether or not to pursue.",
+            "source_audio_sha256": "eeceaad4880ab6e476c331aa6c6bf791057e0e47e62cb070e0f3e602c82582d2",
+            "speaker_id": "profile-d5a0a06dea9d632f48d9",
+            "utterance_id": "svarah-2db66909509a6e3a7532",
+            "waveform_sha256": "6440580cef01da174ec4ec91a420e79723f5a87dee366a6a6b774a9e74ae7b83"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Kashmiri",
+            "reference": "choose whether or not to pursue.",
+            "seed": 2028006287,
+            "snr_db": 17.578073143959045,
+            "speaker_id": "profile-d5a0a06dea9d632f48d9",
+            "utterance_id": "svarah-2db66909509a6e3a7532@white-17.5781db",
+            "waveform_sha256": "3ba9066bc58b558d657d97313fe2ad2ec6430d2122a94d9428222a77dbf6ff06"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893915_f2228_chunk_9.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Though it was celebrated by the Bodos in a traditional way",
+            "source_audio_sha256": "e54fb2f63ca200be4788cfa59195ac856c173ac5a6268555840025a3480ce8db",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-03451bcf9da7781edd0b",
+            "waveform_sha256": "acebc95df348bc0496f8ec89dc5f00d599a687d1ddd206dedb73bfcae3af7e2f"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Though it was celebrated by the Bodos in a traditional way",
+            "seed": 2028006288,
+            "snr_db": 18.26196551322937,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-03451bcf9da7781edd0b@white-18.2620db",
+            "waveform_sha256": "8ea840f65423bbc711efc51eea3d73b07b6e6d44d29a9afc8221519eb0322c78"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 3,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "e4157b7bb24da27b5c66b6883d2af0eaa84d7fbcd8fe9529d706302cf0cc73aa",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "0889ca88aaab253c9da923d87ac2ea3f73c437196d7b64f6d01420c3a8d02a88",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976887177_f3253_chunk_9.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "So if we were to prevent or to put a stop to that opportunity, to that gateway, then",
+            "source_audio_sha256": "cd0eb0da19ca9c3a2b8c5614a58e09cb409a03df1bf5dc05e1d2a5b0a533d15c",
+            "speaker_id": "profile-47be87d8f672b7bf35cf",
+            "utterance_id": "svarah-416d95a0efe8173b0081",
+            "waveform_sha256": "5c37637e91b7044f60f4b05275a90a86d0765d6a88ac71b62e543a64e82bbe9a"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "So if we were to prevent or to put a stop to that opportunity, to that gateway, then",
+            "seed": 2028006387,
+            "snr_db": 10.191351175308228,
+            "speaker_id": "profile-47be87d8f672b7bf35cf",
+            "utterance_id": "svarah-416d95a0efe8173b0081@white-10.1914db",
+            "waveform_sha256": "f19c29702926e18e4f7a55c3d1aeb16cb24b487ad4aa0c4c60b964cc6dfa201d"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976897351_f463_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Odia",
+            "reference": "Are there any offers on Veg Items?",
+            "source_audio_sha256": "cdd2ea91572848b7f25477c56565201715ec726f4a88ef4f86b7f0f7ee2e234a",
+            "speaker_id": "profile-682a8b391ffd86c736d0",
+            "utterance_id": "svarah-5952fa5876dc0f7d670b",
+            "waveform_sha256": "4cf0bb0ed404233e1a87cfd933f4650d1f5fb831176e4eb4b1399a8195314e5f"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Odia",
+            "reference": "Are there any offers on Veg Items?",
+            "seed": 2028006388,
+            "snr_db": 18.498042821884155,
+            "speaker_id": "profile-682a8b391ffd86c736d0",
+            "utterance_id": "svarah-5952fa5876dc0f7d670b@white-18.4980db",
+            "waveform_sha256": "329a95b3f5261eb23a9913cbedc84b0ca7e6102e8eedf647f4010892395eae47"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976895655_f647_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Use my UAN number 116195929553 to generate EPFO passbook statement",
+            "source_audio_sha256": "56428297f8323f94901e2c0073962f0ff63374256b6a99424cdda970ddf9ab3b",
+            "speaker_id": "profile-3c53ba96dd808d79c979",
+            "utterance_id": "svarah-afd5c3ee44844c518551",
+            "waveform_sha256": "c3bc70a83ee0a7e4ad1a3786320a16f7372ac9875ba2b517041ba82937e4d509"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Use my UAN number 116195929553 to generate EPFO passbook statement",
+            "seed": 2028006389,
+            "snr_db": 13.031054139137268,
+            "speaker_id": "profile-3c53ba96dd808d79c979",
+            "utterance_id": "svarah-afd5c3ee44844c518551@white-13.0311db",
+            "waveform_sha256": "240874e6bb8bd9b893c5500d98cf63aad35d165a4eb3979c6e234bec5b46ec0c"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 4,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "db88e80a09d6a5524a66914c943a430909031cc1612f156e302fece0b6bc6f6c",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "134b2bfa9ef0332c581ddfcc75304a99e952b7e855baf6d801642941912dd40e",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976896187_f29_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Kannada",
+            "reference": "Down",
+            "source_audio_sha256": "5acd46c5d849f2590333f2e1ce9b56aa38255f7f39192a5e7b54f189045e90e8",
+            "speaker_id": "profile-a0dd548ca527398b8c73",
+            "utterance_id": "svarah-d03162314f1d8ff6133f",
+            "waveform_sha256": "8ecd6bc2a667bdb0893cb687809e9a8ffa4aca5f5164aa199b28cced33de0f36"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Kannada",
+            "reference": "Down",
+            "seed": 2028006488,
+            "snr_db": 13.941624164581299,
+            "speaker_id": "profile-a0dd548ca527398b8c73",
+            "utterance_id": "svarah-d03162314f1d8ff6133f@white-13.9416db",
+            "waveform_sha256": "f2763e0768ce8f49028156c15b2c6a395abae2af2a12b86ba2e896c1331daa7b"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976896978_f327_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Bengali",
+            "reference": "Play",
+            "source_audio_sha256": "989f6d9be0d2a0065d8723947de8fb2f0ecdeb336ed82ad11baa914f38481dc5",
+            "speaker_id": "profile-e1d15ceb4d27cc864dd9",
+            "utterance_id": "svarah-002beb2b5f843c7fc285",
+            "waveform_sha256": "5521372333b8664ab0cd4c553d5c0324dfb9a19068b0da2310ce5963961ff9af"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Bengali",
+            "reference": "Play",
+            "seed": 2028006489,
+            "snr_db": 12.261115312576294,
+            "speaker_id": "profile-e1d15ceb4d27cc864dd9",
+            "utterance_id": "svarah-002beb2b5f843c7fc285@white-12.2611db",
+            "waveform_sha256": "4b0f2670735aabb7a291dc715cb86d8a4ea382db656319003cb9916364aaaa13"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893913_f2002_chunk_5.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "The state is bordering Arunachal Pradesh in the east",
+            "source_audio_sha256": "1a22bf03d0871ed4becb848c091053c9c1bc1343cbceaf3f255ba25330a58ff2",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-1e78cc8788b6969c58a2",
+            "waveform_sha256": "dba2e1a64b75d6b445db5a888f243ec3a9ae40cf268c03a1c40eeef4ea2ffe3e"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "The state is bordering Arunachal Pradesh in the east",
+            "seed": 2028006490,
+            "snr_db": 16.190152764320374,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-1e78cc8788b6969c58a2@white-16.1902db",
+            "waveform_sha256": "f521720f328b66d53a56eb02e075981d51be934a366ecac170ad3b8d3e7d3590"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 5,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "a1064df53f20a6798f2ac68e562c85b2ab7af47ae013276737bddbec99683822",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "02d9689e609a86a42dcfd7ceb5dbc4015926b4c33d9553c3b460e149dfd7a5c0",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976884273_f1982_chunk_3.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "of English language used in this area",
+            "source_audio_sha256": "8cf58a4566d342c8fa75aebacc751ed3dc98c82821530118f1f361d5b7007845",
+            "speaker_id": "profile-18f95a3802aa5043859d",
+            "utterance_id": "svarah-f7459a67ceb55bb2ab8d",
+            "waveform_sha256": "9257a131407eb8080c849e586ad0f6899471d5e1e92046f5d94cf7917827f50a"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "of English language used in this area",
+            "seed": 2028006589,
+            "snr_db": 11.299191117286682,
+            "speaker_id": "profile-18f95a3802aa5043859d",
+            "utterance_id": "svarah-f7459a67ceb55bb2ab8d@white-11.2992db",
+            "waveform_sha256": "8610e54328dbceef873536e464d5fea398480b69ee68ff5ab7f4ee984bec5617"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976888160_f3202_chunk_6.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Maithili",
+            "reference": "Its railway station and airport caters to large population of North Bihar.",
+            "source_audio_sha256": "8c51083f0898e3156c9d0787a73eb5ab28dca428c450a8b36649d5f7348d657f",
+            "speaker_id": "profile-7e85ce267eb2c53ee472",
+            "utterance_id": "svarah-3b8902f20cfdd9f7a6f8",
+            "waveform_sha256": "8405b6d5f26a27da15371a1943dac71f89cbda3fc06b1439ec816bbb93f78fb1"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Maithili",
+            "reference": "Its railway station and airport caters to large population of North Bihar.",
+            "seed": 2028006590,
+            "snr_db": 14.95460033416748,
+            "speaker_id": "profile-7e85ce267eb2c53ee472",
+            "utterance_id": "svarah-3b8902f20cfdd9f7a6f8@white-14.9546db",
+            "waveform_sha256": "6d732fac31ece97ae959957f45c384b52a9d04bb0fe3d8807ea15683e6807d2c"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893811_f2666_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Choose district to search for medical stores in state Chhattisgarh",
+            "source_audio_sha256": "52596c8e04813334cebd653c9ad7e4de929badae60d15a1b4f2827fac81783ee",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-05c1529484b1f2c8c98f",
+            "waveform_sha256": "ff9e46defba03b6e9da938dffe09560a650437866f18d8be7fe25d2a6d34f604"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Choose district to search for medical stores in state Chhattisgarh",
+            "seed": 2028006591,
+            "snr_db": 13.250315189361572,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-05c1529484b1f2c8c98f@white-13.2503db",
+            "waveform_sha256": "5db5347bef6bcc2e5c5f519d2fa42a0c5ffb576d3d95d1c73534c8cbbb5a5240"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 6,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "401e36202fb778b2eb2b797faf01cefcc1298ba0eb82840823a89e6caf0b970a",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "8b1d8c460f618555c747872a4833bec825ad70b85a2c4af951e672b6e0ee37d5",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976899467_f1087_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "where can i order pizza for delivery",
+            "source_audio_sha256": "2bf0909ee4537b9206b9f6aa98e8ee740bebdfacce5374e2230d8538ecf87394",
+            "speaker_id": "profile-20102f82fc05ff563820",
+            "utterance_id": "svarah-00f598494a125609b1ca",
+            "waveform_sha256": "49efc38bcf32516640c91f87198b20bd5b236a15d923b7b30d87643655b736b7"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "where can i order pizza for delivery",
+            "seed": 2028006690,
+            "snr_db": 10.09982943534851,
+            "speaker_id": "profile-20102f82fc05ff563820",
+            "utterance_id": "svarah-00f598494a125609b1ca@white-10.0998db",
+            "waveform_sha256": "c559fa0e6717c69a855b1713e1eec204fc968c09ff4f444abfaf3454273bc3fb"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976897396_f2171_chunk_16.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Odia",
+            "reference": "despite being",
+            "source_audio_sha256": "9dd13b0ec3e3a6d35e7f24c6e03ab7031c9aa6facbec9f8038efa69977bf1f7b",
+            "speaker_id": "profile-682a8b391ffd86c736d0",
+            "utterance_id": "svarah-577287774df2a64979ec",
+            "waveform_sha256": "0184b4b287c693727acfe89c366e3db9bd36271517f177dab52b90133f4f2140"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Odia",
+            "reference": "despite being",
+            "seed": 2028006691,
+            "snr_db": 18.884394764900208,
+            "speaker_id": "profile-682a8b391ffd86c736d0",
+            "utterance_id": "svarah-577287774df2a64979ec@white-18.8844db",
+            "waveform_sha256": "06b9f9aaaa482ddb7d96114b1ee7ee99bf9d9773e1418dda5750eac7d7f71806"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893912_f2185_chunk_1.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "This center is best in Guwahati",
+            "source_audio_sha256": "04d18b64f0551859dc47fe9ef806b78b1376ccbc25e9e2ddbed6b8f54375e044",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-ef668cee115c842b1139",
+            "waveform_sha256": "f25c8420151d60680f2611d6356540b5fa4bceadaa948559290e3c53c0183f5e"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "This center is best in Guwahati",
+            "seed": 2028006692,
+            "snr_db": 13.557533025741577,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-ef668cee115c842b1139@white-13.5575db",
+            "waveform_sha256": "e205d350c8ecabdaf17cf46ccfab03e7af7acfe146e63cb9a09c473470ffd4c0"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 7,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "e3f4ad92364768d70bc63c442156b9d4b5b1505478b14b5555d35da9bc74193e",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "4b67f1673fb45c2c7bab6db2695c19bc695848ec156377f0a86c1c4f2fcfe1c1",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976883943_f2231_chunk_1.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "to build up an art career",
+            "source_audio_sha256": "8fa1f6b115183094b2aeda705185091048839d1e8fa55319462fc070bf310370",
+            "speaker_id": "profile-1c5fec00bae5aff8a504",
+            "utterance_id": "svarah-e7768a9a740a059c4dcb",
+            "waveform_sha256": "a0a6e7322a89cdcd2ebb9d9fc883ec4245f314f99eca152d952bd95e1a2be2a1"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "to build up an art career",
+            "seed": 2028006791,
+            "snr_db": 19.062952399253845,
+            "speaker_id": "profile-1c5fec00bae5aff8a504",
+            "utterance_id": "svarah-e7768a9a740a059c4dcb@white-19.0630db",
+            "waveform_sha256": "2aa3581a0bbb68a8734174408c2764d1c8a46d9e44cbf3be878722acdeea199f"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976894274_f2214_chunk_3.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Kashmiri",
+            "reference": "English was taught quite effectively by our teachers. They stressed upon the importance and use of grammar and the students were expected to give their 100% in learning the language.",
+            "source_audio_sha256": "4b8c90d77cbcee53774fe132c7a15a917795c920c2a608923321a60d77482bda",
+            "speaker_id": "profile-d5a0a06dea9d632f48d9",
+            "utterance_id": "svarah-24619700fd42da0e01a2",
+            "waveform_sha256": "fe341d8f1a533359750cfed45743e67c657e1249c926c7e736e5b76b6537f994"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Kashmiri",
+            "reference": "English was taught quite effectively by our teachers. They stressed upon the importance and use of grammar and the students were expected to give their 100% in learning the language.",
+            "seed": 2028006792,
+            "snr_db": 19.663239121437073,
+            "speaker_id": "profile-d5a0a06dea9d632f48d9",
+            "utterance_id": "svarah-24619700fd42da0e01a2@white-19.6632db",
+            "waveform_sha256": "db01ba5f95de92ba454d7e51e68c454be4289ee87614a71bd24809a6901a0498"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893909_f2140_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Yes, I have taken many trips for the purpose of learning. My third trip was riding in a snow-covered terrain of Himalayan rains.",
+            "source_audio_sha256": "11726053b8a9ebdb71fafd41e643717a24ced46c42443ec29faacbe8d1589583",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-87d28610cdfa08751844",
+            "waveform_sha256": "51c6303c52d8812b225025f449842ab67152657b05581fac244587bf76924ce7"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Yes, I have taken many trips for the purpose of learning. My third trip was riding in a snow-covered terrain of Himalayan rains.",
+            "seed": 2028006793,
+            "snr_db": 15.176781415939331,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-87d28610cdfa08751844@white-15.1768db",
+            "waveform_sha256": "c9c4fa15c761b010475acb0691b78aa07724a2b605de55529d8c1b77ae799ed6"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 8,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "f5bd421a6493028b7b88d4056e104ca8b27c5bd709439565ffed3f54277caaef",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "16b32a9ef31f82a83f145cd7f6aabc89f243bd866611e57d3b9afa1c1e9fb1c7",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976883946_f1999_chunk_13.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "and the knowledge about them is imparted by the teacher",
+            "source_audio_sha256": "705c6b75bcdc81c9d2c53257763499cc2d95bb40f7bc5ef442a7bbece0513792",
+            "speaker_id": "profile-1c5fec00bae5aff8a504",
+            "utterance_id": "svarah-507a33cea1c7ad543868",
+            "waveform_sha256": "c0f5e8e943884fc48ca6a343943395d326b31dc6116704f2fdd50ee8a6525aa9"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "and the knowledge about them is imparted by the teacher",
+            "seed": 2028006892,
+            "snr_db": 13.84763777256012,
+            "speaker_id": "profile-1c5fec00bae5aff8a504",
+            "utterance_id": "svarah-507a33cea1c7ad543868@white-13.8476db",
+            "waveform_sha256": "a33afd7e05826d5020b6681089f685a6b37c1e21427cda82c61b45a3d0853fe4"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976900608_f176_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Urdu",
+            "reference": "Disagree",
+            "source_audio_sha256": "a971e90f06b7f90a28887a857839f319d00a892de66a6b90573187bbd02e8400",
+            "speaker_id": "profile-9ce33732b58d09bf0fcd",
+            "utterance_id": "svarah-7a7c3da288417cfedb91",
+            "waveform_sha256": "6c1f3c11c56d2d61de267a9d6a6d1c70268940280a92079518156e4322eb8ca2"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Urdu",
+            "reference": "Disagree",
+            "seed": 2028006893,
+            "snr_db": 14.347882866859436,
+            "speaker_id": "profile-9ce33732b58d09bf0fcd",
+            "utterance_id": "svarah-7a7c3da288417cfedb91@white-14.3479db",
+            "waveform_sha256": "eec5ae30abbf9ffed26a0e06bc9e7844f8bbfc6830cfb12fca6e909b8502d112"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893912_f2185_chunk_14.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "healed",
+            "source_audio_sha256": "d996435c0c9f268687161f008fe763db10ff6522cf5851aedfd673106e712fe0",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-f9a4d185fa07263354b4",
+            "waveform_sha256": "652bbf3183ec74b4bfd4eb2fa0b07f8c16e04f9904f311017316c4b4c8687d59"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "healed",
+            "seed": 2028006894,
+            "snr_db": 18.34642469882965,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-f9a4d185fa07263354b4@white-18.3464db",
+            "waveform_sha256": "2981fd61432a92ad776a77eb7d1c5a8f69ec1c1e8e6efa8154b6fe417fbd5f56"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 9,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "e492baba5ff73b2f1fb8480404f1b958bf6539de6dc31f6760a76c64b80eec03",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "697b94230429c292172a07368a302d44cd9efdb8b23de8d4097e56c537d96a64",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976896163_f378_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Kannada",
+            "reference": "Can you fetch the list of all University Managed-Private institutes which are approved by AICTE in the academic year 2019 - 2020",
+            "source_audio_sha256": "864f9faf443b388cc494b7d16fcc052b56066db1fe740645bc2e8ef0df1e0a30",
+            "speaker_id": "profile-a0dd548ca527398b8c73",
+            "utterance_id": "svarah-f978b55b90b826e8509e",
+            "waveform_sha256": "ebf69a04b9859093d960c3571796ee88bfd9de4b99fe7677b026dcf0c076cc77"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Kannada",
+            "reference": "Can you fetch the list of all University Managed-Private institutes which are approved by AICTE in the academic year 2019 - 2020",
+            "seed": 2028006993,
+            "snr_db": 10.900522470474243,
+            "speaker_id": "profile-a0dd548ca527398b8c73",
+            "utterance_id": "svarah-f978b55b90b826e8509e@white-10.9005db",
+            "waveform_sha256": "3e6ae2a215d73c64df424357beee25d945d0e2fe0ce8cb1b2579cef299f3764f"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976884114_f2737_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Marathi",
+            "reference": "Which are all the colleges offering UG level courses in academic year 2019 - 2020 and are approved by AICTE?",
+            "source_audio_sha256": "7afa84de8ed883355e09178ce32e1e9baff2b5a3548ee7bc1508997274377073",
+            "speaker_id": "profile-825e94cdec811576aceb",
+            "utterance_id": "svarah-89dd73e370adf3271e71",
+            "waveform_sha256": "7faf9da4e3ba64a24fcc710995448c3575e82fcda4c88cc2b2f6ac6b519591c6"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Marathi",
+            "reference": "Which are all the colleges offering UG level courses in academic year 2019 - 2020 and are approved by AICTE?",
+            "seed": 2028006994,
+            "snr_db": 11.671371459960938,
+            "speaker_id": "profile-825e94cdec811576aceb",
+            "utterance_id": "svarah-89dd73e370adf3271e71@white-11.6714db",
+            "waveform_sha256": "2d3c2b5a17425691ed8f4d06863fbdcc00b5cd7d8842ebb965ef63fc9d147ed8"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893913_f2002_chunk_17.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "flowing from west to east as the Tsangpo River",
+            "source_audio_sha256": "923fa72dd0cfee5be9ef6bbe4fcc4d9017774151874fb8cd268ffe01aa9c4cfc",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-312eeccf057900fc2540",
+            "waveform_sha256": "2a39c6e9645984407c20743545042bf6903bfc79d137ec56d851d123afe93630"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "flowing from west to east as the Tsangpo River",
+            "seed": 2028006995,
+            "snr_db": 10.940360426902771,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-312eeccf057900fc2540@white-10.9404db",
+            "waveform_sha256": "4521d0b88ff5c44f8e2284605b4a804433096f1692461afb73c7fd4d87d3b32a"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 10,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "f1f5060d0c2465c268374f98ec0fed405127bec8ced8d72ce1a72879862da72c",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "35edd76cbe01368e8b36619aee0bfa7a66ecc8573e5630fd0fb40a191efcd3e1",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976893965_f2524_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Telugu",
+            "reference": "Cat",
+            "source_audio_sha256": "6fdfd7281e284ca0bede5ad37bcb16b42d8ed6e546ea048781e4315d9437ecec",
+            "speaker_id": "profile-75381d61bc76b3fa46f2",
+            "utterance_id": "svarah-bc04a352dceed3724f92",
+            "waveform_sha256": "0473af657f4047db1501fc5b77d4c805c1e92348df101fb786eef893e226c406"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Telugu",
+            "reference": "Cat",
+            "seed": 2028007094,
+            "snr_db": 16.74925446510315,
+            "speaker_id": "profile-75381d61bc76b3fa46f2",
+            "utterance_id": "svarah-bc04a352dceed3724f92@white-16.7493db",
+            "waveform_sha256": "e49819eb6d270986d30fd1f77d81925e262e5f45c057aa1582865d03eb07d16f"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976883863_f2365_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Marathi",
+            "reference": "Chaturdashi is the 14th day of the lunar fortnight.",
+            "source_audio_sha256": "7da3d0057157262b97e9df168308514058d1f4e1fa5a5c99d42d918062d0dc15",
+            "speaker_id": "profile-28c569dcd49c6c3cfc70",
+            "utterance_id": "svarah-e0ab70cb4ae5662d7c5f",
+            "waveform_sha256": "d2f1ffb112b5b820106c543643d92ffa5b41ac7682bc0e6b281ade3974f45059"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Marathi",
+            "reference": "Chaturdashi is the 14th day of the lunar fortnight.",
+            "seed": 2028007095,
+            "snr_db": 19.63544487953186,
+            "speaker_id": "profile-28c569dcd49c6c3cfc70",
+            "utterance_id": "svarah-e0ab70cb4ae5662d7c5f@white-19.6354db",
+            "waveform_sha256": "1f6626335c9ed39b30879f1231c44b58bce5d642f46380716493a91a138cd440"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893853_f3252_chunk_1.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Basically, English is a language where speakers are able to communicate their thoughts and ideas,",
+            "source_audio_sha256": "e2a82ff368286a6ea5e20130858c439119879639c8469b87011639500dcd3f78",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-512fddf902fc21cc9785",
+            "waveform_sha256": "2b64a8d060670c90057766755116842e25da461a0032b6635b02579a06e50372"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Basically, English is a language where speakers are able to communicate their thoughts and ideas,",
+            "seed": 2028007096,
+            "snr_db": 16.847183108329773,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-512fddf902fc21cc9785@white-16.8472db",
+            "waveform_sha256": "a177cca726e80994ea1ed9605a6d675463762acc9765aee18202987662ab003e"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 11,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "c6093493b01eed5a7f714f09fe7a1bca869817415732a199a01046de4fdf6477",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "2eb13584fa24bb1fcc26d410064b3f5bde269a763fd42ba33fe764b2591b96fd",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976883946_f1999_chunk_2.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "For example, government, international, Montessori, traditional school, etc.",
+            "source_audio_sha256": "e43cf3ed0f8bf15069493aead599d036078d307a3d96e9f9165be65bde2d6876",
+            "speaker_id": "profile-1c5fec00bae5aff8a504",
+            "utterance_id": "svarah-a28859e61f82027ba829",
+            "waveform_sha256": "ac77f4f466229df6406257c44a77e8e7312ad28e458125165518b801e738d96b"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "For example, government, international, Montessori, traditional school, etc.",
+            "seed": 2028007195,
+            "snr_db": 16.03920578956604,
+            "speaker_id": "profile-1c5fec00bae5aff8a504",
+            "utterance_id": "svarah-a28859e61f82027ba829@white-16.0392db",
+            "waveform_sha256": "0989d7d536f1adc4822519d351060d4b09501eb723efea216c7e5b32421d68de"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976897399_f2215_chunk_10.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Odia",
+            "reference": "and",
+            "source_audio_sha256": "32bd385e2c8334b672a4eefaf7c6504e96e88b4bd5dcdc295a1563ae847f65e3",
+            "speaker_id": "profile-682a8b391ffd86c736d0",
+            "utterance_id": "svarah-6eb9f1f1a749f0935dfc",
+            "waveform_sha256": "ebe8ce9b10bc1f60fd9c1e568072cbded39598e958125236e6b3f1310ffc72ca"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Odia",
+            "reference": "and",
+            "seed": 2028007196,
+            "snr_db": 17.733432054519653,
+            "speaker_id": "profile-682a8b391ffd86c736d0",
+            "utterance_id": "svarah-6eb9f1f1a749f0935dfc@white-17.7334db",
+            "waveform_sha256": "66460847fe1f96ecf8da150848deba6fab4392c4d224f3f38f746debb4394c98"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893805_f171_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "I want to add 1 box Blue Tokai Coffee Roasters",
+            "source_audio_sha256": "164e6efb784d4f5a70720aa7d32ba88df9e44f3dbd5059b0f858ec769bf6c3db",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-a1023336c51e3df1f646",
+            "waveform_sha256": "d8fbe37c288250ea8a00dd9a84283913bc4c07f0f01c6d712fd0ebcaf04edcfb"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "I want to add 1 box Blue Tokai Coffee Roasters",
+            "seed": 2028007197,
+            "snr_db": 17.626665234565735,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-a1023336c51e3df1f646@white-17.6267db",
+            "waveform_sha256": "5284f79d77f7298945b65a5b77475c1b2fd6c259166574396091d508b13438d3"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 12,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "8d177a5ff7d4e4229bcd56c283babf927ad7953293ac6b3849507811f01bd77b",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "f09282c41e19b8398f81ceb1d60bae8508d760e7f1130e4f59df366e6092d49e",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976893642_f2096_chunk_10.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "there are so many students who can apply for that",
+            "source_audio_sha256": "a7358bf6b36e7b6cd157cb2da756f26a560206834dec8c877ee51fdf53baff92",
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-ff754a3ce789804e88d6",
+            "waveform_sha256": "1e38f3f7c9553e2e4161391b3a9acbeaa318db750b946203564d1308b869b7ee"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "there are so many students who can apply for that",
+            "seed": 2028007296,
+            "snr_db": 14.001640677452087,
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-ff754a3ce789804e88d6@white-14.0016db",
+            "waveform_sha256": "3dab0d685bfd5992605e63d702653bdba75f7605e1c9495dfa6825135d75ece0"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976887078_f1937_chunk_1.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Gujarati",
+            "reference": "and it was in English",
+            "source_audio_sha256": "7c1da673653f5277dfc3c6b23f9a681bce107149053cf1d2e5e3ac0b1d61cbf0",
+            "speaker_id": "profile-de8a445e2449bce1def0",
+            "utterance_id": "svarah-43c3d92d2a3d0c757ae6",
+            "waveform_sha256": "9360727d2cbf289c52114ad2ca2666e6209e6b54c3f564ade7f270a55f5553be"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Gujarati",
+            "reference": "and it was in English",
+            "seed": 2028007297,
+            "snr_db": 17.197988033294678,
+            "speaker_id": "profile-de8a445e2449bce1def0",
+            "utterance_id": "svarah-43c3d92d2a3d0c757ae6@white-17.1980db",
+            "waveform_sha256": "45b002146ee9f0138c7bba531affa4e074d28628cc795c2b8ebeb2f8d02b9178"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893913_f2002_chunk_15.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Its main",
+            "source_audio_sha256": "a85e2490c95a6889f838de05cf1a91e428b66333128a840cecbe57346aa96cf3",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-ad233bb10a77d2d618ed",
+            "waveform_sha256": "e158f851becb8c6a6374758938bcd8e1f98a323c8caaee9828ad3b5f07c8e6c0"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Its main",
+            "seed": 2028007298,
+            "snr_db": 17.770344018936157,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-ad233bb10a77d2d618ed@white-17.7703db",
+            "waveform_sha256": "ec3e0de4efe0e9df7afcec377f1b885ec40832db4756100b0792a21b73b5b1d1"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 13,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "52d0aa3781f963d5b03b53299a232f8814d3a3bccbea7d31b50ec1b9cce0bed3",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "199afec6009a4fd4d4e2f2cc25eee2beaca610c46d1c8d05a444a564d579da43",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976891408_f3101_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "How do you practice and work on your singing technique?",
+            "source_audio_sha256": "4557658a24e2e81633cf6c2975e161da987c8ed09e2caec03a6f8f9ce010c118",
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-e210aee5b7d8b7ca1c75",
+            "waveform_sha256": "80aa0663c35bbcd0f8df688b8563aebb1ee2d62b843c98ac0eb2968a7803eac2"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "How do you practice and work on your singing technique?",
+            "seed": 2028007397,
+            "snr_db": 13.790375590324402,
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-e210aee5b7d8b7ca1c75@white-13.7904db",
+            "waveform_sha256": "d4e9d85c4b6e660d5c62fbf3e41ba7fc3feed21099e90ee35e4c88003689db59"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976887081_f2283_chunk_3.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Gujarati",
+            "reference": "which include",
+            "source_audio_sha256": "e8f5e2fb67c9794ac0a78025addf59bd2f86d4df410ddf4184417de02cd6aa28",
+            "speaker_id": "profile-de8a445e2449bce1def0",
+            "utterance_id": "svarah-36b7ced96b1455138bfc",
+            "waveform_sha256": "bf85c817ca0c33a26100b7f002dfac298411cb043a7e5415ffb7e4277b44769f"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Gujarati",
+            "reference": "which include",
+            "seed": 2028007398,
+            "snr_db": 19.895639419555664,
+            "speaker_id": "profile-de8a445e2449bce1def0",
+            "utterance_id": "svarah-36b7ced96b1455138bfc@white-19.8956db",
+            "waveform_sha256": "07258f3c618e1e868f0cc2bd96b2c1121c33d83b196ea2e37b40a7d16adb8805"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893891_f440_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Wow",
+            "source_audio_sha256": "e75b05a71024f27c37d80f2da2b93ffda79a1091e497fc5083195a6f13472675",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-58bfab2ab9ee5ea356d6",
+            "waveform_sha256": "7b3e496b6cbdb6d42ae44c70e1d3fea68ed1b5e4032911b874969b2436df36f9"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Wow",
+            "seed": 2028007399,
+            "snr_db": 16.29742920398712,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-58bfab2ab9ee5ea356d6@white-16.2974db",
+            "waveform_sha256": "3ea81c2bf325210bc3b3b1ac67b3257e945661dd1018fc3608d1998b54115b74"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 14,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "17ffa7598331f49db2080b72936637c068da48a9a814bda65b12239ebe545260",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "fa2d06788fd0b27cd995f667c121e0dea236b1bac362c57c4702fee5279d6940",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976893984_f3161_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Telugu",
+            "reference": "Jakarta, Beijing, New York, New Jersey, Kolkata.",
+            "source_audio_sha256": "e65857564964af68af2e2b529afa99d3cc995cd52b90c7b3bb7cff423e748e4d",
+            "speaker_id": "profile-75381d61bc76b3fa46f2",
+            "utterance_id": "svarah-954857a6be8e0446103a",
+            "waveform_sha256": "1c112cd052d6f26ed22bb3fa8f016bdce1f25ada3bf3f1287bcb522598077164"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Telugu",
+            "reference": "Jakarta, Beijing, New York, New Jersey, Kolkata.",
+            "seed": 2028007498,
+            "snr_db": 19.444686770439148,
+            "speaker_id": "profile-75381d61bc76b3fa46f2",
+            "utterance_id": "svarah-954857a6be8e0446103a@white-19.4447db",
+            "waveform_sha256": "2c46844701bd4b7f6baf20626339ebee90a3fad8f956fa9642be8f2b3d90d082"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976900640_f2173_chunk_7.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Urdu",
+            "reference": "with the advent of private institutions of school education and higher education the quality of education in public institutions has declined significantly",
+            "source_audio_sha256": "1aed91de5746f5e27e3ea79bfa0a55deb0ac4b61757a51f707d70c308d20602c",
+            "speaker_id": "profile-9ce33732b58d09bf0fcd",
+            "utterance_id": "svarah-4708f8f1d6a679b0fc32",
+            "waveform_sha256": "8397a040649b6446cff86b11e2e83800e2bb4da4a4b94649cf42b77db4cf4c97"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Urdu",
+            "reference": "with the advent of private institutions of school education and higher education the quality of education in public institutions has declined significantly",
+            "seed": 2028007499,
+            "snr_db": 12.06409215927124,
+            "speaker_id": "profile-9ce33732b58d09bf0fcd",
+            "utterance_id": "svarah-4708f8f1d6a679b0fc32@white-12.0641db",
+            "waveform_sha256": "85ee4ab1495850281c61c9896bf8d9a557eeb60dcf6e9febf40aede664c248a2"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893853_f3252_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "There are some unique features of English that I find interesting.",
+            "source_audio_sha256": "ad1578c9413df9004b5195242f0504b29e0b279808ba147bf336b16660ec7dbb",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-846901c97874872ad8b4",
+            "waveform_sha256": "b49910610eaf599403ca4472ec436383db601b639c35e2463ce39f085d51a1f5"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "There are some unique features of English that I find interesting.",
+            "seed": 2028007500,
+            "snr_db": 10.832759737968445,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-846901c97874872ad8b4@white-10.8328db",
+            "waveform_sha256": "6c864be8d0d1598d8ceeb984994112dce06943649bcfcf9667af4f9b4c9a9f10"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 15,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "e1aa5b71a3eb49c786fd98215fc6555f608a4861e0f8be6ab418eba5d84793b4",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "88f8e3d2353e4740e800a7c1fc10b1cb78f6aaef0630725123b3d67f11534eaf",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976884267_f1694_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "We differ from other countries in terms of food, in terms of dress",
+            "source_audio_sha256": "bea840a4ed3c1de6c9387130e29bf12a240a2ff75a9e8a065e2d538a102f146b",
+            "speaker_id": "profile-18f95a3802aa5043859d",
+            "utterance_id": "svarah-07fe04deed2c8ca030f5",
+            "waveform_sha256": "2a56356ac51368322d119fc21b27ac3332672de64e429a1f6c758ae8bb9d7e9d"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "We differ from other countries in terms of food, in terms of dress",
+            "seed": 2028007599,
+            "snr_db": 10.022140145301819,
+            "speaker_id": "profile-18f95a3802aa5043859d",
+            "utterance_id": "svarah-07fe04deed2c8ca030f5@white-10.0221db",
+            "waveform_sha256": "fa5c99c11a042cf907dff51181f2975c4332d5b9fa2fac3dfab6283306b8e608"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976894777_f152_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Nepali",
+            "reference": "Dog",
+            "source_audio_sha256": "5bb894917382a28d95e920a2f4e8f2185196a28fd3af9bb1749a2c5ff074b43f",
+            "speaker_id": "profile-966440bb64137ec5cf86",
+            "utterance_id": "svarah-d631fc8bbc0048f5f0af",
+            "waveform_sha256": "d370e193a513c3e08c26bf496fae8e3d0064fe81a896402f65720cb99c716a0c"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Nepali",
+            "reference": "Dog",
+            "seed": 2028007600,
+            "snr_db": 13.810075521469116,
+            "speaker_id": "profile-966440bb64137ec5cf86",
+            "utterance_id": "svarah-d631fc8bbc0048f5f0af@white-13.8101db",
+            "waveform_sha256": "7295af8a422fdd53c244b7cbe1c78a9da2142f64fcae036bef2177d28fde0239"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893828_f336_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Follow",
+            "source_audio_sha256": "bf7a176ce3eec551aa3f0ded23a46583ac4eb86cef96de258b5ab7f4ced4e6a1",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-f0d1cd0b32c2de294b79",
+            "waveform_sha256": "f455ac9b278338e8aef9ace8b91e81c7cc0813909431fc51ab0de60a2c870244"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Follow",
+            "seed": 2028007601,
+            "snr_db": 16.383862495422363,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-f0d1cd0b32c2de294b79@white-16.3839db",
+            "waveform_sha256": "1a38d5334d88b6320e2c9fea9f243524e6536b4404463b87f269d488db404eee"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 16,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "5e606493e373e07e11698edcd68e1f1ab3a64f96ce92da1e7b6e8a22e26b4a78",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "478db539ba41001e1c5dfba6ae43cb9d72be8ef847ecc6b7d3b60aa751117ca9",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976899489_f595_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "Nine",
+            "source_audio_sha256": "e27c9978efdf1f6328f6082da5000b29010a003f3e1e2e4ea776cefbe2deb772",
+            "speaker_id": "profile-20102f82fc05ff563820",
+            "utterance_id": "svarah-d15b5017ca359b0a084e",
+            "waveform_sha256": "4977799ea5984eb667e2c86b8f34ac1c96bbf7bfef37189266055d8fba8e0aec"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "Nine",
+            "seed": 2028007700,
+            "snr_db": 19.090963006019592,
+            "speaker_id": "profile-20102f82fc05ff563820",
+            "utterance_id": "svarah-d15b5017ca359b0a084e@white-19.0910db",
+            "waveform_sha256": "d7a33db38f4a368c059f3a8087f1f91cca25beb9984f6b94b7b89c791ece10c9"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976895412_f2908_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Konkani",
+            "reference": "Three",
+            "source_audio_sha256": "d4122d8bb23113c6736a5d80c918c45f91d929838f0142978a9b423b5c645f7d",
+            "speaker_id": "profile-5331b17c8bef193056d1",
+            "utterance_id": "svarah-8c6e756457c597b1439f",
+            "waveform_sha256": "5555d34e87eca538aed84280d65d7fd0e71c2a18f0dd4871d8ea17291ffc4421"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Konkani",
+            "reference": "Three",
+            "seed": 2028007701,
+            "snr_db": 11.841315627098083,
+            "speaker_id": "profile-5331b17c8bef193056d1",
+            "utterance_id": "svarah-8c6e756457c597b1439f@white-11.8413db",
+            "waveform_sha256": "694829743951b78880b7c0a31118bff516a8a3b45a98a7eb90f73d6867694fa3"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893805_f171_chunk_3.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "1 pack Franck Air Freshener also",
+            "source_audio_sha256": "9fa4d09b4c044c53f4eb0c89239903f84e653d1d839bd0e5edc23a867c2c0360",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-877c8f6e1e5809c977cf",
+            "waveform_sha256": "8037f005fad2b913f32d18487a00a015b62add7bddfd2e3e2360a3f5fc4d0a6a"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "1 pack Franck Air Freshener also",
+            "seed": 2028007702,
+            "snr_db": 11.909801959991455,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-877c8f6e1e5809c977cf@white-11.9098db",
+            "waveform_sha256": "26e669adbc8df15e55ccdde0d8ec6264430c2ae698af9e2b76a23e89ce21c628"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 17,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "762d3062cf33925c65db3e8465435f36debbba3fdb610e480d3636b882799727",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "85df423f606eeae1d15fe6596ce89bbe54cc8c7c3e56ee8bd6d04060806dd6ce",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976896194_f1731_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Kannada",
+            "reference": "Can you speak 5 numbers between 10 and 10000?",
+            "source_audio_sha256": "eb33c3a6087ec39b3515d7efa39df663d685312f329355c88e59ed674ba57972",
+            "speaker_id": "profile-a0dd548ca527398b8c73",
+            "utterance_id": "svarah-4bec0f4ad9b12f2cc73b",
+            "waveform_sha256": "237458cc1664117e132ed6f70eb9e87aec2f3bfffd8dc723d4d0e7a2ce315b82"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Kannada",
+            "reference": "Can you speak 5 numbers between 10 and 10000?",
+            "seed": 2028007801,
+            "snr_db": 14.937101006507874,
+            "speaker_id": "profile-a0dd548ca527398b8c73",
+            "utterance_id": "svarah-4bec0f4ad9b12f2cc73b@white-14.9371db",
+            "waveform_sha256": "3525cf2167eefd35f0a9f34db568f293e758af7435870602461a55ab1102a3d0"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976898080_f2958_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Odia",
+            "reference": "Has the payment been confirmed for my order containing Borosil Induction Friendly Stainless Steel Casserole , Nescafe Gold Original Roasted Coffee and Fresho Signature Palak Snack Sticks ?",
+            "source_audio_sha256": "608d7de14cc9039cf70eaee7d41dcadccbebb8bcf0c7269a2d843fb84b16b23e",
+            "speaker_id": "profile-282f1079643a5d6868e7",
+            "utterance_id": "svarah-6769cdd75db4c1a33033",
+            "waveform_sha256": "02da3c36f0936241e2494d3423142eae27321a13bbfcc95d64d8e5faded2c1d2"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Odia",
+            "reference": "Has the payment been confirmed for my order containing Borosil Induction Friendly Stainless Steel Casserole , Nescafe Gold Original Roasted Coffee and Fresho Signature Palak Snack Sticks ?",
+            "seed": 2028007802,
+            "snr_db": 17.09197163581848,
+            "speaker_id": "profile-282f1079643a5d6868e7",
+            "utterance_id": "svarah-6769cdd75db4c1a33033@white-17.0920db",
+            "waveform_sha256": "6344b9399c208a91647fcf9c7357a190015a5e4ddfa2265afd4ef498b923a8a4"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893912_f2185_chunk_10.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Their holistic approach to the disease of addiction",
+            "source_audio_sha256": "0e6c5f2d1d2c43e8443682caf2f968ffd381bcaf7fb9e601ede9d5c510dbdfb6",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-f366855d344bebfe2417",
+            "waveform_sha256": "d667028815837052ddfefab7cba66084b9d094f60606f775cd7d1c11d5a980a4"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Their holistic approach to the disease of addiction",
+            "seed": 2028007803,
+            "snr_db": 14.51270341873169,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-f366855d344bebfe2417@white-14.5127db",
+            "waveform_sha256": "d7d60e3912e5d45a0578a617029b9a9a87f86ba8b15e0b2a7cc161b93d158142"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 18,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "3ad0d6ae880e57d676e3a509af932079755f1e4c60aab9c06d81305dcf5294d6",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "3ad4ad932f7fa32d0f7d83e5c60bd762a38333fed255232c07a84ea81a0ce19c",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976896579_f1493_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "Up",
+            "source_audio_sha256": "1290203f2faae5f380b0a2d4ad16a801854b950ae06fcc31b7dfbb477267caf3",
+            "speaker_id": "profile-626f90dd6a8c2b3e6097",
+            "utterance_id": "svarah-3f20b45d2f23a415612a",
+            "waveform_sha256": "ffbcda122d76f0c9ef35fc168e5e40b7c8a7ca11ef25fcbb87d2ac63e69097b7"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "Up",
+            "seed": 2028007902,
+            "snr_db": 19.420103430747986,
+            "speaker_id": "profile-626f90dd6a8c2b3e6097",
+            "utterance_id": "svarah-3f20b45d2f23a415612a@white-19.4201db",
+            "waveform_sha256": "87740ac72e9cd731cfb9114a1436773e151c26cb112fd1eb9b013d67abe922ce"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976891553_f2355_chunk_1.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Konkani",
+            "reference": "by ordering products in greater quantities.",
+            "source_audio_sha256": "0abe5760eebf187ab862eabaa218020952e51c2cec4d5d8b431af39be0f79c3f",
+            "speaker_id": "profile-8aca303b8cb7072c2a6a",
+            "utterance_id": "svarah-aecf3a6e8273795d71ef",
+            "waveform_sha256": "039042c30edb220b4798d90c776785b9b4938f596925b0bcb73b09096bda2b02"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Konkani",
+            "reference": "by ordering products in greater quantities.",
+            "seed": 2028007903,
+            "snr_db": 18.52174699306488,
+            "speaker_id": "profile-8aca303b8cb7072c2a6a",
+            "utterance_id": "svarah-aecf3a6e8273795d71ef@white-18.5217db",
+            "waveform_sha256": "115280800c204faffa22bf1496b7a444215ab4e9d5b2e37e93b23c114c5928c2"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893845_f1948_chunk_3.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "So Mandala is symbol of universe in its ideal form.",
+            "source_audio_sha256": "f5954a2a2d2c41b01c7805670c80a31b66b1664b5b5fdda39028ba644a57a8de",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-eb61f1e6dbf4630bd603",
+            "waveform_sha256": "c429382d1ff65df7f9c99a52a672f4777b57ad4fc01a627ff0106b3ec502d905"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "So Mandala is symbol of universe in its ideal form.",
+            "seed": 2028007904,
+            "snr_db": 14.268856644630432,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-eb61f1e6dbf4630bd603@white-14.2689db",
+            "waveform_sha256": "5095bd96a1505df97c60bb7dbc0483331c2160e9d09d65a51957e3b374262cb6"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 19,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "a12f16f5ba11a8080ee93bbfa787c0574519f9723b884f864628a78c4562b98c",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "881bca9d3ccea85690c6680b21a6916b8ca1997c005986653a7a7397d3820190",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976891389_f832_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "Can you Autopay my Mobile and Mobile bills for the next 6 months?",
+            "source_audio_sha256": "11a1152c5305a4c18a6fb1f2278d9ac58eee456e577cb9eee48f89b9daabcfc4",
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-cd9ed88293758ed367f9",
+            "waveform_sha256": "57f9495b315e81fd0a77a688fa4d32ee004d5b60f434f8f043facdf1ff9be7ac"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "Can you Autopay my Mobile and Mobile bills for the next 6 months?",
+            "seed": 2028008003,
+            "snr_db": 17.84492254257202,
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-cd9ed88293758ed367f9@white-17.8449db",
+            "waveform_sha256": "c0a6f7b775fcb3caced6b88d438c1a4564a07073732c799b8f084064bf5d78e1"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976895414_f1594_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Konkani",
+            "reference": "Tree",
+            "source_audio_sha256": "e516c8da90a73cf66b792a9fc60fe245e4cdc65f4c68820431a7b2494094dc96",
+            "speaker_id": "profile-5331b17c8bef193056d1",
+            "utterance_id": "svarah-a061fcf749f1641da97f",
+            "waveform_sha256": "cbf9061684a5c865a30f74fb7319321b12ca49a490db14fe51dab169e08f9739"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Konkani",
+            "reference": "Tree",
+            "seed": 2028008004,
+            "snr_db": 11.943777799606323,
+            "speaker_id": "profile-5331b17c8bef193056d1",
+            "utterance_id": "svarah-a061fcf749f1641da97f@white-11.9438db",
+            "waveform_sha256": "82c5a1fc1940f57ccec2425b241d5837a63da9ef930c7f032e068e274f1c090f"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893917_f2082_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "The most unique feature of English is that the past person pronoun is always capitalized",
+            "source_audio_sha256": "86bbeebb18e7a87efcd00250d2a43a1fcaa6a99e8f6ab96e595e571837fd73a8",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-690c0c6cda41a0892d43",
+            "waveform_sha256": "1f15f28ab106a0f70b068beb8ad51152325bbc3e14461a7170784f168f071022"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "The most unique feature of English is that the past person pronoun is always capitalized",
+            "seed": 2028008005,
+            "snr_db": 18.076942563056946,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-690c0c6cda41a0892d43@white-18.0769db",
+            "waveform_sha256": "9c86ecba0098dfb8fae90ac6d7aedcb3d2de1bdb14cc0d160dab28b8656c3659"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 20,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "de505af36bbb2ebbfc5052b38b06c4462750f954c33b23692d6967144103acd1",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "3ac1a138bb98d8a8d0f2a8a064add902ea72dc70efea6cd942c4248d9a9c048e",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976903204_f1344_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "Cat",
+            "source_audio_sha256": "cf9c346b4e940934ae59f0e4c43e0ee5c45442dd2646919873fde0275b2adae2",
+            "speaker_id": "profile-0ea7b34dc7001fe32ea9",
+            "utterance_id": "svarah-21e487b2aae2da948746",
+            "waveform_sha256": "6d8a06ab5ec5c443510116786558cbb035428a030a7bc661be4583068bf523dd"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "Cat",
+            "seed": 2028008104,
+            "snr_db": 19.31278944015503,
+            "speaker_id": "profile-0ea7b34dc7001fe32ea9",
+            "utterance_id": "svarah-21e487b2aae2da948746@white-19.3128db",
+            "waveform_sha256": "3f7dc86c4b1a1d9624b98f5a1b2c5d4c7fca3e66ab5cb42ba90f8dd9a468222e"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976894265_f3140_chunk_2.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Kashmiri",
+            "reference": "Through poetry, I can put my thoughts on a display more creatively.",
+            "source_audio_sha256": "1f77558d57f74c57e6b1443c5a609722a12444b5b26e1eb6e1ef96f96a04d701",
+            "speaker_id": "profile-d5a0a06dea9d632f48d9",
+            "utterance_id": "svarah-0fb8c03c118103d29f1f",
+            "waveform_sha256": "1048eda31f738a5909160abaf410ca74e058f3ac7c49d8368f9d2ed377f1bbd0"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Kashmiri",
+            "reference": "Through poetry, I can put my thoughts on a display more creatively.",
+            "seed": 2028008105,
+            "snr_db": 16.535990834236145,
+            "speaker_id": "profile-d5a0a06dea9d632f48d9",
+            "utterance_id": "svarah-0fb8c03c118103d29f1f@white-16.5360db",
+            "waveform_sha256": "a67f74928fc08e3c487031b21b4e274b126055c97fbba471d39947c1e2622f50"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893912_f2185_chunk_10.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Their holistic approach to the disease of addiction",
+            "source_audio_sha256": "0e6c5f2d1d2c43e8443682caf2f968ffd381bcaf7fb9e601ede9d5c510dbdfb6",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-f366855d344bebfe2417",
+            "waveform_sha256": "d667028815837052ddfefab7cba66084b9d094f60606f775cd7d1c11d5a980a4"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Their holistic approach to the disease of addiction",
+            "seed": 2028008106,
+            "snr_db": 16.12537145614624,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-f366855d344bebfe2417@white-16.1254db",
+            "waveform_sha256": "ccbf36d4181fec87317b147430486f079cbaa06288e4d477390706ae4f53047d"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 21,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "a77d1e78a0b4b3df52e2548eba3d8b2feaeadfb6f12c6d344517247aa849e32a",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "e52684f1c372267c10e2c5ea55fea15bab8ab73ff52f82f7de981440be67ea12",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976896665_f2406_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Telugu",
+            "reference": "Which is the nearest medical store in district Bargarh from my current location?",
+            "source_audio_sha256": "12b3f59b909e6338ad9595eb5e4a9d87de6357c67922ed4fd2b7869fc99c469f",
+            "speaker_id": "profile-6593cc440c840b4b3ae3",
+            "utterance_id": "svarah-fb5408296817053374aa",
+            "waveform_sha256": "62b9fa70c375e2738ae6b9bddb840d856c62c28eb0e46004be3b9cfc176737d7"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Telugu",
+            "reference": "Which is the nearest medical store in district Bargarh from my current location?",
+            "seed": 2028008205,
+            "snr_db": 10.825207829475403,
+            "speaker_id": "profile-6593cc440c840b4b3ae3",
+            "utterance_id": "svarah-fb5408296817053374aa@white-10.8252db",
+            "waveform_sha256": "99584b92960f81f289ee400777f24178b1bc62f837660af2a4b561c310d4c5ee"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976884096_f2557_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Marathi",
+            "reference": "how do i get to dunkin donut in pune",
+            "source_audio_sha256": "8975cbd8c778138f0321b76cbe87029608d7e93fec493990ef9eefc52199f3fb",
+            "speaker_id": "profile-825e94cdec811576aceb",
+            "utterance_id": "svarah-b0d0143639e3b8bc1155",
+            "waveform_sha256": "bc7c5387c9c09707d4ea9261d8c7261bba48a6f36518a8442d1d107ecd0705b8"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Marathi",
+            "reference": "how do i get to dunkin donut in pune",
+            "seed": 2028008206,
+            "snr_db": 13.261381983757019,
+            "speaker_id": "profile-825e94cdec811576aceb",
+            "utterance_id": "svarah-b0d0143639e3b8bc1155@white-13.2614db",
+            "waveform_sha256": "5f89418367fdd0d4369464f15b81caf97d04759a94a217a783b92719e1ac5711"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893852_f1949_chunk_8.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "like separate groups for dancing and valuable things like rice, cash or edible things are offered to the dancers.",
+            "source_audio_sha256": "ee247c06f050ebbc21c48c295ec3a64194d88e94ba47a41acf743400491e87e6",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-621788dd0b71defcc659",
+            "waveform_sha256": "09e0ef82ddc905745d4ad56856e0c8b53d32ebb6aeb5397b7fa9339a795955ea"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "like separate groups for dancing and valuable things like rice, cash or edible things are offered to the dancers.",
+            "seed": 2028008207,
+            "snr_db": 10.30587613582611,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-621788dd0b71defcc659@white-10.3059db",
+            "waveform_sha256": "0c3b583bda48cf604430d427014e00c14d22f723309528fd420d06b61538b667"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 22,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "a42f58be6959a6461b5d0212a2c96352cfa90e292ec1bd3902b8194faf54765a",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "041304a60706a0f0a51bb347a5592a93bb78ac5fa376f28f3c87a5fef01f9648",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976887171_f3278_chunk_2.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "considered modern or foreign modes of entertainment.",
+            "source_audio_sha256": "61cc69bda8b7c0ddafb6dd060c6a0f50d14560626d44e2e85eea5b05d59fae10",
+            "speaker_id": "profile-47be87d8f672b7bf35cf",
+            "utterance_id": "svarah-5f5b445eb57e5db7f203",
+            "waveform_sha256": "1865e0e379d0c132d5a2e7dff3787666a5e953465a54da8a6d724af43404fd61"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "considered modern or foreign modes of entertainment.",
+            "seed": 2028008306,
+            "snr_db": 18.985087275505066,
+            "speaker_id": "profile-47be87d8f672b7bf35cf",
+            "utterance_id": "svarah-5f5b445eb57e5db7f203@white-18.9851db",
+            "waveform_sha256": "0f9d174f4cb019a503412e53c5a766c8e4ee64ff22a9153595f4349f0bd612a1"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976884113_f851_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Marathi",
+            "reference": "I want to download EFPO passbook statement for account with UAN number 834174669456.",
+            "source_audio_sha256": "c8a51584d2c380edfd9211e08fb82030918fe84ae6ebbd8d72a1c3670a9eb001",
+            "speaker_id": "profile-825e94cdec811576aceb",
+            "utterance_id": "svarah-c264dcb3e1edb24cf1fb",
+            "waveform_sha256": "63f4efedb3bb39d2717655e96646d48d9bf9cc917f964cdefef82ba12c7efe31"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Marathi",
+            "reference": "I want to download EFPO passbook statement for account with UAN number 834174669456.",
+            "seed": 2028008307,
+            "snr_db": 16.707289218902588,
+            "speaker_id": "profile-825e94cdec811576aceb",
+            "utterance_id": "svarah-c264dcb3e1edb24cf1fb@white-16.7073db",
+            "waveform_sha256": "1772cd6a66b5d8ae51364bcb19882a84b14c4f861d31e87da64b57f3692479ca"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893915_f2228_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "The main cultural festival celebrated in my district is called",
+            "source_audio_sha256": "6d5f494beec27d32ef6f7698d1ee27e1fc194309181038c17a6f11f1e6cf464a",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-c775cab73d1d32646174",
+            "waveform_sha256": "b7117fbe448f82273e7c0d76f8e73931be668dd9e97c42880c338143d0734ee1"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "The main cultural festival celebrated in my district is called",
+            "seed": 2028008308,
+            "snr_db": 12.238451838493347,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-c775cab73d1d32646174@white-12.2385db",
+            "waveform_sha256": "6c49159e25382d5fa97cdfe4d7754b465735464da1ad9fc3d88ecf1e4ed164bc"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 23,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "ba18e92de18be6b6047319507e517630c3164f80dcc83b8704eaecec4c4abe26",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "426ee8864ef9155c8ab64b1021147582a87c60977e8d9bc94039a20e611a5347",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976887177_f3253_chunk_6.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "in the world.",
+            "source_audio_sha256": "d959fd83b45a4ab83e6da8994ab666e60f9711ae4c8b3a3d8927cf4dfc3525b6",
+            "speaker_id": "profile-47be87d8f672b7bf35cf",
+            "utterance_id": "svarah-b07b2977734d697af32b",
+            "waveform_sha256": "96d34b953de1385d0d7c0d75a0414dd905a73c54a87eb16fd119c40bf474445d"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "in the world.",
+            "seed": 2028008407,
+            "snr_db": 14.488649368286133,
+            "speaker_id": "profile-47be87d8f672b7bf35cf",
+            "utterance_id": "svarah-b07b2977734d697af32b@white-14.4886db",
+            "waveform_sha256": "70e072027102418f2e6dcf8681ea31b77c020b2c4661f86bb5a553aa04c61741"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976903865_f2392_chunk_4.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Nepali",
+            "reference": "Zig Zag Carrying Basket yesterday",
+            "source_audio_sha256": "7b464d795668a3db6fe591e7ed5c3359fb2e74945a2caa150d41355f6cb30f65",
+            "speaker_id": "profile-7a3b2b47506c38a2c5ae",
+            "utterance_id": "svarah-e7a0e3d71e0ea58d9b89",
+            "waveform_sha256": "aee10d58176250b7068d313dd216f653ec72e69956865f598e76bc59f8918dcd"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Nepali",
+            "reference": "Zig Zag Carrying Basket yesterday",
+            "seed": 2028008408,
+            "snr_db": 13.0324786901474,
+            "speaker_id": "profile-7a3b2b47506c38a2c5ae",
+            "utterance_id": "svarah-e7a0e3d71e0ea58d9b89@white-13.0325db",
+            "waveform_sha256": "dc70bc2bac1a0158ad7987211278e3e678c7d7652a66f824bd55795fd33c6c1e"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893835_f569_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Disagree",
+            "source_audio_sha256": "f72f7bdff5bd870a7abf98e7bdd42611bcd5b5381e67407595d846f9558f7afd",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-bd95c3af6d1b3df030fb",
+            "waveform_sha256": "34054d2381ec088d4f9c82726fd400306d711928ae1d9fff0a0a95f3911d6d74"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "Disagree",
+            "seed": 2028008409,
+            "snr_db": 14.986240863800049,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-bd95c3af6d1b3df030fb@white-14.9862db",
+            "waveform_sha256": "f2021d82e732b75720624f9341e13747797bd69d692fedec37eeadc63156437f"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 24,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "9e8e80f2d0d85f86bc1ceb40ba0562a50136d37d7830b93863d92d4b9988abd9",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "d1a4873ef7844dc0ae3f543b829532176a4c7cd46e0145b16b3582bf3b454ba3",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976903198_f1340_chunk_0.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "Please use mobile number 69014208340 to register on Co-Win platform",
+            "source_audio_sha256": "4371642f3ca6d24a222f230b11d8ea65f3ab7a3a2739d4c546c7381de0fa5d2b",
+            "speaker_id": "profile-0ea7b34dc7001fe32ea9",
+            "utterance_id": "svarah-30e3ada0af9f3e395b82",
+            "waveform_sha256": "c8bcc2f596bf5f4d75977a3dc04f280fe09126c55e3c3617c4836483f227dfe2"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Tamil",
+            "reference": "Please use mobile number 69014208340 to register on Co-Win platform",
+            "seed": 2028008508,
+            "snr_db": 10.88361382484436,
+            "speaker_id": "profile-0ea7b34dc7001fe32ea9",
+            "utterance_id": "svarah-30e3ada0af9f3e395b82@white-10.8836db",
+            "waveform_sha256": "d2f19e3e41bbd45c0d2fcfa01807438f48aa7c474671dd39984e397568598e27"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976894271_f3141_chunk_10.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Kashmiri",
+            "reference": "The Mughal gardens, like Nishat, Shalimar, Pari Mahal, etc provide refreshing sights.",
+            "source_audio_sha256": "c323b5ade8a48da05ea80f6fea5866fb0021d5150b376f9f8f77c618229cd5a0",
+            "speaker_id": "profile-d5a0a06dea9d632f48d9",
+            "utterance_id": "svarah-9c1fd96c01e782fe4d4d",
+            "waveform_sha256": "8ed09019bb4710b102c406f98dbc817b9adea417f586d9c7ca9d050bc9f448a5"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Kashmiri",
+            "reference": "The Mughal gardens, like Nishat, Shalimar, Pari Mahal, etc provide refreshing sights.",
+            "seed": 2028008509,
+            "snr_db": 19.61808443069458,
+            "speaker_id": "profile-d5a0a06dea9d632f48d9",
+            "utterance_id": "svarah-9c1fd96c01e782fe4d4d@white-19.6181db",
+            "waveform_sha256": "d5844ee37fe73e450a4fe33df4a7d61409863837fe55b35580a4d366c14fd9e9"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893853_f3252_chunk_0.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "There are some unique features of English that I find interesting.",
+            "source_audio_sha256": "ad1578c9413df9004b5195242f0504b29e0b279808ba147bf336b16660ec7dbb",
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-846901c97874872ad8b4",
+            "waveform_sha256": "b49910610eaf599403ca4472ec436383db601b639c35e2463ce39f085d51a1f5"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "There are some unique features of English that I find interesting.",
+            "seed": 2028008510,
+            "snr_db": 19.359028935432434,
+            "speaker_id": "profile-de6d654cd25a5495f6aa",
+            "utterance_id": "svarah-846901c97874872ad8b4@white-19.3590db",
+            "waveform_sha256": "8c1c7d3454533fe59564a9182f41c13c3f541e36a3213dcc46db8748f969d70b"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 25,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "66be63e990cdf246079fd865bb8a9da0e65eadc11d16b484e4d2eb4f1ef165cf",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "b91271fa9a3fa1b80c08f3acffa4d04d0a2f7394d10d9b9e55d51d9525f79964",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976887166_f3220_chunk_4.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "embroidery. And there we use to teach us the basic embroidery patterns like running stage,",
+            "source_audio_sha256": "cc248493c2b8be4842a0b3f24e11a44d177cad28f27515ee28bd23f59b81c43f",
+            "speaker_id": "profile-47be87d8f672b7bf35cf",
+            "utterance_id": "svarah-cdae577d0d68813b605b",
+            "waveform_sha256": "0435cfe19722e4e674b8de52dbd904d094fe684b10511002c6039007e6e4564e"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "embroidery. And there we use to teach us the basic embroidery patterns like running stage,",
+            "seed": 2028008609,
+            "snr_db": 14.945432543754578,
+            "speaker_id": "profile-47be87d8f672b7bf35cf",
+            "utterance_id": "svarah-cdae577d0d68813b605b@white-14.9454db",
+            "waveform_sha256": "e47148634b6073dd89b689706df87967b41884f08c716a6e0f55b0f6a2f83d86"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976892134_f1122_chunk_0.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Assamese",
+            "reference": "Can you show recommendation on Fragrances ?",
+            "source_audio_sha256": "c687d2918cdafc6f5fd8382862a244e234812ad54288b5c1375bac3d899cac35",
+            "speaker_id": "profile-7f2793cb823f6aad5624",
+            "utterance_id": "svarah-3aab3256da60ba685e35",
+            "waveform_sha256": "5a88a5b27880ce6b85642338f3f7c33108116dffcff0ff9c344a06f6b892753c"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Assamese",
+            "reference": "Can you show recommendation on Fragrances ?",
+            "seed": 2028008610,
+            "snr_db": 19.64053213596344,
+            "speaker_id": "profile-7f2793cb823f6aad5624",
+            "utterance_id": "svarah-3aab3256da60ba685e35@white-19.6405db",
+            "waveform_sha256": "495c3c5be1a115f60ff172ce0cf84a88b8586376d31f880eb62419c979c09288"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893912_f2185_chunk_6.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "treating",
+            "source_audio_sha256": "202f3108925d32b4af6e5624e05f277e19514441e26af03f7b93950fe477ed7d",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-cfd5566fa8cec4796fd0",
+            "waveform_sha256": "ecc658d668623832168a3803182dbb6dcd35458af8fa5bed770f9d318965437e"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "treating",
+            "seed": 2028008611,
+            "snr_db": 10.24307906627655,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-cfd5566fa8cec4796fd0@white-10.2431db",
+            "waveform_sha256": "812215bac8380f4fc291822da418aa276edf61412ac39f1a4b36db036c20d755"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 26,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "bfc03222502bbf1f64da6c11c1d062e4612f8a0cf5d53dde51cfef50debb845b",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "b5414619486d1de3136b830c032ae14fc56587c953674cd23ecfe89b17b27292",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976883941_f1996_chunk_1.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "not the vertical gardening",
+            "source_audio_sha256": "ea48d4e008228c9ba69ad35179fa3d651a64e0dd7dcf58dd17e420ca3384d8f4",
+            "speaker_id": "profile-1c5fec00bae5aff8a504",
+            "utterance_id": "svarah-a610fa3fb6b58e7a0626",
+            "waveform_sha256": "2ba1400ad3bbc59ccc8bf518c2a658decae8d3f4dd40310bb2f31acace9b2d7e"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "not the vertical gardening",
+            "seed": 2028008710,
+            "snr_db": 11.51796579360962,
+            "speaker_id": "profile-1c5fec00bae5aff8a504",
+            "utterance_id": "svarah-a610fa3fb6b58e7a0626@white-11.5180db",
+            "waveform_sha256": "ecb5f09ec16c5f44b92e6b674ee3d7db7437a40830865e1cc9aa170989ad7b67"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976900596_f3268_chunk_12.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Urdu",
+            "reference": "from an Islamic perspective.",
+            "source_audio_sha256": "1a613a6e21c777682cfb2f2ab8d9ad1877728f7e26c13ca4dee1aa34c7894d94",
+            "speaker_id": "profile-9ce33732b58d09bf0fcd",
+            "utterance_id": "svarah-22ad9130313d6f5a2ab1",
+            "waveform_sha256": "6b5b3146b0b5d0681bfc667d1ca06279068255da8a3c419d364228d990669a7d"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Urdu",
+            "reference": "from an Islamic perspective.",
+            "seed": 2028008711,
+            "snr_db": 12.407891154289246,
+            "speaker_id": "profile-9ce33732b58d09bf0fcd",
+            "utterance_id": "svarah-22ad9130313d6f5a2ab1@white-12.4079db",
+            "waveform_sha256": "b85bcd8ce0479d3b1821c9338fe115f4de17b185812192d90ebaa92442ca2aee"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893915_f2228_chunk_4.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "according to Bodo calendar which falls in mid April",
+            "source_audio_sha256": "7e93a9d3d4941147e4f86a95efdc1832d2248fcb47b511e106e264f3b2468ab0",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-cb3e30fee64bb30c1fd2",
+            "waveform_sha256": "86012bac931d138a2572b27716bf94eaed13b94fcc6180d750126365b25a9432"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "according to Bodo calendar which falls in mid April",
+            "seed": 2028008712,
+            "snr_db": 16.932525634765625,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-cb3e30fee64bb30c1fd2@white-16.9325db",
+            "waveform_sha256": "c44d9fca5678f5936221a26e2b1eb2fbdb381408bae0f850a538ebc0564b11fa"
+          }
+        }
+      ]
+    },
+    {
+      "cycle": 27,
+      "features": {
+        "attention_mask": {
+          "dtype": "torch.int32",
+          "sha256": "81ea9f1995436cf58786c5973927dc46829fd1a3076c456670dacb116bfcace3",
+          "shape": [
+            6,
+            3000
+          ]
+        },
+        "input_features": {
+          "dtype": "torch.float32",
+          "sha256": "f24fd4c02f98dc05b770032fe861c1cef7e78c773494b1de77dd169c34d3fa14",
+          "shape": [
+            6,
+            80,
+            3000
+          ]
+        }
+      },
+      "pairs": [
+        {
+          "clean": {
+            "audio_path": "audio/281474976891405_f1726_chunk_3.wav",
+            "condition": "clean",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "how did you communicate and adapt",
+            "source_audio_sha256": "0fa6bcc3aa3eb6c100de47e60939b4c00dc4a49816b71d9477cdb9787e6fbf6d",
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-15de503824be5b3e9505",
+            "waveform_sha256": "42ffb6b18b119efaa6c1e627c14bd5ecc5853f8cd0f544684cce8e75ee6afa05"
+          },
+          "pair_index": 0,
+          "white": {
+            "condition": "white_train",
+            "family": "Dravidian",
+            "primary_language": "Malayalam",
+            "reference": "how did you communicate and adapt",
+            "seed": 2028008811,
+            "snr_db": 10.78805923461914,
+            "speaker_id": "profile-ab91419cc00066540974",
+            "utterance_id": "svarah-15de503824be5b3e9505@white-10.7881db",
+            "waveform_sha256": "d446d6a67eaa0c64c4f4239a44b0b2b422dbb74e4dba09d020d2160545cade96"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976896955_f52_chunk_1.wav",
+            "condition": "clean",
+            "family": "Indo-Aryan",
+            "primary_language": "Bengali",
+            "reference": "to Human Welfare Charitable Trust",
+            "source_audio_sha256": "57e85a1be1687ceadb9ce69283687bcb82080797ea0e7ecc89dc9b5a458c21fe",
+            "speaker_id": "profile-e1d15ceb4d27cc864dd9",
+            "utterance_id": "svarah-abf4ad17d352318d8a21",
+            "waveform_sha256": "cae9be3443908e6dc907da8c02e1b1696c18d668753b2db37331f267bdd43a8a"
+          },
+          "pair_index": 1,
+          "white": {
+            "condition": "white_train",
+            "family": "Indo-Aryan",
+            "primary_language": "Bengali",
+            "reference": "to Human Welfare Charitable Trust",
+            "seed": 2028008812,
+            "snr_db": 16.0833477973938,
+            "speaker_id": "profile-e1d15ceb4d27cc864dd9",
+            "utterance_id": "svarah-abf4ad17d352318d8a21@white-16.0833db",
+            "waveform_sha256": "18e73c77ae2a8ddca23c62ee6e212c38a158702a7545c73768b0a9440bbc23a1"
+          }
+        },
+        {
+          "clean": {
+            "audio_path": "audio/281474976893909_f2140_chunk_11.wav",
+            "condition": "clean",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "torrent of a river we need",
+            "source_audio_sha256": "9690993c4fbc9731e5fa0623ae218003c253c1fb0bf52db90f45b029a5478e00",
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-23aaaf481d8cad693a8b",
+            "waveform_sha256": "761bb4ec2304ba5aa7adb759b7dace1261b8a849bc9fd1a4b5dce360d1edfff5"
+          },
+          "pair_index": 2,
+          "white": {
+            "condition": "white_train",
+            "family": "Sino-Tibetan",
+            "primary_language": "Bodo",
+            "reference": "torrent of a river we need",
+            "seed": 2028008813,
+            "snr_db": 11.655600666999817,
+            "speaker_id": "profile-6834de35081f744020f5",
+            "utterance_id": "svarah-23aaaf481d8cad693a8b@white-11.6556db",
+            "waveform_sha256": "1cf56aa1177e556de78f8a152d8045cf4f14cac7bb2f04a65152f1cf95a30dc7"
+          }
+        }
+      ]
+    }
+  ],
+  "fold_manifest": {
+    "path": "/data/fr_cispo_profile/prepared/folds/fold-0.json",
+    "sha256": "22e9ab64006fe8a33bac37f5f2b98887df6aed061e158252778c29c6d928a1f0"
+  },
+  "h6_input_manifest_sha256": "92c5b7c7fb3457ca41da462fd8475d8a29694541f9f7ae2137fe989f10118c7e",
+  "policy_checkpoint": {
+    "path": "/artifacts/profile-h6-refkl-beta0-s2028-20260812/h6-beta0-fr-cispo/checkpoint-last-safe",
+    "sha256": "a95530fd914b7fea9f3008a5c6451f3fedef2281443fce6b9dc0df5ba6a8d400"
+  },
+  "prepared_manifest": {
+    "path": "/data/fr_cispo_profile/prepared/dataset_manifest.json",
+    "sha256": "65bdd8cf87f5db0f815e742739be815d2306ddd2b9977ee5687774feb1a18b56"
+  },
+  "profile_cluster_count": 115,
+  "publication_valid": false,
+  "reference_checkpoint": {
+    "path": "/artifacts/profile-dev-full-sft-20260810/profile-sft-development/checkpoint-epoch-1",
+    "sha256": "d204df40dfcd694733a171998ad5d97fdb43eecbc5dc19846d98bce012cd4c1e"
+  },
+  "resolved_config": {
+    "path": "/artifacts/profile-h6-refkl-beta0-s2028-20260812/resolved-policy-configs/h6-beta0-fr-cispo.json",
+    "sha256": "3673abefc4322f4951ee067c8b6ed2c2fef93008b3f85c2cf66afd5abd406ae5"
+  },
+  "schema_version": 1
+}
