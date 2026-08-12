@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import math
 import random
 from collections import defaultdict
@@ -31,7 +32,7 @@ from .modeling import (
     load_saved_processor,
     trainable_parameter_hash,
 )
-from .objectives import CorruptionPolicy, GroupWeighting
+from .objectives import CorruptionPolicy, GroupWeighting, sampled_k3_reference_kl
 from .optimization import (
     InnerUpdateDiagnostics,
     InnerUpdateSafetyStop,
@@ -44,6 +45,11 @@ from .whisper_policy import (
     generate_frozen_rollout,
     score_hypotheses,
 )
+
+# A separately loaded adapter should reproduce the frozen rollout policy at
+# inner update zero.  This is a numerical-invariance check, not a tunable KL
+# coefficient.
+MAX_INITIAL_REFERENCE_K3_PER_TOKEN = 1e-6
 
 
 def _balanced_batch(
@@ -150,9 +156,59 @@ def _sampled_k3_kl(
     reference: torch.Tensor,
     mask: torch.Tensor,
 ) -> float:
-    log_ratio = (reference.float() - current.float()).clamp(-20.0, 20.0)
-    k3 = torch.exp(log_ratio) - log_ratio - 1.0
-    return float(k3[mask].mean().detach().cpu())
+    return float(
+        sampled_k3_reference_kl(current, reference, mask).detach().cpu()
+    )
+
+
+def _freeze_sft_reference_model(model: torch.nn.Module) -> torch.nn.Module:
+    """Make the SFT reference immutable while retaining policy compute dtype.
+
+    ``score_hypotheses`` always returns FP32 log-probabilities.  Keeping model
+    compute dtype equal to the policy avoids a precision-mismatch K3 baseline
+    at inner update zero.
+    """
+    model.eval()
+    for parameter in model.parameters():
+        parameter.requires_grad_(False)
+    return model
+
+
+def _validate_cycle_start_reference_kl(value: float, *, cycle: int) -> None:
+    """Validate fixed-reference scoring without forbidding real policy drift.
+
+    At cycle zero the policy and SFT reference are independently loaded copies
+    of the same adapter, so their sampled K3 should be numerical zero.  From
+    cycle one onward the rollout policy has already moved; a nonzero distance
+    from SFT is expected and is governed by the ordinary per-cycle KL gate.
+    """
+    if not math.isfinite(value):
+        raise RuntimeError(
+            f"SFT reference K3 at cycle start was non-finite at cycle {cycle}"
+        )
+    if cycle == 0 and value > MAX_INITIAL_REFERENCE_K3_PER_TOKEN:
+        raise RuntimeError(
+            "SFT reference K3 at cycle zero exceeded the numerical "
+            f"tolerance {MAX_INITIAL_REFERENCE_K3_PER_TOKEN:.6g}: {value:.6g}"
+        )
+
+
+def _loss_trajectory(
+    diagnostics: Sequence[InnerUpdateDiagnostics],
+) -> list[dict[str, float | int]]:
+    """Render all loss components without changing the legacy total-loss field."""
+    return [
+        {
+            "update": item.update,
+            "base_policy_loss": item.base_policy_loss,
+            "reference_kl_value": item.reference_kl_value,
+            "reference_kl_loss": item.reference_kl_loss,
+            "total_loss": item.total_loss,
+            "reference_kl_evaluated": item.reference_kl_evaluated,
+            "optimizer_step_applied": item.optimizer_step_applied,
+        }
+        for item in diagnostics
+    ]
 
 
 def _render_group_values(values: dict[RiskGroup, float]) -> dict[str, float]:
@@ -177,6 +233,55 @@ def _source_tree_content_hash(config_path: Path) -> str:
     return digest.hexdigest()
 
 
+def _file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _input_provenance(
+    config: ExperimentConfig,
+    *,
+    config_path: Path,
+    fold: int,
+    sft_checkpoint: Path,
+) -> dict[str, object]:
+    """Bind a policy run to its exact config, data split, and source adapter."""
+    prepared_manifest = config.dataset.prepared_manifest
+    fold_manifest = config.dataset.fold_directory / f"fold-{fold}.json"
+    for label, path in (
+        ("prepared dataset manifest", prepared_manifest),
+        ("fold manifest", fold_manifest),
+    ):
+        if not path.is_file():
+            raise FileNotFoundError(f"{label} is missing: {path}")
+    if not sft_checkpoint.is_dir():
+        raise FileNotFoundError(f"SFT checkpoint is missing: {sft_checkpoint}")
+
+    prepared = json.loads(prepared_manifest.read_text(encoding="utf-8"))
+    identity_mode = str(prepared.get("identity_mode", "unknown"))
+    identity_count = int(prepared.get("identity_count", 0))
+    publication_valid = identity_mode == "authoritative" and identity_count == 117
+    return {
+        "config_path": str(config_path),
+        "config_sha256": _file_sha256(config_path),
+        "prepared_manifest_path": str(prepared_manifest),
+        "prepared_manifest_sha256": _file_sha256(prepared_manifest),
+        "prepared_source_hashes": prepared.get("source_hashes", {}),
+        "fold_manifest_path": str(fold_manifest),
+        "fold_manifest_sha256": _file_sha256(fold_manifest),
+        "sft_checkpoint_path": str(sft_checkpoint),
+        "sft_checkpoint_revision": directory_content_hash(sft_checkpoint),
+        "identity_mode": identity_mode,
+        "identity_count": identity_count,
+        "identity_warning": prepared.get("identity_warning"),
+        "authoritative_svarah_speakers_expected": 117,
+        "publication_valid": publication_valid,
+    }
+
+
 def _execution_checkpoint_spec(
     *,
     rollout_cycles: int,
@@ -193,7 +298,39 @@ def _execution_checkpoint_spec(
     )
     if is_protocol:
         return "protocol", "checkpoint-final", "final"
-    return "bounded_smoke", "checkpoint-last-safe", "last_safe_bounded"
+    return "exploratory_bounded", "checkpoint-last-safe", "last_safe_bounded"
+
+
+def _ratio_protocol_violation(
+    diagnostics: Sequence[InnerUpdateDiagnostics],
+) -> tuple[str, str] | None:
+    """Enforce identity, movement, step, and stability gates for one cycle."""
+    if not diagnostics:
+        return "missing_ratio_diagnostics", "optimizer emitted no ratio diagnostics"
+    if not torch.allclose(
+        diagnostics[0].ratios,
+        torch.ones_like(diagnostics[0].ratios),
+    ):
+        return (
+            "update_zero_ratio_identity_violated",
+            "rollout/current ratio was not one at inner update zero",
+        )
+    if len(diagnostics) < 2 or torch.allclose(
+        diagnostics[1].ratios,
+        torch.ones_like(diagnostics[1].ratios),
+    ):
+        return (
+            "post_update_ratio_did_not_move",
+            "rollout/current ratio did not move after the first optimizer update",
+        )
+    applied = sum(item.optimizer_step_applied for item in diagnostics)
+    expected = diagnostics[-1].update
+    if applied != expected:
+        return (
+            "optimizer_step_skipped",
+            f"optimizer applied {applied} of {expected} expected inner updates",
+        )
+    return _ratio_stability_violation(diagnostics)
 
 
 def _ratio_stability_violation(
@@ -216,6 +353,28 @@ def _ratio_stability_violation(
                     f"{item.ratio_p99:.6g}"
                 ),
             )
+    return None
+
+
+def _reference_kl_violation(
+    value: float,
+    *,
+    cycle: int,
+) -> tuple[str, str] | None:
+    """Fail closed when the post-cycle reference-KL diagnostic is unsafe."""
+    if not math.isfinite(value):
+        return (
+            "non_finite_reference_kl",
+            f"sampled K3 KL/token from the SFT checkpoint was non-finite at cycle {cycle}",
+        )
+    if value >= MAX_KL_PER_TOKEN:
+        return (
+            "kl_limit_violated",
+            (
+                "sampled K3 KL/token from the SFT checkpoint reached the preregistered "
+                f"limit {MAX_KL_PER_TOKEN:.6g} at cycle {cycle}: {value:.6g}"
+            ),
+        )
     return None
 
 
@@ -303,6 +462,57 @@ def _raise_if_stability_limit_violated(
     raise RuntimeError(message)
 
 
+def _fail_cycle_before_full_diagnostics(
+    output: Path,
+    *,
+    cycle: int,
+    failure_reason: str,
+    message: str,
+    generated,
+    policy_model: torch.nn.Module,
+    processor,
+    safe_state_before_cycle: dict[str, torch.Tensor],
+    running_max_kl: float,
+    source_tree_content_hash: str,
+) -> None:
+    """Persist provenance when reference validation/optimization fails early."""
+    write_immutable_json(
+        output / "rollouts" / f"cycle-{cycle:03d}.json",
+        generated.frozen.to_dict(),
+    )
+    write_immutable_json(
+        output / "diagnostics" / f"cycle-{cycle:03d}.json",
+        {
+            "cycle": cycle,
+            "status": "failed_before_full_diagnostics",
+            "failure_reason": failure_reason,
+            "message": message,
+            "old_model_revision": generated.frozen.model_revision,
+        },
+    )
+    last_safe_checkpoint = (
+        _save_last_safe_adapter(
+            output,
+            policy_model=policy_model,
+            processor=processor,
+            snapshot=safe_state_before_cycle,
+        )
+        if cycle > 0
+        else None
+    )
+    _raise_if_stability_limit_violated(
+        output,
+        cycle=cycle,
+        failure_reason=failure_reason,
+        message=message,
+        current_cycle_kl=None,
+        running_max_kl=running_max_kl,
+        old_model_revision=generated.frozen.model_revision,
+        last_safe_checkpoint=last_safe_checkpoint,
+        source_tree_content_hash=source_tree_content_hash,
+    )
+
+
 def _parameter_vector(model: torch.nn.Module) -> torch.Tensor:
     values = [
         parameter.detach().float().cpu().flatten()
@@ -348,6 +558,12 @@ def train_policy(args: argparse.Namespace) -> None:
         maximum_new_tokens=maximum_new_tokens,
         configured_maximum_new_tokens=config.policy.maximum_new_tokens,
     )
+    input_provenance = _input_provenance(
+        config,
+        config_path=args.config,
+        fold=args.fold,
+        sft_checkpoint=args.sft_checkpoint,
+    )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train_examples, validation_examples = _load_experiment_records(config, args.fold)
     examples_by_family: dict[str, list[AudioExample]] = defaultdict(list)
@@ -369,6 +585,7 @@ def train_policy(args: argparse.Namespace) -> None:
         trainable=False,
         device=device,
     )
+    _freeze_sft_reference_model(reference_model)
     optimizer = torch.optim.AdamW(
         (parameter for parameter in policy_model.parameters() if parameter.requires_grad),
         lr=args.learning_rate,
@@ -385,6 +602,16 @@ def train_policy(args: argparse.Namespace) -> None:
         "source_tree_content_hash": source_tree_content_hash,
         "execution_mode": execution_mode,
         "checkpoint_role": checkpoint_role,
+        "input_provenance": input_provenance,
+        "randomness": {
+            "root_seed": args.seed,
+            "balanced_batch_rng": "python.Random(root_seed), consumed once per cycle",
+            "rollout_seed_rule": "root_seed * 1000003 + cycle",
+            "corruption_seed_rule": (
+                "root_seed * 1000003 + cycle * 101 + balanced_batch_index"
+            ),
+            "corruption_realizations_recorded_in": "rollouts/cycle-*.json",
+        },
     }
     write_immutable_json(output / "execution_overrides.json", execution_overrides)
 
@@ -418,6 +645,7 @@ def train_policy(args: argparse.Namespace) -> None:
     all_ratio_p99 = []
     running_max_kl = 0.0
     ratio_movement_cycles = 0
+    optimizer_steps_applied = 0
     for cycle in range(rollout_cycles):
         safe_state_before_cycle = _clone_trainable_state(policy_model)
         selected = _balanced_batch(examples_by_family, batch_generator)
@@ -449,7 +677,54 @@ def train_policy(args: argparse.Namespace) -> None:
                 generated.input_features,
                 generated.attention_mask,
                 hypotheses,
-            ).token_log_probs
+            )
+        if not torch.equal(reference_scores.token_mask, tensors.token_mask):
+            _fail_cycle_before_full_diagnostics(
+                output,
+                cycle=cycle,
+                failure_reason="reference_rollout_token_mask_mismatch",
+                message="reference and rollout token masks diverged",
+                generated=generated,
+                policy_model=policy_model,
+                processor=processor,
+                safe_state_before_cycle=safe_state_before_cycle,
+                running_max_kl=running_max_kl,
+                source_tree_content_hash=source_tree_content_hash,
+            )
+        reference_token_log_probs = reference_scores.token_log_probs.detach().clone()
+        if reference_token_log_probs.dtype != torch.float32:
+            _fail_cycle_before_full_diagnostics(
+                output,
+                cycle=cycle,
+                failure_reason="reference_log_prob_dtype_invalid",
+                message="reference token log-probabilities were not FP32",
+                generated=generated,
+                policy_model=policy_model,
+                processor=processor,
+                safe_state_before_cycle=safe_state_before_cycle,
+                running_max_kl=running_max_kl,
+                source_tree_content_hash=source_tree_content_hash,
+            )
+        try:
+            update_zero_reference_kl = _sampled_k3_kl(
+                tensors.old_token_log_probs,
+                reference_token_log_probs,
+                tensors.token_mask,
+            )
+            _validate_cycle_start_reference_kl(update_zero_reference_kl, cycle=cycle)
+        except (FloatingPointError, RuntimeError) as error:
+            _fail_cycle_before_full_diagnostics(
+                output,
+                cycle=cycle,
+                failure_reason="cycle_start_reference_kl_invalid",
+                message=str(error),
+                generated=generated,
+                policy_model=policy_model,
+                processor=processor,
+                safe_state_before_cycle=safe_state_before_cycle,
+                running_max_kl=running_max_kl,
+                source_tree_content_hash=source_tree_content_hash,
+            )
 
         observed_risks = _group_risks(generated)
         probabilities_before_update = dual.probabilities
@@ -489,6 +764,16 @@ def train_policy(args: argparse.Namespace) -> None:
             return scored.token_log_probs
 
         def ratio_safety_check(item: InnerUpdateDiagnostics) -> str | None:
+            if item.update == 0 and not torch.allclose(
+                item.ratios,
+                torch.ones_like(item.ratios),
+            ):
+                return "rollout/current ratio was not one at inner update zero"
+            if item.update == 1 and torch.allclose(
+                item.ratios,
+                torch.ones_like(item.ratios),
+            ):
+                return "rollout/current ratio did not move after the first optimizer update"
             violation = _ratio_stability_violation((item,))
             return None if violation is None else violation[1]
 
@@ -504,15 +789,32 @@ def train_policy(args: argparse.Namespace) -> None:
                 utterance_weights=utterance_weights,
                 max_gradient_norm=config.policy.gradient_clip,
                 update_safety_check=ratio_safety_check,
+                reference_token_log_probs=reference_token_log_probs,
+                reference_kl_beta=config.policy.reference_kl_beta,
             )
         except InnerUpdateSafetyStop as stop:
             diagnostics = stop.diagnostics
-        if not torch.allclose(diagnostics[0].ratios, torch.ones_like(diagnostics[0].ratios)):
-            raise RuntimeError("rollout/current ratio was not one at inner update zero")
-        if not torch.allclose(diagnostics[1].ratios, torch.ones_like(diagnostics[1].ratios)):
+        except (FloatingPointError, RuntimeError) as error:
+            _fail_cycle_before_full_diagnostics(
+                output,
+                cycle=cycle,
+                failure_reason="policy_optimization_numerical_failure",
+                message=str(error),
+                generated=generated,
+                policy_model=policy_model,
+                processor=processor,
+                safe_state_before_cycle=safe_state_before_cycle,
+                running_max_kl=running_max_kl,
+                source_tree_content_hash=source_tree_content_hash,
+            )
+        ratio_violation = _ratio_protocol_violation(diagnostics)
+        cycle_optimizer_steps = sum(
+            item.optimizer_step_applied for item in diagnostics
+        )
+        optimizer_steps_applied += cycle_optimizer_steps
+        if ratio_violation is None:
             ratio_movement_cycles += 1
         all_ratio_p99.extend(item.ratio_p99 for item in diagnostics)
-        ratio_violation = _ratio_stability_violation(diagnostics)
         current_cycle_kl: float | None = None
         if ratio_violation is None:
             with torch.no_grad():
@@ -525,16 +827,33 @@ def train_policy(args: argparse.Namespace) -> None:
                 ).token_log_probs
             current_cycle_kl = _sampled_k3_kl(
                 final_current,
-                reference_scores,
+                reference_token_log_probs,
                 tensors.token_mask,
             )
-            running_max_kl = max(running_max_kl, current_cycle_kl)
+            if math.isfinite(current_cycle_kl):
+                running_max_kl = max(running_max_kl, current_cycle_kl)
+        current_cycle_kl_for_artifact = (
+            current_cycle_kl
+            if current_cycle_kl is None or math.isfinite(current_cycle_kl)
+            else None
+        )
         cycle_summary = {
             "cycle": cycle,
             "old_model_revision": generated.frozen.model_revision,
             "losses": [item.loss for item in diagnostics],
+            "loss_trajectory": _loss_trajectory(diagnostics),
+            "reference_kl": {
+                "beta": config.policy.reference_kl_beta,
+                "estimator": "sampled_k3_response_tokens",
+                "reference_fixed_eval": True,
+                "reference_token_log_probs_fp32": True,
+                "update_zero_k3_kl_per_token": update_zero_reference_kl,
+                "update_zero_k3_tolerance": MAX_INITIAL_REFERENCE_K3_PER_TOKEN,
+            },
             "ratio_p99": [item.ratio_p99 for item in diagnostics],
             "gradient_norm": [item.gradient_norm for item in diagnostics],
+            "optimizer_steps_applied": cycle_optimizer_steps,
+            "optimizer_steps_expected": config.policy.inner_updates,
             "ratio_trajectory": [
                 {
                     "update": item.update,
@@ -563,7 +882,11 @@ def train_policy(args: argparse.Namespace) -> None:
                 ),
             },
             "group_probabilities": _render_group_values(probabilities_after_update),
-            "current_cycle_sampled_k3_kl_per_token_from_sft": current_cycle_kl,
+            "current_cycle_sampled_k3_kl_per_token_from_sft": current_cycle_kl_for_artifact,
+            "current_cycle_sampled_k3_kl_measured": current_cycle_kl is not None,
+            "current_cycle_sampled_k3_kl_is_finite": (
+                current_cycle_kl is not None and math.isfinite(current_cycle_kl)
+            ),
             "running_max_sampled_k3_kl_per_token_from_sft": running_max_kl,
             "sampled_k3_kl_from_sft": running_max_kl,
         }
@@ -599,11 +922,9 @@ def train_policy(args: argparse.Namespace) -> None:
                 source_tree_content_hash=source_tree_content_hash,
             )
         assert current_cycle_kl is not None
-        if current_cycle_kl >= MAX_KL_PER_TOKEN:
-            message = (
-                "sampled K3 KL/token from the SFT checkpoint reached the preregistered "
-                f"limit {MAX_KL_PER_TOKEN:.6g} at cycle {cycle}: {current_cycle_kl:.6g}"
-            )
+        kl_violation = _reference_kl_violation(current_cycle_kl, cycle=cycle)
+        if kl_violation is not None:
+            failure_reason, message = kl_violation
             last_safe_checkpoint = (
                 _save_last_safe_adapter(
                     output,
@@ -617,9 +938,9 @@ def train_policy(args: argparse.Namespace) -> None:
             _raise_if_stability_limit_violated(
                 output,
                 cycle=cycle,
-                failure_reason="kl_limit_violated",
+                failure_reason=failure_reason,
                 message=message,
-                current_cycle_kl=current_cycle_kl,
+                current_cycle_kl=current_cycle_kl_for_artifact,
                 running_max_kl=running_max_kl,
                 old_model_revision=generated.frozen.model_revision,
                 last_safe_checkpoint=last_safe_checkpoint,
@@ -640,9 +961,12 @@ def train_policy(args: argparse.Namespace) -> None:
     )
     final_parameters = _parameter_vector(policy_model)
     drift = float(torch.linalg.vector_norm(final_parameters - initial_parameters))
+    has_non_finite_values = not bool(torch.isfinite(final_parameters).all())
+    expected_optimizer_steps = rollout_cycles * config.policy.inner_updates
+    skipped_steps = expected_optimizer_steps - optimizer_steps_applied
     movement = MovementMetrics(
-        has_non_finite_values=False,
-        skipped_steps=0,
+        has_non_finite_values=has_non_finite_values,
+        skipped_steps=skipped_steps,
         adapter_drift=drift,
         greedy_predictions_changed=after_predictions != before_predictions,
         ratio_p99=max(all_ratio_p99),
@@ -680,6 +1004,8 @@ def train_policy(args: argparse.Namespace) -> None:
             "preregistered_kl_per_token_limit": MAX_KL_PER_TOKEN,
             "ratio_movement_cycles": ratio_movement_cycles,
             "rollout_cycles": rollout_cycles,
+            "optimizer_steps_applied": optimizer_steps_applied,
+            "optimizer_steps_expected": expected_optimizer_steps,
         },
     )
     write_immutable_json(
@@ -693,6 +1019,13 @@ def train_policy(args: argparse.Namespace) -> None:
                 "group_weighting": spec.group_weighting.value,
                 "corruption": spec.corruption.value,
             },
+            "reference_kl": {
+                "beta": config.policy.reference_kl_beta,
+                "estimator": "sampled_k3_response_tokens",
+                "reference_fixed_eval": True,
+                "reference_token_log_probs_fp32": True,
+                "update_zero_k3_tolerance": MAX_INITIAL_REFERENCE_K3_PER_TOKEN,
+            },
             "fold": args.fold,
             "seed": args.seed,
             "learning_rate": args.learning_rate,
@@ -701,6 +1034,8 @@ def train_policy(args: argparse.Namespace) -> None:
             "dataset_id": config.dataset.dataset_id,
             "dataset_revision": config.dataset.revision,
             "sft_checkpoint": str(args.sft_checkpoint),
+            "input_provenance": input_provenance,
+            "publication_valid": input_provenance["publication_valid"],
             "checkpoint": {
                 "path": saved_checkpoint.name,
                 "revision": checkpoint_revision,

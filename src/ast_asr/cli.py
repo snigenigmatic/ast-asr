@@ -96,7 +96,12 @@ def build_parser() -> argparse.ArgumentParser:
     sft.set_defaults(handler=_train_sft)
 
     policy = commands.add_parser("train-policy", help="run one post-training ladder arm")
-    policy.add_argument("--config", type=Path, required=True)
+    policy.add_argument(
+        "--config",
+        type=Path,
+        required=True,
+        help="pinned policy settings, including reference_kl_beta",
+    )
     policy.add_argument("--fold", type=int, choices=range(5), required=True)
     policy.add_argument("--seed", type=int, required=True)
     policy.add_argument("--arm", required=True)

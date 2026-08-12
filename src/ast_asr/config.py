@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
@@ -52,6 +53,7 @@ class PolicyConfig:
     dual_learning_rate: float
     uniform_mix: float
     training_snr_db: tuple[float, float]
+    reference_kl_beta: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -128,6 +130,7 @@ class ExperimentConfig:
                 dual_learning_rate=float(policy["dual_learning_rate"]),
                 uniform_mix=float(policy["uniform_mix"]),
                 training_snr_db=tuple(float(item) for item in policy["training_snr_db"]),
+                reference_kl_beta=float(policy.get("reference_kl_beta", 0.0)),
             ),
             evaluation=EvaluationConfig(
                 conditions=tuple(str(item) for item in evaluation["conditions"]),
@@ -150,3 +153,7 @@ class ExperimentConfig:
             raise ValueError("live off-policy training requires more than one inner update")
         if self.policy.training_snr_db[0] > self.policy.training_snr_db[1]:
             raise ValueError("training SNR range is reversed")
+        if not math.isfinite(self.policy.reference_kl_beta):
+            raise ValueError("reference KL beta must be finite")
+        if self.policy.reference_kl_beta < 0:
+            raise ValueError("reference KL beta must be nonnegative")

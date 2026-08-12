@@ -1,5 +1,7 @@
 import json
+from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import torch
@@ -10,10 +12,17 @@ from ast_asr.policy_training import (
     _balanced_probe,
     _clone_trainable_state,
     _execution_checkpoint_spec,
+    _fail_cycle_before_full_diagnostics,
+    _freeze_sft_reference_model,
+    _input_provenance,
+    _loss_trajectory,
     _raise_if_stability_limit_violated,
+    _ratio_protocol_violation,
     _ratio_stability_violation,
+    _reference_kl_violation,
     _save_last_safe_adapter,
     _source_tree_content_hash,
+    _validate_cycle_start_reference_kl,
 )
 from ast_asr.sft import AudioExample
 
@@ -120,6 +129,91 @@ def test_ratio_safety_finds_non_finite_and_p99_violations() -> None:
     assert _ratio_stability_violation([_diagnostic(p99=MAX_RATIO_P99 - 1e-6)]) is None
 
 
+def test_reference_kl_safety_fails_closed_on_nan_and_limit() -> None:
+    assert _reference_kl_violation(float("nan"), cycle=3)[0] == "non_finite_reference_kl"
+    assert _reference_kl_violation(MAX_KL_PER_TOKEN, cycle=3)[0] == "kl_limit_violated"
+    assert _reference_kl_violation(MAX_KL_PER_TOKEN - 1e-6, cycle=3) is None
+
+
+def test_frozen_reference_is_eval_gradient_free_and_retains_compute_dtype() -> None:
+    reference = torch.nn.Linear(2, 1).half().train()
+
+    frozen = _freeze_sft_reference_model(reference)
+
+    assert frozen.training is False
+    assert next(frozen.parameters()).dtype == torch.float16
+    assert all(not parameter.requires_grad for parameter in frozen.parameters())
+
+
+def test_reference_identity_tolerance_applies_only_at_cycle_zero() -> None:
+    _validate_cycle_start_reference_kl(0.5, cycle=1)
+
+    with pytest.raises(RuntimeError, match="cycle zero"):
+        _validate_cycle_start_reference_kl(0.5, cycle=0)
+    with pytest.raises(RuntimeError, match="non-finite"):
+        _validate_cycle_start_reference_kl(float("nan"), cycle=1)
+
+
+def test_early_reference_failure_persists_rollout_diagnostic_and_failure(
+    tmp_path: Path,
+) -> None:
+    frozen = SimpleNamespace(
+        model_revision="policy-before-cycle",
+        to_dict=lambda: {"model_revision": "policy-before-cycle"},
+    )
+    generated = SimpleNamespace(frozen=frozen)
+
+    with pytest.raises(RuntimeError, match="identity mismatch"):
+        _fail_cycle_before_full_diagnostics(
+            tmp_path,
+            cycle=0,
+            failure_reason="cycle_start_reference_kl_invalid",
+            message="identity mismatch",
+            generated=generated,
+            policy_model=SimpleNamespace(),
+            processor=SimpleNamespace(),
+            safe_state_before_cycle={},
+            running_max_kl=0.0,
+            source_tree_content_hash="source-hash",
+        )
+
+    assert json.loads((tmp_path / "failure.json").read_text())["failure_reason"] == (
+        "cycle_start_reference_kl_invalid"
+    )
+    assert (tmp_path / "rollouts" / "cycle-000.json").is_file()
+    assert (tmp_path / "diagnostics" / "cycle-000.json").is_file()
+
+
+def test_loss_trajectory_reports_all_reference_kl_components() -> None:
+    diagnostic = InnerUpdateDiagnostics(
+        update=2,
+        loss=1.2,
+        ratios=torch.ones(1, 1),
+        ratio_is_finite=True,
+        ratio_p01=1.0,
+        ratio_median=1.0,
+        ratio_p99=1.0,
+        ratio_max=1.0,
+        gradient_norm=0.1,
+        base_policy_loss=1.0,
+        reference_kl_value=0.4,
+        reference_kl_loss=0.2,
+        total_loss=1.2,
+    )
+
+    assert _loss_trajectory((diagnostic,)) == [
+        {
+            "update": 2,
+            "base_policy_loss": 1.0,
+            "reference_kl_value": 0.4,
+            "reference_kl_loss": 0.2,
+            "total_loss": 1.2,
+                "reference_kl_evaluated": False,
+                "optimizer_step_applied": False,
+        }
+    ]
+
+
 def test_last_safe_adapter_restores_the_snapshot_before_persisting(tmp_path: Path) -> None:
     model = _FakeAdapter()
     snapshot = _clone_trainable_state(model)
@@ -147,6 +241,52 @@ def test_source_tree_hash_is_stable_without_git_metadata() -> None:
     assert len(_source_tree_content_hash(config)) == 64
 
 
+def test_input_provenance_records_profile_cluster_limitations_and_hashes(
+    tmp_path: Path,
+) -> None:
+    config_path = tmp_path / "config.json"
+    config_path.write_text("{}\n", encoding="utf-8")
+    prepared_manifest = tmp_path / "dataset_manifest.json"
+    prepared_manifest.write_text(
+        json.dumps(
+            {
+                "identity_mode": "demographic_profile",
+                "identity_count": 115,
+                "identity_warning": "not authoritative speakers",
+                "source_hashes": {"svarah_manifest.json": "abc"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    fold_directory = tmp_path / "folds"
+    fold_directory.mkdir()
+    (fold_directory / "fold-0.json").write_text("{}\n", encoding="utf-8")
+    sft_checkpoint = tmp_path / "checkpoint-epoch-1"
+    sft_checkpoint.mkdir()
+    (sft_checkpoint / "adapter.bin").write_bytes(b"adapter")
+    config = SimpleNamespace(
+        dataset=SimpleNamespace(
+            prepared_manifest=prepared_manifest,
+            fold_directory=fold_directory,
+        )
+    )
+
+    provenance = _input_provenance(
+        config,
+        config_path=config_path,
+        fold=0,
+        sft_checkpoint=sft_checkpoint,
+    )
+
+    assert provenance["identity_count"] == 115
+    assert provenance["publication_valid"] is False
+    assert provenance["authoritative_svarah_speakers_expected"] == 117
+    assert len(provenance["config_sha256"]) == 64
+    assert len(provenance["prepared_manifest_sha256"]) == 64
+    assert len(provenance["fold_manifest_sha256"]) == 64
+    assert len(provenance["sft_checkpoint_revision"]) == 64
+
+
 def test_bounded_execution_cannot_be_labeled_as_a_final_checkpoint() -> None:
     protocol = _execution_checkpoint_spec(
         rollout_cycles=300,
@@ -164,4 +304,19 @@ def test_bounded_execution_cannot_be_labeled_as_a_final_checkpoint() -> None:
     )
 
     assert protocol == ("protocol", "checkpoint-final", "final")
-    assert bounded == ("bounded_smoke", "checkpoint-last-safe", "last_safe_bounded")
+    assert bounded == (
+        "exploratory_bounded",
+        "checkpoint-last-safe",
+        "last_safe_bounded",
+    )
+
+
+def test_ratio_protocol_requires_update_zero_identity_and_live_movement() -> None:
+    identity = _diagnostic(p99=1.0)
+    identity = replace(identity, update=0, optimizer_step_applied=True)
+    still_one = replace(identity, update=1, optimizer_step_applied=False)
+
+    violation = _ratio_protocol_violation((identity, still_one))
+
+    assert violation is not None
+    assert violation[0] == "post_update_ratio_did_not_move"

@@ -23,3 +23,10 @@ def test_cli_exposes_reproducible_experiment_commands() -> None:
         "aggregate-oof",
     ):
         assert command in completed.stdout
+    assert "reference_kl_beta" in subprocess.run(
+        [sys.executable, "-m", "ast_asr", "train-policy", "--help"],
+        check=True,
+        capture_output=True,
+        text=True,
+        env={**os.environ, "PYTHONPATH": str(Path("src").resolve())},
+    ).stdout

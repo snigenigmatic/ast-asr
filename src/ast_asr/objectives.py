@@ -115,6 +115,45 @@ def sequence_importance_ratio(
     return torch.exp(mean_log_ratio)
 
 
+def sampled_k3_reference_kl(
+    current_token_log_probs: torch.Tensor,
+    reference_token_log_probs: torch.Tensor,
+    token_mask: torch.Tensor,
+) -> torch.Tensor:
+    """Return a masked sampled-K3 penalty against a frozen reference policy.
+
+    The rollout hypotheses are sampled once and remain fixed during every
+    inner update.  This is therefore a response-token penalty, rather than a
+    full-vocabulary KL.  ``reference_token_log_probs`` is deliberately
+    detached: the SFT reference is evidence, never an optimization target.
+    The K3 form is non-negative pointwise and has useful gradients on both
+    sides of the reference log-probability.
+    """
+    if current_token_log_probs.shape != reference_token_log_probs.shape:
+        raise ValueError("current and reference log-probability shapes must match")
+    if token_mask.shape != current_token_log_probs.shape:
+        raise ValueError("token mask must match log-probability shape")
+    if reference_token_log_probs.dtype != torch.float32:
+        raise ValueError("reference token log-probabilities must be FP32")
+    if not bool(token_mask.any()):
+        raise ValueError("reference KL requires at least one scored token")
+
+    log_ratio = (
+        reference_token_log_probs.detach().float() - current_token_log_probs.float()
+    )
+    selected = log_ratio[token_mask]
+    if not bool(torch.isfinite(selected).all()):
+        raise FloatingPointError("reference KL received non-finite scored tokens")
+    if bool((selected.abs() > 20.0).any()):
+        raise FloatingPointError(
+            "reference KL token log-ratio exceeded the numerical safety bound"
+        )
+    # expm1 is stable around zero and preserves K3's mathematical
+    # non-negativity at the cycle-zero identity check.
+    k3 = torch.expm1(log_ratio) - log_ratio
+    return k3[token_mask].mean()
+
+
 def _standardized_advantages(
     candidate_wers: torch.Tensor,
     epsilon: float,

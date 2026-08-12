@@ -7,6 +7,7 @@ optimization path, but its outputs are not ASR experiment results.
 from __future__ import annotations
 
 import argparse
+import copy
 import json
 import platform
 from dataclasses import dataclass
@@ -189,6 +190,9 @@ def _run_arm(
     spec = TRAINING_LADDER[arm]
     _seed_everything(seed)
     model = build_lora_whisper(config.model, trainable=True, device=device)
+    reference_model = copy.deepcopy(model).eval()
+    for parameter in reference_model.parameters():
+        parameter.requires_grad_(False)
     cases = build_synthetic_cases(seed=seed, corruption=spec.corruption)
     input_features, attention_mask = _features(processor, cases, device)
     hypotheses = tuple(case.hypotheses for case in cases)
@@ -211,6 +215,16 @@ def _run_arm(
     torch.testing.assert_close(first_old.token_log_probs, repeated_old.token_log_probs)
     if first_old.token_log_probs.dtype != torch.float32:
         raise RuntimeError("smoke rollout log-probabilities were not FP32")
+    with torch.no_grad():
+        reference_scores = score_hypotheses(
+            reference_model,
+            processor,
+            input_features,
+            attention_mask,
+            hypotheses,
+        )
+    if not torch.equal(reference_scores.token_mask, first_old.token_mask):
+        raise RuntimeError("reference and rollout smoke token masks diverged")
 
     weights = None
     probabilities: dict[str, float] = {}
@@ -245,6 +259,8 @@ def _run_arm(
         inner_updates=config.policy.inner_updates,
         utterance_weights=weights,
         max_gradient_norm=config.policy.gradient_clip,
+        reference_token_log_probs=reference_scores.token_log_probs,
+        reference_kl_beta=config.policy.reference_kl_beta,
     )
     first_ratios = diagnostics[0].ratios
     torch.testing.assert_close(first_ratios, torch.ones_like(first_ratios))
@@ -274,6 +290,11 @@ def _run_arm(
         "ratio_movement_after_first_update": movement,
         "ratio_p99": [item.ratio_p99 for item in diagnostics],
         "losses": [item.loss for item in diagnostics],
+        "base_policy_losses": [item.base_policy_loss for item in diagnostics],
+        "reference_kl_values": [item.reference_kl_value for item in diagnostics],
+        "reference_kl_losses": [item.reference_kl_loss for item in diagnostics],
+        "total_losses": [item.total_loss for item in diagnostics],
+        "reference_kl_beta": config.policy.reference_kl_beta,
         "gradient_norms": [item.gradient_norm for item in diagnostics],
         "adapter_drift": drift,
         "group_probabilities": probabilities,

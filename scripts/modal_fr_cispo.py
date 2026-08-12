@@ -9,13 +9,21 @@ Artifacts are written to the separate ``ast-asr-fr-cispo-runs`` volume.
 
 from __future__ import annotations
 
+import hashlib
 import json
+import math
 import os
+import platform
 import subprocess
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
 import modal
+
+# Do not import ast_asr here. Modal loads this module before the remote image
+# has installed the project package; the equivalent pure helpers are exercised
+# by tests in src/ast_asr/modal_policy_config.py.
 
 app = modal.App("ast-asr-fr-cispo")
 cache_volume = modal.Volume.from_name("ast-asr-cache", create_if_missing=False)
@@ -30,6 +38,9 @@ OUTPUT_DIR = "/artifacts"
 SVARAH_REVISION = "ebbf7777fe771490696a3f7b007097606fa8c924"
 MUSAN_URL = "https://www.openslr.org/resources/17/musan.tar.gz"
 MUSAN_MD5 = "0c472d4fc0c5141eca47ad1ffeb2a7df"
+PROFILE_SFT_EPOCH1_REVISION = (
+    "d204df40dfcd694733a171998ad5d97fdb43eecbc5dc19846d98bce012cd4c1e"
+)
 
 CACHE_ENV = {
     "HF_HOME": f"{CACHE_DIR}/hf",
@@ -93,6 +104,56 @@ def _write_text_once(path: Path, value: str) -> None:
     path.write_text(value, encoding="utf-8")
 
 
+def _file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _directory_content_hash(directory: Path) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(item for item in directory.rglob("*") if item.is_file()):
+        digest.update(path.relative_to(directory).as_posix().encode("utf-8"))
+        with path.open("rb") as source:
+            for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _modal_runtime_identity() -> dict[str, object]:
+    """Record the concrete runtime plus the reproducible image declaration."""
+    import torch
+
+    return {
+        "modal_app": "ast-asr-fr-cispo",
+        "modal_image_id": os.environ.get("MODAL_IMAGE_ID"),
+        "modal_task_id": os.environ.get("MODAL_TASK_ID"),
+        "python": sys.version,
+        "platform": platform.platform(),
+        "torch": str(torch.__version__),
+        "torch_cuda": str(torch.version.cuda) if torch.version.cuda else None,
+        "cuda_available": torch.cuda.is_available(),
+        "gpu_name": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+        "gpu_capability": (
+            list(torch.cuda.get_device_capability(0))
+            if torch.cuda.is_available()
+            else None
+        ),
+        "image_declaration": {
+            "base": "nvidia/cuda:12.8.0-devel-ubuntu22.04",
+            "python": "3.12",
+            "gpu_request": "L4",
+            "uv_requirement": "uv>=0.8,<0.9",
+            "uv_lock_sha256": _file_sha256(Path(PROJECT_ROOT) / "uv.lock"),
+            "source_directory_sha256": _directory_content_hash(
+                Path(PROJECT_ROOT) / "src"
+            ),
+        },
+    }
+
+
 def _resolve_evaluation_checkpoint_in_project(
     arm: str,
     *,
@@ -140,6 +201,44 @@ def _resolve_evaluation_checkpoint_in_project(
             "checkpoint resolver must emit exactly one non-empty checkpoint path"
         )
     return resolved[0]
+
+
+def _derive_policy_config_in_project(
+    *,
+    immutable_config: Path,
+    run_artifact_root: Path,
+    output_name: str,
+    reference_kl_beta: float,
+) -> Path:
+    """Create a run config through the tested package helper under ``uv run``."""
+    completed = subprocess.run(
+        [
+            "uv",
+            "run",
+            "--frozen",
+            "python",
+            "-m",
+            "ast_asr.modal_policy_config",
+            "derive",
+            "--immutable-config",
+            str(immutable_config),
+            "--run-artifact-root",
+            str(run_artifact_root),
+            "--output-name",
+            output_name,
+            "--reference-kl-beta",
+            str(reference_kl_beta),
+        ],
+        cwd=PROJECT_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=os.environ.copy(),
+    )
+    lines = completed.stdout.splitlines()
+    if len(lines) != 1 or not lines[0]:
+        raise RuntimeError("policy config helper must emit exactly one path")
+    return Path(lines[0])
 
 
 @app.function(
@@ -485,16 +584,60 @@ def run_profile_fr_cispo_smoke(
     rollout_cycles: int = 2,
     probe_examples: int = 6,
     maximum_new_tokens: int = 32,
+    reference_kl_beta: float = 0.0,
 ) -> dict[str, object]:
-    """Run bounded FR-CISPO cycles over real profile-clustered Svarah."""
+    """Run bounded FR-CISPO cycles over real profile-clustered Svarah.
+
+    H5 must use distinct output names for the paired beta=0 and beta=.04
+    commands (for example ``profile-h5-beta0`` and ``profile-h5-beta04``).
+    """
     source_run = sft_run_name or run_name
-    for artifact_component in (sft_output_name, output_name):
-        if not artifact_component or Path(artifact_component).name != artifact_component:
+    for artifact_component in (run_name, source_run, sft_output_name, output_name):
+        if (
+            not artifact_component
+            or artifact_component in {".", ".."}
+            or "/" in artifact_component
+            or "\\" in artifact_component
+            or Path(artifact_component).name != artifact_component
+        ):
             raise ValueError("artifact output names must be single path components")
+    if not isinstance(reference_kl_beta, (int, float)) or not math.isfinite(
+        float(reference_kl_beta)
+    ):
+        raise ValueError("reference_kl_beta must be finite")
+    if reference_kl_beta < 0:
+        raise ValueError("reference_kl_beta must be nonnegative")
     sft = Path(OUTPUT_DIR) / source_run / sft_output_name / "checkpoint-epoch-1"
     if not sft.is_dir():
         raise FileNotFoundError(f"profile SFT smoke checkpoint is missing: {sft}")
+    source_sft_revision = _directory_content_hash(sft)
+    if source_sft_revision != PROFILE_SFT_EPOCH1_REVISION:
+        raise RuntimeError(
+            "profile SFT checkpoint revision differs from the frozen H5 source: "
+            f"expected {PROFILE_SFT_EPOCH1_REVISION}, found {source_sft_revision}"
+        )
     output = Path(OUTPUT_DIR) / run_name / output_name
+    immutable_source_config = (
+        Path(DATA_DIR) / "fr_cispo_profile" / "configs" / "fr_cispo_tiny.json"
+    )
+    resolved_config = _derive_policy_config_in_project(
+        immutable_config=immutable_source_config,
+        run_artifact_root=Path(OUTPUT_DIR) / run_name,
+        output_name=output_name,
+        reference_kl_beta=float(reference_kl_beta),
+    )
+    resolved_raw = json.loads(resolved_config.read_text(encoding="utf-8"))
+    prepared_manifest = Path(resolved_raw["dataset"]["prepared_manifest"])
+    fold_manifest = Path(resolved_raw["dataset"]["fold_directory"]) / "fold-0.json"
+    prepared = json.loads(prepared_manifest.read_text(encoding="utf-8"))
+    if (
+        prepared.get("identity_mode") != "demographic_profile"
+        or prepared.get("identity_count") != 115
+    ):
+        raise RuntimeError(
+            "H5 requires the frozen 115 demographic-profile clusters; "
+            "authoritative speaker folds are a separate future protocol"
+        )
     command = [
         "uv",
         "run",
@@ -502,7 +645,7 @@ def run_profile_fr_cispo_smoke(
         "ast-asr",
         "train-policy",
         "--config",
-        f"{DATA_DIR}/fr_cispo_profile/configs/fr_cispo_tiny.json",
+        str(resolved_config),
         "--fold",
         "0",
         "--seed",
@@ -522,6 +665,37 @@ def run_profile_fr_cispo_smoke(
         "--maximum-new-tokens",
         str(maximum_new_tokens),
     ]
+    launcher = {
+        "artifact_kind": "modal_policy_launcher",
+        "reference_kl_beta": float(reference_kl_beta),
+        "immutable_source_config": str(immutable_source_config),
+        "resolved_config": str(resolved_config),
+        "immutable_source_config_sha256": _file_sha256(immutable_source_config),
+        "resolved_config_sha256": _file_sha256(resolved_config),
+        "prepared_manifest_sha256": _file_sha256(prepared_manifest),
+        "fold_manifest_sha256": _file_sha256(fold_manifest),
+        "source_sft_revision": source_sft_revision,
+        "expected_source_sft_revision": PROFILE_SFT_EPOCH1_REVISION,
+        "identity_mode": prepared.get("identity_mode"),
+        "identity_count": prepared.get("identity_count"),
+        "identity_warning": prepared.get("identity_warning"),
+        "authoritative_svarah_speakers_expected": 117,
+        "publication_valid": False,
+        "randomness": {
+            "root_seed": seed,
+            "rollout_seed_rule": "root_seed * 1000003 + cycle",
+            "corruption_seed_rule": (
+                "root_seed * 1000003 + cycle * 101 + balanced_batch_index"
+            ),
+            "realizations": "stored per utterance in rollouts/cycle-*.json",
+        },
+        "modal_runtime": _modal_runtime_identity(),
+        "command": command,
+    }
+    _write_once(
+        Path(OUTPUT_DIR) / run_name / "policy-launches" / f"{output_name}.json",
+        launcher,
+    )
     try:
         subprocess.run(
             command,
@@ -536,13 +710,18 @@ def run_profile_fr_cispo_smoke(
         failure = output / "failure.json"
         if failure.is_file():
             raise RuntimeError(
-                f"policy run stopped by the KL gate; inspect {failure}"
+                f"policy run stopped by a safety gate; inspect {failure}"
             ) from error
         raise
     output_volume.commit()
     run = json.loads((output / "run.json").read_text(encoding="utf-8"))
     run["movement"] = json.loads(
         (output / "movement.json").read_text(encoding="utf-8")
+    )
+    run["reference_kl_beta"] = float(reference_kl_beta)
+    run["resolved_config"] = str(resolved_config)
+    run["launcher_artifact"] = str(
+        Path(OUTPUT_DIR) / run_name / "policy-launches" / f"{output_name}.json"
     )
     return run
 
