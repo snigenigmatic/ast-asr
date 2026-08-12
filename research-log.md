@@ -179,3 +179,23 @@ labelled as such.
 - Decision: any future safety study requires a fixed sentinel candidate bank
   and decomposed K3 telemetry. This analysis does not reopen H6 or authorize a
   paid run.
+
+## 2026-08-12 — H7 fixed-policy sentinel-KL question locked
+
+- Locked a measurement-validation question before implementation: rescore the
+  28 existing seed-2028 historical candidate banks under one frozen last-safe
+  policy and the frozen SFT reference, with no generation, optimizer, WER
+  selection, or parameter update.
+- H7 reconstructs the original clean/paired-white acoustic inputs, scores the
+  exact saved target token IDs in the original 6 × 4 bank shape, and persists
+  per-token through bank-global K3 decomposition.
+- Phase A must reproduce cycle-27 update-zero K3 `0.10983546078205109` and the
+  saved policy log probabilities before any other bank is scored.
+- The registered interpretation is deliberately narrow: threshold values on
+  both sides of `0.1` establish bank-dependent classification for this fixed
+  policy; one side only gives no evidence of flips for these historical banks.
+  Neither outcome estimates fresh on-policy variance or authorizes a
+  controller/training run.
+- Status remains `LOCKED — NOT APPROVED FOR RUN` until a committed input lock,
+  implementation tests, independent review, clean preflight, and separate
+  implementation-bound authorization exist.
