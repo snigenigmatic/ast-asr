@@ -79,6 +79,15 @@ controls measured drift when it is present, but the current 40-cycle training
 recipe is not seed-stable and the one-seed worst-group gain did not replicate.
 There is no complete three-seed estimate to average, bootstrap, or promote.
 
+Offline localization of 376 saved diagnostic and rollout artifacts shows that
+the cycle-27 failure was already above the KL ceiling at update zero
+(`0.1098355`); the four optimizer passes added only `0.0011158`. Shorter
+candidate batches have a repeated negative descriptive association with the
+sampled K3 estimate, while recorded linear summaries show no dual-weight
+concentration signal. Because per-token and per-utterance K3 contributions were
+not saved, this distinguishes a candidate-conditioned threshold crossing from
+a localized optimizer blow-up but does not identify a causal group or token.
+
 ## Invalid or provisional evidence
 
 The current 115 profile-cluster identities are not the authoritative 117 Svarah
@@ -92,8 +101,9 @@ replace it; earlier FP16 metric tables should not be cited.
 
 1. Can authoritative speaker IDs be recovered from a pinned official artifact
    without inventing a heuristic mapping?
-2. At what cycle and under which group/condition does KL escape, and is the
-   movement gradual or caused by a localized update?
+2. Does a fixed sentinel candidate bank with per-token/per-utterance K3
+   contributions show genuine policy drift, rather than candidate-bank
+   variation, before the sampled safety threshold is crossed?
 3. Is there a principled training rule that guarantees the fixed KL budget
    across seeds without choosing a horizon or coefficient after seeing each
    trajectory?

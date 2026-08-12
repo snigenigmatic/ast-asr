@@ -155,8 +155,27 @@ labelled as such.
   were not launched.
 - Trajectory audit shows the seed-2028 control first exceeded `0.05` at cycle
   13, reached `0.0999123` at cycle 23, dipped, and crossed the limit at cycle
-  27 while ratio p99 remained small. This is cumulative reference drift, not a
-  ratio-cap failure.
+  27 while ratio p99 remained small. This is a sampled fixed-reference-K3
+  failure with fresh candidate-bank variation, not a ratio-cap failure.
 - Decision: H6 fails its safety prerequisite. The fixed three-seed efficacy
   rule is not evaluable, no bootstrap/mean gate is computed, and no additional
   paid policy run is authorized without a new question and locked protocol.
+
+## 2026-08-12 — Offline H6 failure localization
+
+- Downloaded read-only copies of 376 immutable H5/H6 diagnostic and rollout
+  artifacts and bound them to exact Modal run/output paths with deterministic
+  per-file manifests. No Modal function ran and no remote state changed.
+- At failed seed-2028 cycle 27, sampled fixed-SFT K3 was already `0.1098355`
+  at update zero; four optimizer passes added only `0.0011158`. The immediate
+  crossing is therefore not a localized cycle-27 optimizer jump.
+- Across the beta-zero traces, sampled K3 has a repeated negative descriptive
+  association with mean valid candidate length after linear cycle detrending.
+  The saved telemetry cannot separate candidate-bank estimator variation from
+  a genuine short-utterance policy effect.
+- Recorded linear batch summaries show no dual-weight concentration signal at
+  the failure. Per-token, per-utterance, and per-group K3 contributions were
+  not persisted, so causal group attribution is unavailable.
+- Decision: any future safety study requires a fixed sentinel candidate bank
+  and decomposed K3 telemetry. This analysis does not reopen H6 or authorize a
+  paid run.

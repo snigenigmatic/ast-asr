@@ -179,6 +179,16 @@ known_results:
       observed_k3: 0.1109513
       last_safe_checkpoint_revision: a95530fd914b7fea9f3008a5c6451f3fedef2281443fce6b9dc0df5ba6a8d400
       beta_004_status: not_launched_by_protocol
+    failure_localization:
+      input_file_count: 376
+      cycle_27_update_zero_k3: 0.1098355
+      cycle_27_post_update_k3: 0.1109513
+      cycle_27_within_cycle_change: 0.0011158
+      interpretation: >-
+        The stop was already present on the fresh cycle-27 candidate bank
+        before its optimizer passes. Shorter candidate batches have a repeated
+        negative descriptive association with sampled K3, but missing
+        per-token and per-utterance K3 prevents causal attribution.
     three_seed_rule_evaluable: false
     publication_valid: false
     interpretation: >-
@@ -188,10 +198,10 @@ known_results:
       three-seed efficacy result.
 
 next_decision:
-  selected_next_hypothesis: none_after_H6_safety_failure
+  selected_next_hypothesis: none_after_offline_failure_localization
   required_before_paid_training:
-    - "Commit the complete H6 failure and immutable replication-gate artifact"
     - "Explain why another paid run answers a new question rather than rescuing an observed failure"
+    - "Persist a fixed sentinel candidate bank and per-token/per-utterance K3 for any new safety hypothesis"
     - "Freeze any new hypothesis and stop rule before execution"
     - "Label any profile-cluster run publication_valid: false"
   forbidden_shortcuts:
@@ -207,6 +217,8 @@ artifacts:
   h5_matched_result: experiments/H5-reference-kl/result-20260812.md
   h6_replication_result: experiments/H6-replication/result-20260812.md
   h6_replication_gate: experiments/H6-replication/h6_replication_gate.json
+  h6_failure_localization: experiments/H6-replication/failure-localization-20260812.md
+  h6_failure_localization_script: experiments/H6-replication/analyze_kl_failure.py
 
 continuity:
   heartbeat_requested_minutes: 20
