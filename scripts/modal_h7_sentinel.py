@@ -13,7 +13,7 @@ from pathlib import Path
 
 import modal
 
-app = modal.App("ast-asr-h7-sentinel-kl")
+app = modal.App("ast-asr-h7-sentinel-kl-r1")
 cache_volume = modal.Volume.from_name("ast-asr-cache", create_if_missing=False)
 data_volume = modal.Volume.from_name("ast-asr-data", create_if_missing=False)
 output_volume = modal.Volume.from_name("ast-asr-fr-cispo-runs", create_if_missing=False)
@@ -23,8 +23,8 @@ PROJECT_ROOT = "/root/fr-cispo"
 CACHE_DIR = "/cache"
 DATA_DIR = "/data"
 OUTPUT_DIR = "/artifacts"
-H7_PROFILE = "profile-h7-fixed-policy-sentinel-kl-s2028-20260812"
-H7_OUTPUT = "h7-fixed-policy-sentinel-kl"
+H7_PROFILE = "profile-h7-fixed-policy-sentinel-kl-r1-s2028-20260812"
+H7_OUTPUT = "h7-fixed-policy-sentinel-kl-r1"
 
 CACHE_ENV = {
     "HF_HOME": f"{CACHE_DIR}/hf",

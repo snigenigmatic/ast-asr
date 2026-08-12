@@ -37,8 +37,8 @@ from .sft import _load_audio
 from .whisper_policy import score_saved_target_tokens
 
 H7_SEED = 2028
-H7_RESERVED_PROFILE_NAME = "profile-h7-fixed-policy-sentinel-kl-s2028-20260812"
-H7_RESERVED_OUTPUT_NAME = "h7-fixed-policy-sentinel-kl"
+H7_RESERVED_PROFILE_NAME = "profile-h7-fixed-policy-sentinel-kl-r1-s2028-20260812"
+H7_RESERVED_OUTPUT_NAME = "h7-fixed-policy-sentinel-kl-r1"
 H7_BETA0_CONFIG_SHA256 = (
     "3673abefc4322f4951ee067c8b6ed2c2fef93008b3f85c2cf66afd5abd406ae5"
 )

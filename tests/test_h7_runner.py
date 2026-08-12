@@ -684,3 +684,44 @@ def test_h7_modal_entrypoint_uses_existing_h6_mounts_and_a_discoverable_function
     assert '.add_local_file(\n        "experiments/H7-sentinel-kl/input-lock.json",' in script
     assert 'remote_path=f"{PROJECT_ROOT}/experiments/H7-sentinel-kl/input-lock.json"' in script
     assert '.add_local_dir(\n        "experiments/H7-sentinel-kl"' not in script
+
+
+def test_h7_r1_coordinates_replace_only_the_consumed_attempt_namespace() -> None:
+    from ast_asr.h7_modal import H7ModalLaunchSpec
+
+    root = Path(__file__).parents[1]
+    spec = H7ModalLaunchSpec.default()
+    assert (
+        H7_RESERVED_PROFILE_NAME
+        == "profile-h7-fixed-policy-sentinel-kl-r1-s2028-20260812"
+    )
+    assert H7_RESERVED_OUTPUT_NAME == "h7-fixed-policy-sentinel-kl-r1"
+    assert spec.profile_name == H7_RESERVED_PROFILE_NAME
+    assert spec.output_name == H7_RESERVED_OUTPUT_NAME
+    assert f"/artifacts/{spec.profile_name}/{spec.output_name}" in spec.command
+    assert spec.retries == 0
+
+    executable_paths = (
+        root / "scripts" / "modal_h7_sentinel.py",
+        root / "src" / "ast_asr" / "h7_runner.py",
+        root / "src" / "ast_asr" / "h7_modal.py",
+    )
+    old_coordinates = (
+        "ast-asr-h7-sentinel-kl\"",
+        "profile-h7-fixed-policy-sentinel-kl-s2028-20260812",
+        "h7-fixed-policy-sentinel-kl\"",
+    )
+    for path in executable_paths:
+        contents = path.read_text(encoding="utf-8")
+        assert all(old not in contents for old in old_coordinates)
+    script = executable_paths[0].read_text(encoding="utf-8")
+    assert 'modal.App("ast-asr-h7-sentinel-kl-r1")' in script
+    assert "retries=0" in script
+
+    recovery = (
+        root / "experiments" / "H7-sentinel-kl" / "recovery-protocol.md"
+    ).read_text(encoding="utf-8")
+    assert (
+        "$env:PYTHONIOENCODING='utf-8'\n"
+        "uvx modal run scripts/modal_h7_sentinel.py"
+    ) in recovery
