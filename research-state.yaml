@@ -39,11 +39,13 @@ evidence_status:
   checkpoint_round_trip:
     status: passing
   policy_safety:
-    status: safe_bounded_h5_only
+    status: seed_unstable_at_40_cycles
     note: >-
       None of the preregistered learning rates completed 300 cycles while
       satisfying per-token KL < 0.1. Matched 40-cycle beta=0 and beta=0.04 H5
-      runs both completed safely; this does not validate a 300-cycle schedule.
+      runs both completed safely, and both seed-2027 H6 arms were safe. The
+      seed-2028 beta-zero control failed the KL gate at cycle 27, so 40-cycle
+      safety itself does not replicate across seeds.
 
 hypotheses:
   - id: H0
@@ -86,6 +88,17 @@ hypotheses:
       - "Beta=0.04 worst family-condition WER improved 0.0221774 absolute versus beta=0"
       - "Beta=0.04 clean WER degraded 0.0006663, white WER 0.0059020, and MUSAN WER 0.0174203 versus beta=0"
       - "A 10,000-sample paired bootstrap over 39 fold-0 profile clusters included zero/harm for every registered delta"
+  - id: H6
+    statement: >-
+      The matched beta-zero versus beta=0.04 H5 mechanism and provisional
+      worst-group point improvement repeat over two additional fixed seeds.
+    status: failed_safety
+    classification: exploratory_engineering
+    evidence:
+      - "Seed 2027: beta=0.04 reduced peak K3/token 0.0762783 -> 0.0294708, but worst family-condition WER worsened 0.0040323 absolute"
+      - "Seed 2027: clean and white WER improved slightly while MUSAN WER worsened 0.0148977 absolute"
+      - "Seed 2028 beta-zero reached K3/token 0.1109513 at cycle 27 and failed the preregistered 0.1 gate"
+      - "Seed 2028 treatment and both evaluations were not launched, as required by the locked stop rule"
 
 known_results:
   sft:
@@ -149,14 +162,38 @@ known_results:
       provisional worst group by 2.22 points within the clean-WER tolerance,
       but worsened both aggregate noise conditions and has wide profile-cluster
       uncertainty. This supports replication, not an efficacy claim.
+  h6_replication:
+    protocol_commit: b178e95
+    status: failed_safety
+    seed_2027:
+      beta_zero_checkpoint_revision: 33b389492935d45ad2f773a6bd82fae2cf188b6517fed057b15fbde3c61b814c
+      beta_004_checkpoint_revision: f53aa3acdad257fbe569a10a0d3e5de19d7e625b4d73c05315489833357382cc
+      beta_zero_peak_k3: 0.0762783
+      beta_004_peak_k3: 0.0294708
+      treatment_minus_control_clean_wer: -0.0009519
+      treatment_minus_control_white_wer: -0.0129462
+      treatment_minus_control_musan_wer: 0.0148977
+      treatment_minus_control_worst_family_condition_wer: 0.0040323
+    seed_2028:
+      beta_zero_status: failed_kl_gate_cycle_27
+      observed_k3: 0.1109513
+      last_safe_checkpoint_revision: a95530fd914b7fea9f3008a5c6451f3fedef2281443fce6b9dc0df5ba6a8d400
+      beta_004_status: not_launched_by_protocol
+    three_seed_rule_evaluable: false
+    publication_valid: false
+    interpretation: >-
+      The reference penalty repeatedly reduced sampled divergence when run, but
+      efficacy did not replicate on seed 2027 and the seed-2028 control made the
+      fixed three-seed set incomplete. H6 fails; do not compute or claim a
+      three-seed efficacy result.
 
 next_decision:
-  selected_next_hypothesis: H6_two_additional_seed_replication_pending_protocol
+  selected_next_hypothesis: none_after_H6_safety_failure
   required_before_paid_training:
+    - "Commit the complete H6 failure and immutable replication-gate artifact"
+    - "Explain why another paid run answers a new question rather than rescuing an observed failure"
+    - "Freeze any new hypothesis and stop rule before execution"
     - "Label any profile-cluster run publication_valid: false"
-    - "Commit the complete H5 result and paired profile-cluster uncertainty"
-    - "Freeze an H6 replication protocol without changing beta, LR, cycles, data, or endpoints"
-    - "Predeclare the two additional seeds and a stop rule before execution"
   forbidden_shortcuts:
     - "No heuristic speaker IDs presented as authoritative"
     - "No silent objective pivot after observing a failed run"
@@ -168,6 +205,8 @@ artifacts:
   source_speaker_statistics_sha256: e2daa48863581eb41befd1826b7b14cd80e05f3a1bab9b72d08e7814248f1f94
   h1_engineering_result: experiments/H1-kl-control/result-20260811.md
   h5_matched_result: experiments/H5-reference-kl/result-20260812.md
+  h6_replication_result: experiments/H6-replication/result-20260812.md
+  h6_replication_gate: experiments/H6-replication/h6_replication_gate.json
 
 continuity:
   heartbeat_requested_minutes: 20

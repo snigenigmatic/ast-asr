@@ -1,0 +1,266 @@
+{
+  "aggregate": {
+    "bootstrap": {
+      "computed": false,
+      "reason": "The fixed three-seed H6 set is incomplete after seed 2028 beta-zero failed its preregistered safety gate."
+    },
+    "equal_seed_means": {
+      "computed": false,
+      "reason": "Only two matched pairs completed; the locked protocol requires all three fixed seeds."
+    }
+  },
+  "artifact_kind": "h6_replication_gate",
+  "decision": {
+    "all_six_training_arms_safe_and_moving": {
+      "evaluable": true,
+      "passed": false,
+      "reason": "Seed 2028 beta-zero violated the sampled K3/token safety limit; its treatment and evaluations were not launched."
+    },
+    "clean_overall_tolerance": {
+      "evaluable": false,
+      "passed": false,
+      "reason": "The locked equal-seed mean cannot be computed from two completed matched pairs.",
+      "threshold_treatment_minus_control_max": 0.01
+    },
+    "evaluable": false,
+    "passed": false,
+    "primary_worst_family_condition": {
+      "evaluable": false,
+      "passed": false,
+      "reason": "The locked equal-seed mean cannot be computed from two completed matched pairs.",
+      "threshold_control_minus_treatment_min": 0.02
+    },
+    "reason": "failed_safety: seed 2028 beta-zero violated the sampled K3/token limit before its matched treatment or either evaluation could run."
+  },
+  "frozen_provenance": {
+    "authoritative_svarah_speakers_expected": 117,
+    "beta004_config_sha256": "00b1257018e4dc8fe926714ada6d361da5ba7fae6895e43aa71736f230eba6d3",
+    "beta0_config_sha256": "3673abefc4322f4951ee067c8b6ed2c2fef93008b3f85c2cf66afd5abd406ae5",
+    "fold": 0,
+    "fold_manifest_sha256": "22e9ab64006fe8a33bac37f5f2b98887df6aed061e158252778c29c6d928a1f0",
+    "identity_count": 115,
+    "identity_mode": "demographic_profile",
+    "model_id": "openai/whisper-tiny",
+    "model_revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+    "prepared_manifest_sha256": "65bdd8cf87f5db0f815e742739be815d2306ddd2b9977ee5687774feb1a18b56",
+    "prepared_svarah_revision": "ebbf7777fe771490696a3f7b007097606fa8c924",
+    "sft_checkpoint_revision": "d204df40dfcd694733a171998ad5d97fdb43eecbc5dc19846d98bce012cd4c1e"
+  },
+  "later_runs_authorized": false,
+  "mechanism": {
+    "completed_seed_count": 2,
+    "conclusion": "beta=.04 reduced peak sampled fixed-SFT K3 for each completed matched seed; efficacy remains unconfirmed.",
+    "replicated_for_completed_seeds": true
+  },
+  "publication_valid": false,
+  "robustness_classification": "not_evaluable_incomplete_fixed_seed_set",
+  "seeds": {
+    "2026": {
+      "classification": "completed_h5_matched_pair",
+      "control": {
+        "artifact_sha256": {
+          "edit_counts_json": "cf848bac135d13657e4065031a73f6d92e8ff2899b45c2472eb78e4f7d8c26a8",
+          "evaluation_metrics_json": "3380e6cbe804bd70841ca1865f28f08ba987d43b0b65154a773fa6dab2bd4117",
+          "evaluation_run_json": "6ff105216144b0795fa7dff5d9263a2831b8ae1c0520dcfc48cf0bc3b7ed61cf",
+          "predictions_jsonl": "0264dff6d190742c8de69b9ef481b39bb1a48c92d52755c604feafbd8d469cd0"
+        },
+        "checkpoint_revision": "eb519c5b60dba9573c4c56808ff9526005b5cd0e1bebae79851a1aea13e902ea",
+        "evaluation": {
+          "edit_count": 5772,
+          "failure_json_present": false,
+          "prediction_count": 5772,
+          "solo_batched_predictions_equal": true
+        },
+        "movement": {
+          "adapter_drift": 0.1620269,
+          "checkpoint_round_trip_equal": true,
+          "greedy_predictions_changed": true,
+          "optimizer_steps": "160/160",
+          "peak_sampled_k3_per_token": 0.0249191,
+          "ratio_movement_cycles": 40,
+          "ratio_p99": 1.17210138,
+          "safe": true
+        },
+        "metrics": {
+          "clean_overall_wer": 0.212756,
+          "family_condition_wer": {
+            "Dravidian::clean": 0.21442813123074134,
+            "Dravidian::musan_babble_10db": 0.35055283668660503,
+            "Dravidian::white_10db": 0.367047308319739,
+            "Indo-Aryan::clean": 0.20764152830566113,
+            "Indo-Aryan::musan_babble_10db": 0.6330599453223978,
+            "Indo-Aryan::white_10db": 0.5649796625991865,
+            "Sino-Tibetan::clean": 0.3487903225806452,
+            "Sino-Tibetan::musan_babble_10db": 0.8528225806451613,
+            "Sino-Tibetan::white_10db": 0.6713709677419355
+          },
+          "family_gap": 0.141149,
+          "musan_babble_10db_wer": 0.564065,
+          "noise_amplification": 0.351309,
+          "white_10db_wer": 0.515516,
+          "worst_20_percent_profile_cluster_wer": 0.408471,
+          "worst_family_clean_wer": 0.34879,
+          "worst_family_condition_wer": 0.852823
+        }
+      },
+      "deltas_treatment_minus_control": {
+        "clean_overall_wer": 0.00066635,
+        "family_condition_wer": {
+          "Dravidian::clean": 0.0012688055102410833,
+          "Dravidian::musan_babble_10db": 0.027007431575131413,
+          "Dravidian::white_10db": 0.002900126880551024,
+          "Indo-Aryan::clean": 0.00040008001600319587,
+          "Indo-Aryan::musan_babble_10db": 0.01520304060812161,
+          "Indo-Aryan::white_10db": 0.0069347202773888394,
+          "Sino-Tibetan::clean": 0.0020161290322580627,
+          "Sino-Tibetan::musan_babble_10db": -0.022177419354838634,
+          "Sino-Tibetan::white_10db": 0.008064516129032251
+        },
+        "family_gap": 0.00161605,
+        "musan_babble_10db_wer": 0.017420,
+        "noise_amplification": 0.01675393,
+        "white_10db_wer": 0.005902,
+        "worst_20_percent_profile_cluster_wer": -0.00750739,
+        "worst_family_clean_wer": 0.00201613,
+        "worst_family_condition_wer": -0.0221774
+      },
+      "treatment": {
+        "artifact_sha256": {
+          "edit_counts_json": "9bbdf31e85fbfaf1ff5b99481244ddbf3d665e2789b6bafb9e79a4f49c920070",
+          "evaluation_metrics_json": "3968e0bbc99abfbfb83bd293b517103c7f46aa5c9fb08294c0c02f2daed75b72",
+          "evaluation_run_json": "9e16c164a81d53701991551de5efd18f50b902d34c5f3b1d5fb3b7e10f25a500",
+          "predictions_jsonl": "b820f36f398a089f5d7fee846314cf21c84375114b731f1da4df2d9cb30e6ab6"
+        },
+        "checkpoint_revision": "9ac3b236270dd9a9bbce12f4b7988aac3a8e5f5942ec4b7ce7ef3e2da41cd41b",
+        "evaluation": {
+          "edit_count": 5772,
+          "failure_json_present": false,
+          "prediction_count": 5772,
+          "solo_batched_predictions_equal": true
+        },
+        "movement": {
+          "adapter_drift": 0.15942682,
+          "checkpoint_round_trip_equal": true,
+          "greedy_predictions_changed": true,
+          "optimizer_steps": "160/160",
+          "peak_sampled_k3_per_token": 0.01642897,
+          "ratio_movement_cycles": 40,
+          "ratio_p99": 1.18770492,
+          "safe": true
+        },
+        "metrics": {
+          "clean_overall_wer": 0.213422,
+          "family_condition_wer": {
+            "Dravidian::clean": 0.21569693674098242,
+            "Dravidian::musan_babble_10db": 0.37756026826173644,
+            "Dravidian::white_10db": 0.36994743520029,
+            "Indo-Aryan::clean": 0.20804160832166432,
+            "Indo-Aryan::musan_babble_10db": 0.6482629859305195,
+            "Indo-Aryan::white_10db": 0.5719143828765754,
+            "Sino-Tibetan::clean": 0.35080645161290325,
+            "Sino-Tibetan::musan_babble_10db": 0.8306451612903226,
+            "Sino-Tibetan::white_10db": 0.6794354838709677
+          },
+          "family_gap": 0.142765,
+          "musan_babble_10db_wer": 0.581485,
+          "noise_amplification": 0.368063,
+          "white_10db_wer": 0.521418,
+          "worst_20_percent_profile_cluster_wer": 0.400963,
+          "worst_family_clean_wer": 0.350806,
+          "worst_family_condition_wer": 0.830645
+        }
+      }
+    },
+    "2027": {
+      "classification": "completed_h6_matched_pair",
+      "control": {
+        "artifact_sha256": {
+          "edit_counts_json": "8ac4650c0a11509b457ec4ffe7d89cef92c9bd5312831b6dcf38d73999e39e76",
+          "evaluation_metrics_json": "c7ff18ac41542582e6a901cb71acad87b98a8593dfd860b92928a08da84359ad",
+          "evaluation_run_json": "81e5189c87710c1a31649e8e7393d5289f0edbf3ea6c6ebfe8942e2ed3cd6840",
+          "movement_json": "dc9805ef0c753f988146387b7efffc4101ae2bddd50ab3df237870a77e7079bc",
+          "predictions_jsonl": "589a84e81197d72b55119a4e840156ce7d905244cf46ffda16afe9c0d8a8381b",
+          "training_run_json": "31440c02a2f6fd3d3f2b596ea6dbb644bbf289337003743f5fa2ac55c2596972"
+        },
+        "checkpoint_revision": "33b389492935d45ad2f773a6bd82fae2cf188b6517fed057b15fbde3c61b814c",
+        "evaluation": {
+          "edit_count": 5772,
+          "failure_json_present": false,
+          "prediction_count": 5772,
+          "solo_batched_predictions_equal": true
+        },
+        "metrics": {
+          "accent_wer": {"Assamese": 0.5353756382202771, "Bengali": 0.8292682926829268, "Bodo": 0.8353494623655914, "Dogri": 0.43093570973901973, "Gujarati": 0.4386186565592756, "Hindi": 0.3154008438818565, "Kannada": 0.28277439024390244, "Kashmiri": 0.48412698412698413, "Konkani": 0.3426223651304037, "Maithili": 0.38244803695150115, "Malayalam": 0.4904534606205251, "Marathi": 0.5954198473282443, "Nepali": 0.6852485180118559, "Odia": 0.3370674632810555, "Punjabi": 0.6712962962962963, "Sindhi": 0.32390745501285345, "Tamil": 0.22686025408348456, "Telugu": 0.3906960475690801, "Urdu": 0.2329912580767769},
+          "clean_overall_wer": 0.20866254164683484,
+          "condition_wer": {"clean": 0.20866254164683484, "musan_babble_10db": 0.5682056163731556, "white_10db": 0.550309376487387},
+          "family_clean_wer": {"Dravidian": 0.18742069965560992, "Indo-Aryan": 0.21150896846035874, "Sino-Tibetan": 0.3588709677419355},
+          "family_condition_wer": {"Dravidian::clean": 0.18742069965560992, "Dravidian::musan_babble_10db": 0.38136668479245966, "Dravidian::white_10db": 0.39659235091535255, "Indo-Aryan::clean": 0.21150896846035874, "Indo-Aryan::musan_babble_10db": 0.6215243048609722, "Indo-Aryan::white_10db": 0.5882509835300394, "Sino-Tibetan::clean": 0.3588709677419355, "Sino-Tibetan::musan_babble_10db": 1.034274193548387, "Sino-Tibetan::white_10db": 1.1129032258064515},
+          "family_gap": 0.17145026808632557,
+          "noise_amplification": 0.35954307472632074,
+          "worst_20_percent_profile_cluster_wer": 0.3816441336823329,
+          "worst_family_clean_wer": 0.3588709677419355,
+          "worst_family_condition_wer": 1.1129032258064515
+        },
+        "modal": {"app": "ap-EOebLDkqAcs9BsOFUsoqM3", "container": "ta-01KZTPNC29C3EFGTCDXAPVAPZR", "evaluation_app": "ap-6Vsppft6Kn9md7njYGsDrD", "evaluation_container": "ta-01KZTQ7SPQ1G14AMGR7M7JDYJR", "evaluation_function": "fu-gh8nqAoReMr7NwrIPTy9Md", "function": "fu-kpVQDjL7AGIYUkf3gG1dOW"},
+        "movement": {"adapter_drift": 0.1623592972755432, "checkpoint_round_trip_equal": true, "greedy_predictions_changed": true, "optimizer_steps": "160/160", "peak_sampled_k3_per_token": 0.07627827674150467, "ratio_movement_cycles": 40, "ratio_p99": 1.3671640157699585, "safe": true}
+      },
+      "deltas_treatment_minus_control": {
+        "clean_overall_wer": -0.0009519277,
+        "family_condition_wer": {
+          "Dravidian::clean": -0.0014500634402755119,
+          "Dravidian::musan_babble_10db": 0.015225666122892889,
+          "Dravidian::white_10db": -0.022838499184339334,
+          "Indo-Aryan::clean": -0.0005334400213375945,
+          "Indo-Aryan::musan_babble_10db": 0.016136560645462428,
+          "Indo-Aryan::white_10db": -0.009868640394745665,
+          "Sino-Tibetan::clean": -0.008064516129032251,
+          "Sino-Tibetan::musan_babble_10db": -0.02620967741935476,
+          "Sino-Tibetan::white_10db": 0.0040322580645162365
+        },
+        "family_gap": -0.0066144527,
+        "musan_babble_10db_wer": 0.0148976678,
+        "noise_amplification": 0.0158495954,
+        "white_10db_wer": -0.0129462161,
+        "worst_20_percent_profile_cluster_wer": 0.0114876818,
+        "worst_family_clean_wer": -0.0080645161,
+        "worst_family_condition_wer": 0.0040322581
+      },
+      "treatment": {
+        "artifact_sha256": {
+          "edit_counts_json": "c0d569faffc486a654ceb16f523c89daf84fb0a7402e192b0ba81d924b94e01a",
+          "evaluation_metrics_json": "c55ba575f5351741887a9490afb1c794fddb87fd3c51075ebc2f9307a07df5d8",
+          "evaluation_run_json": "380496c52bfd23db856f611870b2940122a2afc13a42f1245e9d343b4ec2ce0f",
+          "movement_json": "b8501fbf63e12666a4736322d1f690f9fb0b4a352aa714d2d8b537233e40e8e7",
+          "predictions_jsonl": "267c1e04db69e87f31eafae38c141208291b9e1d9b19ef44823707239c6289c8",
+          "training_run_json": "9c43d968f6808b00d5d83b5bc5fc7c6927353d5695728dd64814ae8d6969338a"
+        },
+        "checkpoint_revision": "f53aa3acdad257fbe569a10a0d3e5de19d7e625b4d73c05315489833357382cc",
+        "evaluation": {"edit_count": 5772, "failure_json_present": false, "prediction_count": 5772, "solo_batched_predictions_equal": true},
+        "metrics": {
+          "accent_wer": {"Assamese": 0.5353756382202771, "Bengali": 0.7432249322493225, "Bodo": 0.8252688172043011, "Dogri": 0.4642478251644388, "Gujarati": 0.4461991998315435, "Hindi": 0.3681434599156118, "Kannada": 0.27439024390243905, "Kashmiri": 0.48484848484848486, "Konkani": 0.34369417649160416, "Maithili": 0.3744418783679754, "Malayalam": 0.44669848846459825, "Marathi": 0.628498727735369, "Nepali": 0.6665526675786594, "Odia": 0.3323375653472741, "Punjabi": 0.7621527777777778, "Sindhi": 0.31405312767780635, "Tamil": 0.22413793103448276, "Telugu": 0.4379153550192375, "Urdu": 0.2386925123527176},
+          "clean_overall_wer": 0.2077106139933365,
+          "condition_wer": {"clean": 0.2077106139933365, "musan_babble_10db": 0.5831032841504046, "white_10db": 0.5373631603998096},
+          "family_clean_wer": {"Dravidian": 0.1859706362153344, "Indo-Aryan": 0.21097552843902115, "Sino-Tibetan": 0.35080645161290325},
+          "family_condition_wer": {"Dravidian::clean": 0.1859706362153344, "Dravidian::musan_babble_10db": 0.39659235091535255, "Dravidian::white_10db": 0.3737538517310132, "Indo-Aryan::clean": 0.21097552843902115, "Indo-Aryan::musan_babble_10db": 0.6376608655064346, "Indo-Aryan::white_10db": 0.5783823431352937, "Sino-Tibetan::clean": 0.35080645161290325, "Sino-Tibetan::musan_babble_10db": 1.0080645161290323, "Sino-Tibetan::white_10db": 1.1169354838709677},
+          "family_gap": 0.16483581539756884,
+          "noise_amplification": 0.37539267015706806,
+          "worst_20_percent_profile_cluster_wer": 0.39313181552091875,
+          "worst_family_clean_wer": 0.35080645161290325,
+          "worst_family_condition_wer": 1.1169354838709677
+        },
+        "modal": {"app": "ap-umsYqFvVgKGVs6M5Yn0N8n", "container": "ta-01KZTQ07Z8X2FFEA4A9JNQNC8R", "evaluation_app": "ap-RXr7CgPCQFtHxZUhzQcyUT", "evaluation_container": "ta-01KZTQRRB09MJD503VY14GW83R", "evaluation_function": "fu-DKqNjisxkS9HDgJCyV7tyN", "function": "fu-jJ0ujcsdKqSf0G3ilMazdQ"},
+        "movement": {"adapter_drift": 0.1568237543106079, "checkpoint_round_trip_equal": true, "greedy_predictions_changed": true, "optimizer_steps": "160/160", "peak_sampled_k3_per_token": 0.029470758512616158, "ratio_movement_cycles": 40, "ratio_p99": 1.4506962299346924, "safe": true}
+      }
+    },
+    "2028": {
+      "classification": "failed_safety",
+      "control": {
+        "artifact_sha256": {"cycle_027_diagnostics_json": "5c267d055bcfd80a041b97bbb9e28dbb18aec1bbbdefa1bde55bb8ab5baeba45", "execution_overrides_json": "ad934a14a59af937fc75c908e82eba2669d89fb395a1898fd3b530d0cd61fca3", "failure_json": "a19349642c64214391fb2ac3028defcab8e7623cc61fcbf25c2c19e33c71531a"},
+        "failure": {"cycle": 27, "failure_reason": "kl_limit_violated", "last_safe_checkpoint_revision": "a95530fd914b7fea9f3008a5c6451f3fedef2281443fce6b9dc0df5ba6a8d400", "sampled_k3_per_token": 0.11095129698514938},
+        "modal": {"app": "ap-8qLz8ljFwUoCNhkpqcXDGK", "container": "ta-01KZTR7F0F0NVMME7KSZVB90AR", "function": "fu-rmq9RefQA2PqW3PNrN1Tty"}
+      },
+      "treatment_or_evaluations_launched": false
+    }
+  },
+  "status": "failed_safety"
+}

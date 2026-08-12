@@ -67,6 +67,18 @@ improvement for the registered worst-group delta. H5 therefore supports
 replication of a fairness/average-robustness trade-off; it does not confirm
 FR-CISPO efficacy.
 
+H6 then tested repeatability rather than tuning another coefficient. On seed
+2027, beta `0.04` again reduced sampled divergence substantially, but the
+worst family-condition WER was 0.40 points worse than its matched beta-zero
+control. On seed 2028, the beta-zero control crossed the K3 safety limit at
+cycle 27 before the paired treatment was allowed to run. The predeclared stop
+rule therefore ended H6.
+
+This separates mechanism from efficacy cleanly: the fixed-reference penalty
+controls measured drift when it is present, but the current 40-cycle training
+recipe is not seed-stable and the one-seed worst-group gain did not replicate.
+There is no complete three-seed estimate to average, bootstrap, or promote.
+
 ## Invalid or provisional evidence
 
 The current 115 profile-cluster identities are not the authoritative 117 Svarah
@@ -82,8 +94,9 @@ replace it; earlier FP16 metric tables should not be cited.
    without inventing a heuristic mapping?
 2. At what cycle and under which group/condition does KL escape, and is the
    movement gradual or caused by a localized update?
-3. Does the one-seed worst-group improvement from beta `0.04` replicate over
-   two additional fixed seeds without repeating the average-noise regressions?
+3. Is there a principled training rule that guarantees the fixed KL budget
+   across seeds without choosing a horizon or coefficient after seeing each
+   trajectory?
 4. If authoritative IDs remain unavailable, what narrower claim can be made
    honestly without speaker-level fairness conclusions?
 

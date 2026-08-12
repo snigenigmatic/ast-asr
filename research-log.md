@@ -135,3 +135,28 @@ labelled as such.
 - Decision: H5 supports the proximal mechanism and justifies drafting a locked
   two-seed replication protocol. It does not establish efficacy, unlock five
   folds, or support a publication-valid fairness claim.
+
+## 2026-08-12 — H6 matched replication stopped on safety
+
+- Locked H6 before execution as two additional matched seed pairs. It froze
+  the H5 code/data/checkpoint hashes, prohibited performance-based early
+  stopping, and required a stop if either arm failed safety.
+- Seed 2027 completed safely. Beta `0.04` reduced peak sampled K3 from
+  `0.0762783` to `0.0294708`, so the proximity mechanism repeated. Its primary
+  WER did not: worst family-condition WER changed from `1.112903` to `1.116935`.
+  Clean and white WER improved slightly, while MUSAN WER worsened by 1.49
+  points.
+- The seed-2027 control Modal client reported a local `OSError(22)` after the
+  remote app had completed and committed all artifacts. Independent audit
+  accepted the run and did not retry it.
+- Seed 2028 beta zero failed closed at cycle 27 when sampled K3/token reached
+  `0.1109513`, above the registered `0.1` limit. It saved the preceding
+  last-safe adapter. The beta-`0.04` treatment and both seed-2028 evaluations
+  were not launched.
+- Trajectory audit shows the seed-2028 control first exceeded `0.05` at cycle
+  13, reached `0.0999123` at cycle 23, dipped, and crossed the limit at cycle
+  27 while ratio p99 remained small. This is cumulative reference drift, not a
+  ratio-cap failure.
+- Decision: H6 fails its safety prerequisite. The fixed three-seed efficacy
+  rule is not evaluable, no bootstrap/mean gate is computed, and no additional
+  paid policy run is authorized without a new question and locked protocol.
