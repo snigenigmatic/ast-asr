@@ -13,9 +13,7 @@ import hashlib
 import json
 import math
 import os
-import platform
 import subprocess
-import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -124,29 +122,45 @@ def _directory_content_hash(directory: Path) -> str:
 
 def _modal_runtime_identity() -> dict[str, object]:
     """Record the concrete runtime plus the reproducible image declaration."""
-    import torch
-
+    completed = subprocess.run(
+        [
+            "uv",
+            "run",
+            "--frozen",
+            "python",
+            "-c",
+            (
+                "import json,platform,sys,torch;"
+                "print(json.dumps({"
+                "'python':sys.version,'platform':platform.platform(),"
+                "'torch':str(torch.__version__),"
+                "'torch_cuda':str(torch.version.cuda) if torch.version.cuda else None,"
+                "'cuda_available':torch.cuda.is_available(),"
+                "'gpu_name':torch.cuda.get_device_name(0) "
+                "if torch.cuda.is_available() else None,"
+                "'gpu_capability':list(torch.cuda.get_device_capability(0)) "
+                "if torch.cuda.is_available() else None}))"
+            ),
+        ],
+        cwd=PROJECT_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        env=os.environ.copy(),
+    )
+    runtime = json.loads(completed.stdout)
     return {
         "modal_app": "ast-asr-fr-cispo",
         "modal_image_id": os.environ.get("MODAL_IMAGE_ID"),
         "modal_task_id": os.environ.get("MODAL_TASK_ID"),
-        "python": sys.version,
-        "platform": platform.platform(),
-        "torch": str(torch.__version__),
-        "torch_cuda": str(torch.version.cuda) if torch.version.cuda else None,
-        "cuda_available": torch.cuda.is_available(),
-        "gpu_name": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
-        "gpu_capability": (
-            list(torch.cuda.get_device_capability(0))
-            if torch.cuda.is_available()
-            else None
-        ),
+        **runtime,
         "image_declaration": {
             "base": "nvidia/cuda:12.8.0-devel-ubuntu22.04",
             "python": "3.12",
             "gpu_request": "L4",
             "uv_requirement": "uv>=0.8,<0.9",
             "uv_lock_sha256": _file_sha256(Path(PROJECT_ROOT) / "uv.lock"),
+            "launcher_script_sha256": _file_sha256(Path(__file__)),
             "source_directory_sha256": _directory_content_hash(
                 Path(PROJECT_ROOT) / "src"
             ),
