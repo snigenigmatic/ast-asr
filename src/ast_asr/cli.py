@@ -61,6 +61,24 @@ def _diagnose_invariance(args: argparse.Namespace) -> None:
     diagnose_batch_invariance(args)
 
 
+def _measure_sentinel_kl(args: argparse.Namespace) -> None:
+    from .h7_runner import run_h7_cuda
+
+    run_h7_cuda(
+        config_path=args.config,
+        bank_root=args.bank_root,
+        archive_root=args.archive_root,
+        policy_checkpoint=args.policy_checkpoint,
+        reference_checkpoint=args.reference_checkpoint,
+        output_dir=args.output_dir,
+        input_lock=args.input_lock,
+        expected_policy_revision=args.expected_policy_revision,
+        expected_reference_revision=args.expected_reference_revision,
+        expected_cycle27_model_revision=args.expected_cycle27_model_revision,
+        expected_config_sha256=args.expected_config_sha256,
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ast-asr",
@@ -140,6 +158,23 @@ def build_parser() -> argparse.ArgumentParser:
     invariance.add_argument("--probe-examples", type=int, default=8)
     invariance.add_argument("--batch-size", type=int, default=8)
     invariance.set_defaults(handler=_diagnose_invariance)
+
+    h7 = commands.add_parser(
+        "measure-sentinel-kl",
+        help="H7 fixed-policy score-only measurement; requires a separately authorized CUDA launch",
+    )
+    h7.add_argument("--config", type=Path, required=True)
+    h7.add_argument("--bank-root", type=Path, required=True)
+    h7.add_argument("--archive-root", type=Path, required=True)
+    h7.add_argument("--policy-checkpoint", type=Path, required=True)
+    h7.add_argument("--reference-checkpoint", type=Path, required=True)
+    h7.add_argument("--output-dir", type=Path, required=True)
+    h7.add_argument("--input-lock", type=Path, required=True)
+    h7.add_argument("--expected-policy-revision", required=True)
+    h7.add_argument("--expected-reference-revision", required=True)
+    h7.add_argument("--expected-cycle27-model-revision", required=True)
+    h7.add_argument("--expected-config-sha256", required=True)
+    h7.set_defaults(handler=_measure_sentinel_kl)
     return parser
 
 

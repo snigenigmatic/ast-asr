@@ -72,7 +72,11 @@ class ContentManifest:
     def to_dict(self) -> dict[str, object]:
         return {
             "files": [
-                {"path": item.path, "byte_count": item.byte_count, "sha256": item.sha256}
+                {
+                    "path": item.path,
+                    "byte_count": item.byte_count,
+                    "sha256": item.sha256,
+                }
                 for item in self.files
             ],
             "sha256": self.sha256,
@@ -100,7 +104,11 @@ class LockedH6InputManifest:
             "arm": self.arm,
             "modal_volume_path": self.modal_volume_path,
             "files": [
-                {"path": item.path, "sha256": item.sha256, "size_bytes": item.size_bytes}
+                {
+                    "path": item.path,
+                    "sha256": item.sha256,
+                    "size_bytes": item.size_bytes,
+                }
                 for item in self.files
             ],
         }
@@ -127,7 +135,9 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def build_content_manifest(paths: tuple[Path, ...] | list[Path], *, root: Path) -> ContentManifest:
+def build_content_manifest(
+    paths: tuple[Path, ...] | list[Path], *, root: Path
+) -> ContentManifest:
     """Create a deterministic, content-addressed manifest without reading extras."""
     resolved_root = root.resolve()
     entries: list[ContentFile] = []
@@ -162,6 +172,7 @@ def build_locked_h6_input_manifest(
     *,
     arm: str,
     modal_volume_path: str,
+    arm_directory: Path | None = None,
     expected_cycles: tuple[int, ...] = H7_CYCLES,
 ) -> LockedH6InputManifest:
     """Reproduce H6's exact canonical diagnostic/rollout manifest digest.
@@ -172,7 +183,9 @@ def build_locked_h6_input_manifest(
     """
     if not arm or not modal_volume_path.startswith("/artifacts/"):
         raise ValueError("locked H6 manifest requires an arm and Modal artifact path")
-    arm_root = artifacts_root / arm
+    arm_root = arm_directory if arm_directory is not None else artifacts_root / arm
+    if arm_directory is not None and not arm_root.is_relative_to(artifacts_root):
+        raise ValueError("locked H6 arm directory must remain under artifacts root")
     expected = {f"cycle-{cycle:03d}.json" for cycle in expected_cycles}
     files: list[LockedInputFile] = []
     for kind in ("diagnostics", "rollouts"):
@@ -224,7 +237,9 @@ def assert_locked_manifest_digest(
     return manifest
 
 
-def _require_exact_keys(value: dict[str, Any], *, expected: set[str], context: str) -> None:
+def _require_exact_keys(
+    value: dict[str, Any], *, expected: set[str], context: str
+) -> None:
     if set(value) != expected:
         raise ValueError(
             f"{context} keys differ; missing={sorted(expected - set(value))}, "
@@ -248,7 +263,9 @@ def _require_float(value: object, *, context: str) -> float:
 
 def _validate_raw_bank(value: dict[str, Any], *, path: Path) -> None:
     """Reject type coercions and schema drift before rollout dataclasses parse it."""
-    _require_exact_keys(value, expected={"model_revision", "utterances"}, context=path.name)
+    _require_exact_keys(
+        value, expected={"model_revision", "utterances"}, context=path.name
+    )
     _require_string(value["model_revision"], context=f"{path.name}.model_revision")
     utterances = value["utterances"]
     if type(utterances) is not list:
@@ -286,27 +303,49 @@ def _validate_raw_bank(value: dict[str, Any], *, path: Path) -> None:
             candidate_context = f"{context}.candidates[{candidate_index}]"
             if type(candidate) is not dict:
                 raise TypeError(f"{candidate_context} must be a JSON object")
-            _require_exact_keys(candidate, expected=candidate_keys, context=candidate_context)
-            _require_string(candidate["hypothesis"], context=f"{candidate_context}.hypothesis")
+            _require_exact_keys(
+                candidate, expected=candidate_keys, context=candidate_context
+            )
+            _require_string(
+                candidate["hypothesis"], context=f"{candidate_context}.hypothesis"
+            )
             token_ids = candidate["token_ids"]
             token_mask = candidate["token_mask"]
             old_logs = candidate["old_token_log_probs"]
-            if type(token_ids) is not list or type(token_mask) is not list or type(old_logs) is not list:
-                raise TypeError(f"{candidate_context} token evidence must use JSON lists")
-            if not token_ids or len(token_ids) != len(token_mask) or len(token_ids) != len(old_logs):
-                raise ValueError(f"{candidate_context} token evidence lengths must align and be nonzero")
+            if (
+                type(token_ids) is not list
+                or type(token_mask) is not list
+                or type(old_logs) is not list
+            ):
+                raise TypeError(
+                    f"{candidate_context} token evidence must use JSON lists"
+                )
+            if (
+                not token_ids
+                or len(token_ids) != len(token_mask)
+                or len(token_ids) != len(old_logs)
+            ):
+                raise ValueError(
+                    f"{candidate_context} token evidence lengths must align and be nonzero"
+                )
             for token_index, token_id in enumerate(token_ids):
                 if type(token_id) is not int or token_id < 0:
-                    raise TypeError(f"{candidate_context}.token_ids[{token_index}] must be a nonnegative integer")
+                    raise TypeError(
+                        f"{candidate_context}.token_ids[{token_index}] must be a nonnegative integer"
+                    )
             for token_index, keep in enumerate(token_mask):
                 if type(keep) is not bool:
-                    raise TypeError(f"{candidate_context}.token_mask[{token_index}] must be boolean")
+                    raise TypeError(
+                        f"{candidate_context}.token_mask[{token_index}] must be boolean"
+                    )
             for token_index, log_probability in enumerate(old_logs):
                 probability = _require_float(
                     log_probability,
                     context=f"{candidate_context}.old_token_log_probs[{token_index}]",
                 )
-                round_trip = float(torch.tensor(probability, dtype=torch.float32).item())
+                round_trip = float(
+                    torch.tensor(probability, dtype=torch.float32).item()
+                )
                 if round_trip != probability:
                     raise ValueError(
                         f"{candidate_context}.old_token_log_probs[{token_index}] must be exact FP32"
@@ -323,11 +362,15 @@ def _validate_bank_shape(bank: HistoricalBank, *, path: Path) -> None:
     if len(utterances) != H7_UTTERANCES_PER_BANK:
         raise ValueError(f"{path.name} must contain exactly six utterances")
     if any(len(utterance.candidates) != H7_CANDIDATES for utterance in utterances):
-        raise ValueError(f"{path.name} must contain exactly four candidates per utterance")
+        raise ValueError(
+            f"{path.name} must contain exactly four candidates per utterance"
+        )
     for utterance in utterances:
         for candidate in utterance.candidates:
             if not all(candidate.token_mask):
-                raise ValueError(f"{path.name} candidates must retain unpadded saved target tokens")
+                raise ValueError(
+                    f"{path.name} candidates must retain unpadded saved target tokens"
+                )
     utterance_ids = [utterance.utterance_id for utterance in utterances]
     if len(set(utterance_ids)) != len(utterance_ids):
         raise ValueError(f"{path.name} contains duplicate utterance IDs")
@@ -336,8 +379,13 @@ def _validate_bank_shape(bank: HistoricalBank, *, path: Path) -> None:
         raise ValueError(f"{path.name} must contain exactly the three H7 families")
     for index in range(0, H7_UTTERANCES_PER_BANK, 2):
         clean, white = utterances[index : index + 2]
-        if clean.condition is not AcousticCondition.CLEAN or white.condition is not AcousticCondition.WHITE_TRAIN:
-            raise ValueError(f"{path.name} must preserve paired clean/white_train ordering")
+        if (
+            clean.condition is not AcousticCondition.CLEAN
+            or white.condition is not AcousticCondition.WHITE_TRAIN
+        ):
+            raise ValueError(
+                f"{path.name} must preserve paired clean/white_train ordering"
+            )
         if (
             clean.family != white.family
             or clean.speaker_id != white.speaker_id
@@ -353,7 +401,9 @@ def _validate_bank_shape(bank: HistoricalBank, *, path: Path) -> None:
             raise ValueError(f"{path.name} white utterance ID has invalid SNR grammar")
         snr_db = float(white_id.group(1))
         if not 10.0 <= snr_db <= 20.0:
-            raise ValueError(f"{path.name} white utterance SNR is outside the frozen bounds")
+            raise ValueError(
+                f"{path.name} white utterance SNR is outside the frozen bounds"
+            )
 
 
 def load_historical_banks(root: Path) -> HistoricalBankSet:
@@ -365,7 +415,9 @@ def load_historical_banks(root: Path) -> HistoricalBankSet:
     if observed != expected:
         missing = sorted(expected - observed)
         unexpected = sorted(observed - expected)
-        raise ValueError(f"historical bank cycles differ; missing={missing}, unexpected={unexpected}")
+        raise ValueError(
+            f"historical bank cycles differ; missing={missing}, unexpected={unexpected}"
+        )
     banks = []
     for cycle in H7_CYCLES:
         path = root / f"cycle-{cycle:03d}.json"
@@ -379,7 +431,9 @@ def load_historical_banks(root: Path) -> HistoricalBankSet:
     return HistoricalBankSet(banks=tuple(banks))
 
 
-def _masked_summary(terms: torch.Tensor, mask: torch.Tensor, *, threshold: bool = False) -> K3Summary:
+def _masked_summary(
+    terms: torch.Tensor, mask: torch.Tensor, *, threshold: bool = False
+) -> K3Summary:
     selected = terms[mask]
     count = int(selected.numel())
     if count == 0:
@@ -396,7 +450,11 @@ def classify_k3(value: torch.Tensor) -> K3Threshold:
     """Classify a finite scalar under the registered inclusive 0.1 boundary."""
     if value.numel() != 1 or not bool(torch.isfinite(value).all()):
         raise ValueError("K3 threshold classification requires one finite scalar")
-    return K3Threshold.AT_OR_ABOVE_LIMIT if value >= H7_K3_LIMIT else K3Threshold.BELOW_LIMIT
+    return (
+        K3Threshold.AT_OR_ABOVE_LIMIT
+        if value >= H7_K3_LIMIT
+        else K3Threshold.BELOW_LIMIT
+    )
 
 
 def decompose_sampled_k3(
@@ -410,26 +468,40 @@ def decompose_sampled_k3(
     """Compute protocol K3 and token-weighted summaries, failing closed on bad terms."""
     if current_token_log_probs.shape != reference_token_log_probs.shape:
         raise ValueError("current and reference token log-probabilities must align")
-    if current_token_log_probs.ndim != 3 or token_mask.shape != current_token_log_probs.shape:
-        raise ValueError("K3 tensors must align with shape [utterance, candidate, token]")
+    if (
+        current_token_log_probs.ndim != 3
+        or token_mask.shape != current_token_log_probs.shape
+    ):
+        raise ValueError(
+            "K3 tensors must align with shape [utterance, candidate, token]"
+        )
     if token_mask.dtype != torch.bool:
         raise ValueError("K3 token mask must use torch.bool")
     if current_token_log_probs.dtype != torch.float32:
         raise ValueError("current token log-probabilities must use FP32")
     if reference_token_log_probs.dtype != torch.float32:
         raise ValueError("reference token log-probabilities must use FP32")
-    if len(families) != current_token_log_probs.shape[0] or len(conditions) != current_token_log_probs.shape[0]:
+    if (
+        len(families) != current_token_log_probs.shape[0]
+        or len(conditions) != current_token_log_probs.shape[0]
+    ):
         raise ValueError("family and condition labels must align with utterances")
     if bool((token_mask.sum(dim=-1) == 0).any()):
         raise ValueError("every candidate requires at least one valid token")
 
-    difference = reference_token_log_probs.detach().float() - current_token_log_probs.float()
+    difference = (
+        reference_token_log_probs.detach().float() - current_token_log_probs.float()
+    )
     selected_difference = difference[token_mask]
     if not bool(torch.isfinite(selected_difference).all()):
         raise FloatingPointError("K3 received non-finite selected log-probabilities")
     if bool((selected_difference.abs() > 20).any()):
-        raise FloatingPointError("K3 selected log-ratio exceeded the numerical safety bound")
-    token_terms = torch.where(token_mask, torch.expm1(difference) - difference, torch.zeros_like(difference))
+        raise FloatingPointError(
+            "K3 selected log-ratio exceeded the numerical safety bound"
+        )
+    token_terms = torch.where(
+        token_mask, torch.expm1(difference) - difference, torch.zeros_like(difference)
+    )
     if not bool(torch.isfinite(token_terms[token_mask]).all()):
         raise FloatingPointError("K3 produced non-finite selected terms")
     candidates = tuple(
@@ -443,7 +515,11 @@ def decompose_sampled_k3(
     )
     groups: dict[tuple[str, str], K3Summary] = {}
     for group in sorted(set(zip(families, conditions, strict=True))):
-        indices = [index for index, value in enumerate(zip(families, conditions, strict=True)) if value == group]
+        indices = [
+            index
+            for index, value in enumerate(zip(families, conditions, strict=True))
+            if value == group
+        ]
         groups[group] = _masked_summary(token_terms[indices], token_mask[indices])
     return K3Decomposition(
         token_terms=token_terms,
