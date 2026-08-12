@@ -1,0 +1,81 @@
+{
+  "app": {
+    "app_id": "ap-8ffhsYgqERSLniCGF7vaW4",
+    "immediate_observation": {
+      "app_state": "APP_STATE_EPHEMERAL",
+      "class_ids": [],
+      "containers": [],
+      "function_id": null,
+      "function_ids": [],
+      "history": [],
+      "image_id": null,
+      "layout_objects": [],
+      "logs": [],
+      "stopped_at": null,
+      "task_count": 0
+    },
+    "later_read_only_observation": {
+      "app_state": "stopped",
+      "explicit_stop_action_issued": false,
+      "stopped_at": "2026-08-12 17:44:48+05:30",
+      "task_count": 0
+    }
+  },
+  "artifact_kind": "h7_launcher_failure",
+  "authorization": {
+    "commit": "dab18a96e1cddc5d65cf7b584d5f09b5d2c4c858",
+    "tag": "h7-authorized-20260812"
+  },
+  "classification": {
+    "attempt_consumed": true,
+    "decision": "measurement_failed",
+    "measurement_status": "non_evaluable",
+    "no_retry": true,
+    "not_result": true,
+    "profile_cluster_count": 115,
+    "publication_valid": false
+  },
+  "command": "uvx modal run scripts/modal_h7_sentinel.py",
+  "error": {
+    "literal": "'charmap' codec can't encode character '\\u2713' in position 0: character maps to <undefined>",
+    "stage": "local_modal_cli_console_encoding"
+  },
+  "hashes": {
+    "executable_source_baseline": "e4053c632577d22e6d86ccf5848a2686780452f8",
+    "h7_input_lock_sha256": "27f4c033eaba568f74f500ab560cb7b0bd2945b8c4bd8814cb37fb9cb8d41187",
+    "modal_wrapper_sha256": "64a226cb19842309643408f2a948cbd53145ebf62c0b76d8db2efaab7efad333",
+    "protocol_commit": "e1e40ff87bad8aea699d2912617cae7b83f9372c"
+  },
+  "local_environment": {
+    "active_code_page": 437,
+    "modal_version": "1.5.3",
+    "preferred_encoding": "cp1252",
+    "stderr_encoding": "cp1252",
+    "stdout_encoding": "cp1252",
+    "sys_flags_utf8_mode": 0,
+    "uv_version": "0.11.28",
+    "uvx_python_version": "3.12.3"
+  },
+  "ordering_evidence": [
+    "_init_local_app_new",
+    "Rich._step_completed_text checkmark render",
+    "_create_all_objects not reached"
+  ],
+  "remote_execution": {
+    "container_id": null,
+    "function_call_id": null,
+    "image_start": "unresolved_no_id_observed",
+    "model_or_scoring_observed": false
+  },
+  "schema_version": 1,
+  "times": {
+    "app_created_epoch": 1786536707.776958,
+    "app_created_ist": "2026-08-12 17:41:47.776958 IST",
+    "shell_elapsed_seconds": 3.4
+  },
+  "volume": {
+    "reserved_run_root": "/artifacts/profile-h7-fixed-policy-sentinel-kl-s2028-20260812",
+    "reserved_run_root_absent": true
+  },
+  "working_directory": "C:\\Kaustubh\\ast-asr-worktrees\\fair-cispo-tiny"
+}
