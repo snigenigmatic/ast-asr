@@ -7,6 +7,8 @@ from types import SimpleNamespace
 import pytest
 import torch
 
+import ast_asr.h7_input_lock as input_lock_module
+from ast_asr.h7_input_lock import build_h7_input_lock_from_mirror
 from ast_asr.h7_runner import (
     H7_BETA0_CONFIG_SHA256,
     H7_H6_CANONICAL_ARM,
@@ -27,7 +29,11 @@ from ast_asr.h7_runner import (
     write_h7_failure,
     write_h7_output,
 )
-from ast_asr.historical_kl import HistoricalBank, build_locked_h6_input_manifest
+from ast_asr.historical_kl import (
+    HistoricalBank,
+    HistoricalBankSet,
+    build_locked_h6_input_manifest,
+)
 from ast_asr.rollouts import (
     AcousticCondition,
     CandidateRollout,
@@ -394,6 +400,205 @@ def test_h7_prepared_audio_loads_only_required_clean_ids(tmp_path: Path) -> None
     assert set(selected) == {"needed"}
     with pytest.raises(ValueError, match="missing required"):
         _load_prepared_audio(manifest, archive, required_clean_ids={"absent"})
+
+
+def test_offline_h7_lock_builder_rejects_wrong_mirror_before_writing_output(
+    tmp_path: Path,
+) -> None:
+    bad_config = tmp_path / "resolved.json"
+    bad_config.write_text("{}", encoding="utf-8")
+    output = tmp_path / "candidate.json"
+    with pytest.raises(ValueError, match="resolved config"):
+        build_h7_input_lock_from_mirror(
+            resolved_config=bad_config,
+            resolved_config_remote_path="/artifacts/frozen.json",
+            bank_root=tmp_path / "banks",
+            h6_arm_remote_path="/artifacts/profile-h6-refkl-beta0-s2028-20260812/h6-beta0-fr-cispo",
+            archive_root=tmp_path / "archive",
+            prepared_manifest=tmp_path / "prepared.json",
+            prepared_remote_path="/data/prepared.json",
+            fold_manifest=tmp_path / "fold.json",
+            fold_remote_path="/data/fold.json",
+            policy_remote_path="/artifacts/policy",
+            policy_directory_hash="a" * 64,
+            reference_remote_path="/artifacts/reference",
+            reference_directory_hash="b" * 64,
+            reference_processor_checkpoint=tmp_path / "processor",
+            output=output,
+        )
+    assert not output.exists()
+
+
+def test_offline_h7_lock_builder_rejects_wrong_frozen_checkpoint_hash_first(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "candidate.json"
+    with pytest.raises(ValueError, match="policy checkpoint hash"):
+        build_h7_input_lock_from_mirror(
+            resolved_config=tmp_path / "resolved.json",
+            resolved_config_remote_path="/artifacts/profile-h6-refkl-beta0-s2028-20260812/resolved-policy-configs/h6-beta0-fr-cispo.json",
+            bank_root=tmp_path / "local-mirror" / "rollouts",
+            h6_arm_remote_path="/artifacts/profile-h6-refkl-beta0-s2028-20260812/h6-beta0-fr-cispo",
+            archive_root=tmp_path / "archive",
+            prepared_manifest=tmp_path / "prepared.json",
+            prepared_remote_path="/data/fr_cispo_profile/prepared/dataset_manifest.json",
+            fold_manifest=tmp_path / "fold.json",
+            fold_remote_path="/data/fr_cispo_profile/prepared/folds/fold-0.json",
+            policy_remote_path="/artifacts/profile-h6-refkl-beta0-s2028-20260812/h6-beta0-fr-cispo/checkpoint-last-safe",
+            policy_directory_hash="0" * 64,
+            reference_remote_path="/artifacts/profile-dev-full-sft-20260810/profile-sft-development/checkpoint-epoch-1",
+            reference_directory_hash="d204df40dfcd694733a171998ad5d97fdb43eecbc5dc19846d98bce012cd4c1e",
+            reference_processor_checkpoint=tmp_path / "processor",
+            output=output,
+        )
+    assert not output.exists()
+
+
+def test_offline_h7_lock_builder_orchestrates_28_banks_and_preserves_remote_paths(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    candidate = CandidateRollout("h", (2,), (True,), (-1.0,), -1.0, 1.0)
+    banks = []
+    audio_root = tmp_path / "archive" / "audio"
+    audio_root.mkdir(parents=True)
+    prepared_audio: dict[str, tuple[torch.Tensor, Path, str]] = {}
+    records = []
+    for cycle in range(28):
+        utterances = []
+        for pair_index, family in enumerate(
+            ("Dravidian", "Indo-Aryan", "Sino-Tibetan")
+        ):
+            identifier = f"u-{(cycle * 3 + pair_index) % 82}"
+            if identifier not in prepared_audio:
+                source = audio_root / f"{identifier}.wav"
+                source.write_bytes(identifier.encode("utf-8"))
+                prepared_audio[identifier] = (
+                    torch.ones(16),
+                    source,
+                    f"audio/{identifier}.wav",
+                )
+                records.append(
+                    {
+                        "utterance_id": identifier,
+                        "audio_path": f"audio/{identifier}.wav",
+                    }
+                )
+            clean = UtteranceRollout(
+                identifier,
+                "s",
+                "Tamil",
+                family,
+                AcousticCondition.CLEAN,
+                "r",
+                (candidate,) * 4,
+            )
+            replay = reconstruct_white_pair(
+                torch.ones(16), cycle=cycle, pair_index=pair_index
+            )
+            white = UtteranceRollout(
+                f"{identifier}{replay.utterance_suffix}",
+                "s",
+                "Tamil",
+                family,
+                AcousticCondition.WHITE_TRAIN,
+                "r",
+                (candidate,) * 4,
+            )
+            utterances.extend((clean, white))
+        banks.append(
+            HistoricalBank(cycle, FrozenRolloutBatch(f"r-{cycle}", tuple(utterances)))
+        )
+    assert len(prepared_audio) == 82
+    mirror = tmp_path / "mirror"
+    mirror.mkdir()
+    config, prepared, fold = (
+        mirror / "config.json",
+        mirror / "prepared.json",
+        mirror / "fold.json",
+    )
+    config.write_text("{}", encoding="utf-8")
+    prepared.write_text(json.dumps({"utterances": records}), encoding="utf-8")
+    fold.write_text("{}", encoding="utf-8")
+    reference = mirror / "reference"
+    reference.mkdir()
+    (reference / "marker").write_text("reference", encoding="utf-8")
+    hashes = {
+        config: "3673abefc4322f4951ee067c8b6ed2c2fef93008b3f85c2cf66afd5abd406ae5",
+        prepared: "65bdd8cf87f5db0f815e742739be815d2306ddd2b9977ee5687774feb1a18b56",
+        fold: "22e9ab64006fe8a33bac37f5f2b98887df6aed061e158252778c29c6d928a1f0",
+    }
+    monkeypatch.setattr(
+        input_lock_module, "_sha256", lambda path: hashes.get(path, "0" * 64)
+    )
+    monkeypatch.setattr(
+        input_lock_module,
+        "load_historical_banks",
+        lambda path: HistoricalBankSet(tuple(banks)),
+    )
+    monkeypatch.setattr(
+        input_lock_module,
+        "_load_prepared_audio",
+        lambda *args, **kwargs: prepared_audio,
+    )
+    monkeypatch.setattr(
+        input_lock_module,
+        "build_locked_h6_input_manifest",
+        lambda *args, **kwargs: object(),
+    )
+    monkeypatch.setattr(
+        input_lock_module, "assert_locked_manifest_digest", lambda value: value
+    )
+    monkeypatch.setattr(
+        input_lock_module,
+        "directory_content_hash",
+        lambda path: "d204df40dfcd694733a171998ad5d97fdb43eecbc5dc19846d98bce012cd4c1e",
+    )
+
+    class Extractor:
+        value = 1.0
+
+        def __call__(self, audio, **kwargs):  # type: ignore[no-untyped-def]
+            return SimpleNamespace(
+                input_features=torch.full((len(audio), 2, 3), self.value),
+                attention_mask=torch.ones((len(audio), 3), dtype=torch.long),
+            )
+
+    extractor = Extractor()
+    monkeypatch.setattr(
+        input_lock_module,
+        "load_saved_processor",
+        lambda path: SimpleNamespace(feature_extractor=extractor),
+    )
+    output = tmp_path / "candidate.json"
+    kwargs = {
+        "resolved_config": config,
+        "resolved_config_remote_path": "/artifacts/profile-h6-refkl-beta0-s2028-20260812/resolved-policy-configs/h6-beta0-fr-cispo.json",
+        "bank_root": mirror / "local-h6" / "rollouts",
+        "h6_arm_remote_path": "/artifacts/profile-h6-refkl-beta0-s2028-20260812/h6-beta0-fr-cispo",
+        "archive_root": tmp_path / "archive",
+        "prepared_manifest": prepared,
+        "prepared_remote_path": "/data/fr_cispo_profile/prepared/dataset_manifest.json",
+        "fold_manifest": fold,
+        "fold_remote_path": "/data/fr_cispo_profile/prepared/folds/fold-0.json",
+        "policy_remote_path": "/artifacts/profile-h6-refkl-beta0-s2028-20260812/h6-beta0-fr-cispo/checkpoint-last-safe",
+        "policy_directory_hash": "a95530fd914b7fea9f3008a5c6451f3fedef2281443fce6b9dc0df5ba6a8d400",
+        "reference_remote_path": "/artifacts/profile-dev-full-sft-20260810/profile-sft-development/checkpoint-epoch-1",
+        "reference_directory_hash": "d204df40dfcd694733a171998ad5d97fdb43eecbc5dc19846d98bce012cd4c1e",
+        "reference_processor_checkpoint": reference,
+        "output": output,
+    }
+    first = build_h7_input_lock_from_mirror(**kwargs)
+    second = build_h7_input_lock_from_mirror(**kwargs)
+    assert first == second
+    assert (
+        len(first["banks"]) == 28
+        and sum(len(bank["pairs"]) for bank in first["banks"]) == 84
+    )
+    assert first["resolved_config"]["path"].startswith("/artifacts/")
+    assert first["banks"][0]["features"]["input_features"]["sha256"]
+    extractor.value = 2.0
+    with pytest.raises(FileExistsError, match="immutable"):
+        build_h7_input_lock_from_mirror(**kwargs)
 
 
 def test_h7_terminal_classification_is_not_a_threshold_claim_after_measurement_failure() -> (

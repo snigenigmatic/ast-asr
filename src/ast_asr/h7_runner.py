@@ -49,6 +49,29 @@ H7_FOLD_MANIFEST_SHA256 = (
     "22e9ab64006fe8a33bac37f5f2b98887df6aed061e158252778c29c6d928a1f0"
 )
 H7_H6_CANONICAL_ARM = "h6_s2028_beta0"
+H7_H6_ARM_REMOTE_PATH = (
+    "/artifacts/profile-h6-refkl-beta0-s2028-20260812/h6-beta0-fr-cispo"
+)
+H7_RESOLVED_CONFIG_REMOTE_PATH = (
+    "/artifacts/profile-h6-refkl-beta0-s2028-20260812/"
+    "resolved-policy-configs/h6-beta0-fr-cispo.json"
+)
+H7_PREPARED_REMOTE_PATH = "/data/fr_cispo_profile/prepared/dataset_manifest.json"
+H7_FOLD_REMOTE_PATH = "/data/fr_cispo_profile/prepared/folds/fold-0.json"
+H7_POLICY_REMOTE_PATH = (
+    "/artifacts/profile-h6-refkl-beta0-s2028-20260812/"
+    "h6-beta0-fr-cispo/checkpoint-last-safe"
+)
+H7_POLICY_DIRECTORY_HASH = (
+    "a95530fd914b7fea9f3008a5c6451f3fedef2281443fce6b9dc0df5ba6a8d400"
+)
+H7_REFERENCE_REMOTE_PATH = (
+    "/artifacts/profile-dev-full-sft-20260810/"
+    "profile-sft-development/checkpoint-epoch-1"
+)
+H7_REFERENCE_DIRECTORY_HASH = (
+    "d204df40dfcd694733a171998ad5d97fdb43eecbc5dc19846d98bce012cd4c1e"
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -301,11 +324,8 @@ def _require_tensor_identity(value: object, *, context: str) -> None:
     _require_sha256(value["sha256"], context=f"{context}.sha256")
 
 
-def validate_h7_input_lock(path: Path) -> dict[str, object]:
-    """Require the committed full 28-bank H7 input lock, never runtime discovery."""
-    if not path.is_file():
-        raise FileNotFoundError(f"H7 input lock is missing: {path}")
-    payload = json.loads(path.read_text(encoding="utf-8"))
+def validate_h7_input_lock_payload(payload: object) -> dict[str, object]:
+    """Validate one in-memory full H7 lock payload without writing a file."""
     if not isinstance(payload, dict):
         raise TypeError("H7 input lock must be a JSON object")
     expected = {
@@ -441,6 +461,13 @@ def validate_h7_input_lock(path: Path) -> dict[str, object]:
         _require_tensor_identity(features["input_features"], context="input_features")
         _require_tensor_identity(features["attention_mask"], context="attention_mask")
     return payload
+
+
+def validate_h7_input_lock(path: Path) -> dict[str, object]:
+    """Load and validate the committed full 28-bank H7 input lock."""
+    if not path.is_file():
+        raise FileNotFoundError(f"H7 input lock is missing: {path}")
+    return validate_h7_input_lock_payload(json.loads(path.read_text(encoding="utf-8")))
 
 
 def _load_prepared_audio(

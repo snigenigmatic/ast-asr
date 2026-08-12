@@ -79,6 +79,28 @@ def _measure_sentinel_kl(args: argparse.Namespace) -> None:
     )
 
 
+def _build_h7_input_lock(args: argparse.Namespace) -> None:
+    from .h7_input_lock import build_h7_input_lock_from_mirror
+
+    build_h7_input_lock_from_mirror(
+        resolved_config=args.resolved_config,
+        resolved_config_remote_path=args.resolved_config_remote_path,
+        bank_root=args.bank_root,
+        h6_arm_remote_path=args.h6_arm_remote_path,
+        archive_root=args.archive_root,
+        prepared_manifest=args.prepared_manifest,
+        prepared_remote_path=args.prepared_remote_path,
+        fold_manifest=args.fold_manifest,
+        fold_remote_path=args.fold_remote_path,
+        policy_remote_path=args.policy_remote_path,
+        policy_directory_hash=args.policy_directory_hash,
+        reference_remote_path=args.reference_remote_path,
+        reference_directory_hash=args.reference_directory_hash,
+        reference_processor_checkpoint=args.reference_processor_checkpoint,
+        output=args.output,
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="ast-asr",
@@ -175,6 +197,27 @@ def build_parser() -> argparse.ArgumentParser:
     h7.add_argument("--expected-cycle27-model-revision", required=True)
     h7.add_argument("--expected-config-sha256", required=True)
     h7.set_defaults(handler=_measure_sentinel_kl)
+
+    lock = commands.add_parser(
+        "build-h7-input-lock",
+        help="offline candidate builder only; it does not authorize H7 Modal execution",
+    )
+    lock.add_argument("--resolved-config", type=Path, required=True)
+    lock.add_argument("--resolved-config-remote-path", required=True)
+    lock.add_argument("--bank-root", type=Path, required=True)
+    lock.add_argument("--h6-arm-remote-path", required=True)
+    lock.add_argument("--archive-root", type=Path, required=True)
+    lock.add_argument("--prepared-manifest", type=Path, required=True)
+    lock.add_argument("--prepared-remote-path", required=True)
+    lock.add_argument("--fold-manifest", type=Path, required=True)
+    lock.add_argument("--fold-remote-path", required=True)
+    lock.add_argument("--policy-remote-path", required=True)
+    lock.add_argument("--policy-directory-hash", required=True)
+    lock.add_argument("--reference-remote-path", required=True)
+    lock.add_argument("--reference-directory-hash", required=True)
+    lock.add_argument("--reference-processor-checkpoint", type=Path, required=True)
+    lock.add_argument("--output", type=Path, required=True)
+    lock.set_defaults(handler=_build_h7_input_lock)
     return parser
 
 
