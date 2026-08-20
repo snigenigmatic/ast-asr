@@ -5,7 +5,8 @@ must never be downloaded to a local machine.
 
 Registered contract: experiments/SPIRE-crosscorpus/protocol.md
 
-Audit first (cheap, metadata only, writes no audio):
+Audit first. This projects only the metadata columns and streams them over
+HTTP, so it transfers no audio and costs cents:
 
     $env:PYTHONIOENCODING='utf-8'
     uvx modal run scripts/modal_spire_prepare.py::audit_spire_val \
@@ -66,6 +67,7 @@ prep_image = (
         "soundfile>=0.13.1",
         "soxr>=0.5.0",
         "huggingface_hub>=0.35",
+        "fsspec>=2024.6.0",
     )
     .add_local_file(
         "scripts/spire_crosscorpus.py",
@@ -111,6 +113,65 @@ def _validated_val_speakers(token: str, contract):
     return contract.validate_splits(splits), path
 
 
+SPLIT_COLUMNS: tuple[str, ...] = (
+    "uid",
+    "speaker_id",
+    "accent",
+    "language_family",
+    "gender",
+    "duration",
+    "src_sr",
+    "split",
+    "reference",
+)
+
+
+def _iter_language_batches(language: str, token: str, *, audit_only: bool):
+    """Yield record batches for one shard.
+
+    Audit mode projects only the metadata columns and streams them over HTTP, so
+    it never transfers the audio payload. Materialization needs the audio, so it
+    downloads the shard to scratch and deletes it immediately afterwards.
+    """
+    import shutil
+    import tempfile
+
+    import pyarrow.parquet as pq
+
+    if audit_only:
+        from huggingface_hub import HfFileSystem
+
+        filesystem = HfFileSystem(token=token)
+        remote = f"datasets/{REPO_ID}/data/{language}.parquet"
+        with filesystem.open(remote, "rb") as handle:
+            parquet = pq.ParquetFile(handle)
+            for batch in parquet.iter_batches(
+                batch_size=512,
+                columns=list(SPLIT_COLUMNS),
+            ):
+                yield batch
+        return
+
+    from huggingface_hub import hf_hub_download
+
+    staging = Path(tempfile.mkdtemp(prefix=f"spire-{language}-"))
+    try:
+        shard = Path(
+            hf_hub_download(
+                REPO_ID,
+                f"data/{language}.parquet",
+                repo_type="dataset",
+                token=token,
+                local_dir=str(staging),
+            )
+        )
+        parquet = pq.ParquetFile(shard)
+        for batch in parquet.iter_batches(batch_size=32):
+            yield batch
+    finally:
+        shutil.rmtree(staging, ignore_errors=True)
+
+
 def _scan(
     *,
     audit_only: bool,
@@ -120,15 +181,11 @@ def _scan(
     import hashlib
     import io
     import os
-    import shutil
-    import tempfile
     from collections import defaultdict
 
     import numpy as np
-    import pyarrow.parquet as pq
     import soundfile as sf
     import soxr
-    from huggingface_hub import hf_hub_download
 
     contract = _load_contract()
     token = os.environ["HF_TOKEN"]
@@ -147,73 +204,63 @@ def _scan(
     skipped_rows = 0
 
     for language in LANGUAGES:
-        staging = Path(tempfile.mkdtemp(prefix=f"spire-{language}-"))
-        try:
-            shard = Path(
-                hf_hub_download(
-                    REPO_ID,
-                    f"data/{language}.parquet",
-                    repo_type="dataset",
-                    token=token,
-                    local_dir=str(staging),
-                )
-            )
-            parquet = pq.ParquetFile(shard)
-            for batch in parquet.iter_batches(batch_size=32):
-                for row in batch.to_pylist():
-                    scanned_rows += 1
-                    utterance = contract.accept_row(row, val_speakers)
-                    if utterance is None:
-                        skipped_rows += 1
-                        continue
+        for batch in _iter_language_batches(
+            language,
+            token,
+            audit_only=audit_only,
+        ):
+            for row in batch.to_pylist():
+                scanned_rows += 1
+                utterance = contract.accept_row(row, val_speakers)
+                if utterance is None:
+                    skipped_rows += 1
+                    continue
 
-                    relative = f"wav/{utterance.uid}.wav"
-                    if not audit_only:
-                        waveform, sample_rate = sf.read(
-                            io.BytesIO(row["audio_bytes"]),
-                            dtype="float32",
-                            always_2d=False,
-                        )
-                        waveform = np.asarray(waveform, dtype=np.float32)
-                        if waveform.ndim > 1:
-                            waveform = waveform.mean(axis=1, dtype=np.float32)
-                        if sample_rate != contract.TARGET_SAMPLE_RATE:
-                            waveform = soxr.resample(
-                                waveform,
-                                sample_rate,
-                                contract.TARGET_SAMPLE_RATE,
-                                quality="HQ",
-                            )
-                        destination = root / relative
-                        if destination.exists():
-                            raise FileExistsError(
-                                f"refusing to overwrite audio: {destination}"
-                            )
-                        sf.write(
-                            destination,
-                            np.asarray(waveform, dtype=np.float32),
-                            contract.TARGET_SAMPLE_RATE,
-                            subtype="PCM_16",
-                        )
-
-                    manifest.append(
-                        {
-                            "uid": utterance.uid,
-                            "speaker_id": utterance.speaker_id,
-                            "accent": utterance.language,
-                            "language_family": utterance.family,
-                            "gender": utterance.gender,
-                            "duration": f"{utterance.duration:.6f}",
-                            "source_sample_rate": int(row["src_sr"]),
-                            "reference": str(row["reference"]).strip(),
-                            "path": relative,
-                        }
+                relative = f"wav/{utterance.uid}.wav"
+                if not audit_only:
+                    waveform, sample_rate = sf.read(
+                        io.BytesIO(row["audio_bytes"]),
+                        dtype="float32",
+                        always_2d=False,
                     )
-                    per_language[utterance.language] += 1
-                    per_family_seconds[utterance.family] += utterance.duration
-                    observed_speakers.add(utterance.speaker_id)
-        finally:
-            shutil.rmtree(staging, ignore_errors=True)
+                    waveform = np.asarray(waveform, dtype=np.float32)
+                    if waveform.ndim > 1:
+                        waveform = waveform.mean(axis=1, dtype=np.float32)
+                    if sample_rate != contract.TARGET_SAMPLE_RATE:
+                        waveform = soxr.resample(
+                            waveform,
+                            sample_rate,
+                            contract.TARGET_SAMPLE_RATE,
+                            quality="HQ",
+                        )
+                    destination = root / relative
+                    if destination.exists():
+                        raise FileExistsError(
+                            f"refusing to overwrite audio: {destination}"
+                        )
+                    sf.write(
+                        destination,
+                        np.asarray(waveform, dtype=np.float32),
+                        contract.TARGET_SAMPLE_RATE,
+                        subtype="PCM_16",
+                    )
+
+                manifest.append(
+                    {
+                        "uid": utterance.uid,
+                        "speaker_id": utterance.speaker_id,
+                        "accent": utterance.language,
+                        "language_family": utterance.family,
+                        "gender": utterance.gender,
+                        "duration": f"{utterance.duration:.6f}",
+                        "source_sample_rate": int(row["src_sr"]),
+                        "reference": str(row["reference"]).strip(),
+                        "path": relative,
+                    }
+                )
+                per_language[utterance.language] += 1
+                per_family_seconds[utterance.family] += utterance.duration
+                observed_speakers.add(utterance.speaker_id)
 
     if not manifest:
         raise RuntimeError("no validation utterances were accepted")
@@ -288,7 +335,7 @@ def _scan(
     secrets=[hf_secret],
 )
 def audit_spire_val(run_name: str) -> dict[str, object]:
-    """Verify the split, taxonomy, and counts without writing any audio."""
+    """Verify the split, taxonomy, and counts without transferring audio."""
     return _scan(audit_only=True, run_name=run_name)
 
 
