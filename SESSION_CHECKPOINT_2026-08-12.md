@@ -11,6 +11,44 @@ After this checkpoint was drafted, `codex/fair-cispo-tiny` moved on (tip `c5a7ba
 - **`fair-cispo-work` is 12 commits behind codex → rebase onto latest codex before continuing.**
 - Sources of truth: `research-state.yaml`, `experiments/H6-replication/result-20260812.md` on codex.
 
+## SPIRE cross-corpus: audit PASSED, materialization launched (2026-08-20)
+
+**Audit `spire-val-audit-20260820`** (app `ap-MnNC7dxDvoHL7QDdupLKWb`, 86 s end-to-end, metadata-only
+streaming, no audio transferred). Result recorded in `experiments/SPIRE-crosscorpus/audit-20260820.md`:
+- **198 declared = 198 observed** validation speakers; **15.3192 h**; families exactly
+  {Dravidian 7.2961 h, Indo-Aryan 8.0231 h}; 5,214 accepted utterances of 35,299 scanned.
+- **Zero contract violations across all 35,299 rows** — the per-row `split` label agreed with `splits.json`
+  everywhere and every language resolved against `ast_asr.taxonomy`. The speaker-disjoint guarantee is
+  verified, not assumed.
+- Disclosed constraints: only **13 of 17** shipped languages appear in val (Dogri, Gujarati, Maithili,
+  Sindhi contribute none), and the tail is severe (**Kashmiri = 2 utterances**, Nepali 34, Punjabi 50).
+  Analysis pools to family; per-language cells are descriptive only.
+
+**Materialization `spire-val-20260820`** launched detached: app `ap-L4lXx6uF1WYAdxuL7sMeRh`, 1 task.
+Writes 16 kHz mono PCM-16 WAV + `manifest.csv` to volume `ast-asr-spire` under `/val`. Check with
+`uvx modal app list --json`; on completion read
+`uvx modal volume get ast-asr-spire /runs/spire-val-20260820/preparation.json -`.
+
+**Evaluation path is built and committed but NOT yet run** (`scripts/modal_spire_eval.py` +
+`scripts/spire_eval_entry.py`). Once the manifest exists:
+```powershell
+$env:PYTHONIOENCODING='utf-8'
+# zero-shot baseline first
+uvx modal run --detach scripts/modal_spire_eval.py::evaluate_spire `
+  --run-name spire-eval-zeroshot-20260820 --arm zero-shot
+# then any FR-CISPO checkpoint, e.g. the completed H5 seed-2026 pair
+uvx modal run --detach scripts/modal_spire_eval.py::evaluate_spire `
+  --run-name spire-eval-h5-beta004-20260820 --arm h5-beta004 `
+  --checkpoint-run-name <training-run> --checkpoint-output-name <output> `
+  --checkpoint-name checkpoint-last-safe
+# then the paired speaker-clustered bootstrap
+uvx modal run scripts/modal_spire_eval.py::compare_spire_arms `
+  --control-run-name spire-eval-zeroshot-20260820 `
+  --treatment-run-name spire-eval-h5-beta004-20260820
+```
+Tip: use `--limit 40` on the first eval as a cheap smoke before the full 5,214 utterances.
+Verify checkpoint run/output names against the H5/H6 result docs before launching.
+
 ## H7 r1 outcome (2026-08-20) — terminal, and the encoding fix DID work
 
 A parallel Codex thread authorized (`39a4508`, tag `h7-r1-authorized-20260812`) and ran H7 r1 today, then
