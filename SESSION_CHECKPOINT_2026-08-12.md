@@ -1,5 +1,16 @@
 # Session checkpoint — 2026-08-12 (restart from here tomorrow)
 
+## ⚠ Status correction — codex branch advanced 12 commits past this branch point (read first)
+After this checkpoint was drafted, `codex/fair-cispo-tiny` moved on (tip `c5a7baf`, we branched at `b178e95`):
+- **H6 replication RAN and FAILED the safety gate.** β=0.04 reliably reduced divergence (mechanism holds),
+  but the effect did NOT replicate: seed 2026 +2.2 pp worst-group improvement, seed 2027 **−0.4 pp (worse)**,
+  seed 2028 β=0 control **tripped KL 0.111 > 0.1 at cycle 27 and stopped**. `H6 = failed_safety`; no 3-seed
+  efficacy claim. Also `H0 refuted`: no LR runs 300 cycles safely.
+- **H7 sentinel-KL diagnostic** is locked but NOT authorized to run — tests whether the stop is real
+  instability or a candidate-bank/measurement artifact (`experiments/H7-sentinel-kl/protocol.md`).
+- **`fair-cispo-work` is 12 commits behind codex → rebase onto latest codex before continuing.**
+- Sources of truth: `research-state.yaml`, `experiments/H6-replication/result-20260812.md` on codex.
+
 ## How to restart
 1. Read `docs/plain-language-walkthrough.md` (this worktree) — the framework, in plain terms.
 2. Read this file.
@@ -17,6 +28,8 @@
 1. Foundation = codex FR-CISPO framework (`src/ast_asr/`), in this worktree.
 2. Paper = "replicate first, then decide" — run H6 before choosing the story.
 3. Data blocker = "defensible split" — do not wait on the missing authoritative 117 Svarah speaker IDs.
+   CAVEAT (codex `forbidden_shortcuts`): a heuristic Svarah speaker split is EXPLORATORY-only and must never
+   be presented as authoritative. SPIRE-SIES (real speaker IDs) is the legitimate publication-valid route.
 
 ## DONE this session
 - Worktree created; `uv sync --extra dev` (torch is CPU on Windows); **all 66 tests green** (8s).
@@ -56,8 +69,10 @@ metrics,taxonomy}.py`; port ONLY the parquet-row → record logic (NOT `spire_lo
    `src/ast_asr/folds.py`; add a non-"authoritative" identity mode (see `policy_training.py:266`
    `publication_valid` gate) and document the heuristic limitation honestly.
 2. **SPIRE cross-corpus eval on Modal** (materialize val → eval). Never local.
-3. **Phase 3 — H6** (seeds 2027/2028, whisper-tiny, LR 1e-5, 40 cycles) per
-   `experiments/H6-replication/protocol.md`, Svarah primary, on Modal `--detach`.
+3. ~~Phase 3 — H6~~ **SUPERSEDED: H6 already ran on codex and failed safety** (see status banner above).
+   The real frontier is the **H7 sentinel-KL diagnostic** (locked, not yet authorized) to explain the
+   seed-2028 KL trip before any further training. Reconcile the codex thread (H7) with this session's SPIRE
+   cross-corpus plan.
 4. **Phase 4** — let the numbers pick the paper story.
 
 ## Gotchas / ops
