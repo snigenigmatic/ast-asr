@@ -11,6 +11,44 @@ After this checkpoint was drafted, `codex/fair-cispo-tiny` moved on (tip `c5a7ba
 - **`fair-cispo-work` is 12 commits behind codex → rebase onto latest codex before continuing.**
 - Sources of truth: `research-state.yaml`, `experiments/H6-replication/result-20260812.md` on codex.
 
+## Session 2 progress (same day, after the status correction)
+
+- **Rebased `fair-cispo-work` onto codex tip `c5a7baf`** — now 0 commits behind; docs sit on top.
+- **H7 blocker diagnosed as a Windows console bug, not science.** The consumed H7 attempt died on
+  `'charmap' codec can't encode '✓'` (Modal's Rich tick mark on a cp1252/CP437 console); zero remote
+  work ran. The recovery protocol's prescribed fix is `PYTHONIOENCODING=utf-8`, and **its required
+  no-Modal preflight probe now PASSES on this machine** (`utf-8 utf-8 cp1252`, exit 0). H7 r1 preflight
+  gate #4 is therefore satisfied; gates #1-#3, #5, #6 (reviewed commit + tag + r1 authorization doc +
+  coordinate-only renames + absent run root + `retries=0`) remain outstanding.
+- **Built the SPIRE cross-corpus workstream** (new, does not touch H7's frozen scope):
+  - `experiments/SPIRE-crosscorpus/protocol.md` — pre-registered contract, endpoints, forbidden actions.
+  - `scripts/spire_crosscorpus.py` — pure logic: family resolution, split validation, fail-closed row
+    acceptance, error-weighted pooling, worst-group, **paired speaker-clustered bootstrap** (real speakers).
+  - `scripts/modal_spire_prepare.py` — Modal app `ast-asr-spire-crosscorpus`, isolated volume
+    `ast-asr-spire`, `audit_spire_val` (metadata only, cheap) and `prepare_spire_val` (writes 16 kHz WAV).
+  - `tests/test_spire_crosscorpus.py` — 33 tests, incl. taxonomy-agreement and a subprocess test proving
+    the preparation path works with `torch` imports **blocked**.
+- **Verified:** ruff clean, ruff-formatted, `compileall` OK, `git diff --check` clean, **135 tests pass**.
+
+### Design decisions worth remembering
+- WER uses the repo's own `ast_asr.metrics.normalize_for_wer` (NOT Whisper's `EnglishTextNormalizer`) so
+  SPIRE numbers stay directly comparable to every existing Svarah number. SPIRE's uppercase references
+  normalize cleanly. This supersedes the earlier note in this file.
+- All SPIRE code lives in `scripts/`, **never `src/` or `configs/`**, because the H7 authorization freezes
+  those trees' SHA-256 manifests and forbids source changes. Refactor into `src/` only after H7 r1.
+- The prep path is stdlib-only because `ast_asr/__init__` imports `.objectives` -> torch; a local
+  17-language family table is used, with a test asserting it matches `ast_asr.taxonomy` exactly.
+
+### Immediate next action
+Run the cheap metadata audit on Modal (no audio written, verifies split + taxonomy + counts/hours):
+
+```powershell
+$env:PYTHONIOENCODING='utf-8'
+uvx modal run scripts/modal_spire_prepare.py::audit_spire_val --run-name spire-val-audit-20260812
+```
+Expect ~198 observed val speakers, ~15.3 h, families exactly {Dravidian, Indo-Aryan}. Then
+`prepare_spire_val` with `--detach`. After that, build the GPU cross-corpus eval function.
+
 ## How to restart
 1. Read `docs/plain-language-walkthrough.md` (this worktree) — the framework, in plain terms.
 2. Read this file.
