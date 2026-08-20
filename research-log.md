@@ -199,3 +199,30 @@ labelled as such.
 - Status remains `LOCKED — NOT APPROVED FOR RUN` until a committed input lock,
   implementation tests, independent review, clean preflight, and separate
   implementation-bound authorization exist.
+
+## 2026-08-20 — H7 r1 stopped before scoring on a non-portable noise lock
+
+- The original authorized H7 attempt was already consumed by a Windows Modal
+  launcher encoding failure. A separately locked recovery changed only the
+  app/run/output coordinates and set the actual launcher streams to UTF-8.
+- The r1 authorization commit/tag, clean executable tree, 102 tests, scoped
+  Ruff, compileall, frozen hashes, UTF-8 probe, and absent output-root checks
+  all passed before the single permitted command.
+- Modal app `ap-Kq27Pelv0e61xhF8Mu7rPV` created the pinned image and loaded both
+  frozen Whisper-tiny models. Before any forward pass, the full replay audit
+  stopped on `H7 input-lock noisy waveform hash mismatch`.
+- Ordered validation localizes the first mismatch to cycle `000`, pair `0`.
+  Source audio, utterance metadata, seed `2028006084`, SNR
+  `13.66676926612854`, and clean waveform bytes had already matched.
+- The committed noisy hash reproduces exactly with PyTorch `2.13.0+cpu` on
+  Windows, where the lock was built and independently regenerated. The Modal
+  image used PyTorch `2.11.0+cu128` on Linux. A byte lock over `torch.randn`
+  plus floating-point mixing was observed not to be portable across the frozen
+  producer and consumer environments.
+- The remote volume contains only immutable `failure.json`, SHA-256
+  `c991efc484f036cfdc5799a57102e6fa191a19cdc4914f702d170619d3ed5382`.
+  The attempt is consumed, non-evaluable, not an H7 result, and cannot be
+  retried. No fixed-policy K3 bank comparison was produced.
+- Decision: do not pivot or launch again. A future study would need a newly
+  preregistered contract that stores noise/features directly or builds the
+  lock inside the exact consuming runtime; it cannot inherit H7 authorization.

@@ -88,6 +88,15 @@ concentration signal. Because per-token and per-utterance K3 contributions were
 not saved, this distinguishes a candidate-conditioned threshold crossing from
 a localized optimizer blow-up but does not identify a causal group or token.
 
+H7 was designed to resolve that ambiguity without changing the policy, but it
+did not produce a statistic. Its sole recovery attempt failed before the first
+model forward because the committed noisy-waveform byte lock, generated under
+Windows/PyTorch 2.13, did not reproduce under Linux/PyTorch 2.11. The clean
+waveform, source bytes, seed, and SNR matched. This is evidence that the audit's
+cross-runtime reproducibility contract was invalid, not evidence for or
+against candidate-bank threshold flips. The failure is preserved as
+non-evaluable and no further H7 recovery is authorized.
+
 ## Invalid or provisional evidence
 
 The current 115 profile-cluster identities are not the authoritative 117 Svarah
