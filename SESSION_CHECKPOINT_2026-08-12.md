@@ -11,6 +11,26 @@ After this checkpoint was drafted, `codex/fair-cispo-tiny` moved on (tip `c5a7ba
 - **`fair-cispo-work` is 12 commits behind codex → rebase onto latest codex before continuing.**
 - Sources of truth: `research-state.yaml`, `experiments/H6-replication/result-20260812.md` on codex.
 
+## H7 r1 outcome (2026-08-20) — terminal, and the encoding fix DID work
+
+A parallel Codex thread authorized (`39a4508`, tag `h7-r1-authorized-20260812`) and ran H7 r1 today, then
+recorded a **terminal measurement failure** (`e9c4e6b`,
+`experiments/H7-sentinel-kl/failure-r1-20260820.md`). Read that file before touching H7.
+
+- The **launcher encoding fix worked**: unlike the 3.4 s charmap crash, this attempt reached remote
+  execution (task `ta-01M0F56FBP7HJ7QXV8RF47KAXR`, image `im-T5smJqHtvyR2slZGuNwOU1`) and validated banks.
+- It then **fail-closed** on `ValueError: H7 input-lock noisy waveform hash mismatch` at cycle 000, pair 0.
+- **Root cause:** the input lock froze *bitwise* hashes of a `torch.randn` noise waveform plus float SNR
+  mixing. The lock was built on Windows / `torch 2.13.0+cpu`; Modal executed Linux / `torch 2.11.0+cu128`.
+  PyTorch does not guarantee bitwise-identical results across versions or platforms. Seed, SNR, row
+  identity, and source-audio bytes were all ruled out; the clean tensor hash matched, only the noisy one
+  differed.
+- **The authorization is consumed and cannot be retried.** No forward pass, decode, or WER happened, so it
+  is a non-result, not evidence about KL.
+- **Design lesson (carry into the paper):** a bitwise cross-platform tensor contract is unachievable. Fix by
+  persisting the noise tensors as data in the lock, or verifying within a numerical tolerance, or generating
+  noise with a platform-stable RNG. Do not simply re-freeze new hashes on a different machine.
+
 ## Session 2 progress (same day, after the status correction)
 
 - **Rebased `fair-cispo-work` onto codex tip `c5a7baf`** — now 0 commits behind; docs sit on top.
