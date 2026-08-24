@@ -8,7 +8,9 @@ After this checkpoint was drafted, `codex/fair-cispo-tiny` moved on (tip `c5a7ba
   efficacy claim. Also `H0 refuted`: no LR runs 300 cycles safely.
 - **H7 sentinel-KL diagnostic** is locked but NOT authorized to run — tests whether the stop is real
   instability or a candidate-bank/measurement artifact (`experiments/H7-sentinel-kl/protocol.md`).
-- **`fair-cispo-work` is 12 commits behind codex → rebase onto latest codex before continuing.**
+- **Rebase status: RESOLVED** — `fair-cispo-work` was rebased onto codex tip `e9c4e6b` (0 behind). Codex
+  moves fast and a parallel Codex agent shares this repo and Modal account, so re-check
+  `git -C ../fair-cispo-tiny log --oneline -2` and `uvx modal app list --json` before assuming status.
 - Sources of truth: `research-state.yaml`, `experiments/H6-replication/result-20260812.md` on codex.
 
 ## SPIRE evaluation: smoke PASSED, 4 matched-pair arms launched (2026-08-20)
@@ -73,8 +75,8 @@ Writes 16 kHz mono PCM-16 WAV + `manifest.csv` to volume `ast-asr-spire` under `
 `uvx modal app list --json`; on completion read
 `uvx modal volume get ast-asr-spire /runs/spire-val-20260820/preparation.json -`.
 
-**Evaluation path is built and committed but NOT yet run** (`scripts/modal_spire_eval.py` +
-`scripts/spire_eval_entry.py`). Once the manifest exists:
+**SUPERSEDED — see the evaluation section above; the smoke passed and four arms are running.** Kept for the
+command shapes (`scripts/modal_spire_eval.py` + `scripts/spire_eval_entry.py`):
 ```powershell
 $env:PYTHONIOENCODING='utf-8'
 # zero-shot baseline first
