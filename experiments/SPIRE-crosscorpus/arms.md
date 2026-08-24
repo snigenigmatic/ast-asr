@@ -13,6 +13,21 @@ reading result documents. Use these literal values; a wrong name fails closed in
 | `h6-beta0-s2027` | `profile-h6-refkl-beta0-s2027-20260812` | `h6-beta0-fr-cispo` | `checkpoint-last-safe` |
 | `h6-beta004-s2027` | `profile-h6-refkl-beta004-s2027-20260812` | `h6-beta004-fr-cispo` | `checkpoint-last-safe` |
 
+## Why the zero-shot arm is a genuine baseline
+
+Omitting the checkpoint arguments does **not** load a bare model. `build_lora_whisper`
+takes the `adapter_checkpoint is None` branch and attaches a *fresh* LoRA via
+`get_peft_model` (`src/ast_asr/modeling.py`). That is only equivalent to the base
+model if `lora_B` is zero-initialised, since the update is `delta W = B @ A`.
+
+Verified locally on `openai/whisper-tiny` with this repository's config before the
+arm was launched: **48 `lora_A` tensors non-zero, 48 `lora_B` tensors all exactly
+zero.** So `delta W = 0` and the fresh-LoRA model is numerically identical to base
+whisper-tiny. The `zero-shot` arm therefore measures the unmodified model.
+
+Re-check this if `peft` is ever upgraded; a future default that initialises
+`lora_B` non-zero would silently turn this baseline into a perturbed model.
+
 ## Traps that would otherwise cost a run
 
 1. **The H5 beta-zero control lives in the `-r1-` run.**
