@@ -336,3 +336,49 @@ class TestPreparationPathIsLightweight:
         )
         assert result.returncode == 0, result.stderr
         assert "PREP_OK" in result.stdout
+
+
+class TestResultFromRecord:
+    """predictions.jsonl records must round-trip without re-scoring text."""
+
+    def _record(self) -> dict[str, object]:
+        return {
+            "uid": "u1",
+            "speaker_id": "V1",
+            "family": "Dravidian",
+            "gender": "Female",
+            "reference": "A B C",
+            "hypothesis": "A B D",
+            "substitutions": 1,
+            "deletions": 0,
+            "insertions": 0,
+            "reference_words": 3,
+        }
+
+    def test_uses_stored_counts_verbatim(self) -> None:
+        result = sc.result_from_record(self._record())
+        assert result.uid == "u1"
+        assert result.speaker_id == "V1"
+        assert result.family == "Dravidian"
+        assert result.counts.substitutions == 1
+        assert result.counts.reference_words == 3
+        assert result.counts.wer == pytest.approx(1 / 3)
+
+    def test_round_trips_a_scored_utterance(self) -> None:
+        utterance = sc.accept_row(
+            _row("u9", "V1", "Tamil", "Dravidian", reference="ALPHA BETA GAMMA"),
+            frozenset({"V1"}),
+        )
+        assert utterance is not None
+        scored = sc.score_utterance(utterance, "ALPHA BETA GAMMA", "alpha beta delta")
+        record = {
+            "uid": scored.uid,
+            "speaker_id": scored.speaker_id,
+            "family": scored.family,
+            "gender": scored.gender,
+            "substitutions": scored.counts.substitutions,
+            "deletions": scored.counts.deletions,
+            "insertions": scored.counts.insertions,
+            "reference_words": scored.counts.reference_words,
+        }
+        assert sc.result_from_record(record) == scored

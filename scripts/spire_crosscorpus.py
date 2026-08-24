@@ -211,6 +211,28 @@ def score_utterance(
     )
 
 
+def result_from_record(record: Mapping[str, object]) -> UtteranceResult:
+    """Rebuild a scored utterance from one predictions.jsonl record.
+
+    Re-scoring from text would re-run edit distance and risk drifting from the
+    numbers already committed by the evaluation, so the stored counts are
+    authoritative.
+    """
+    counts_class = _edit_counts_class()
+    return UtteranceResult(
+        uid=str(record["uid"]),
+        speaker_id=str(record["speaker_id"]),
+        family=str(record["family"]),
+        gender=str(record["gender"]),
+        counts=counts_class(
+            substitutions=int(record["substitutions"]),
+            deletions=int(record["deletions"]),
+            insertions=int(record["insertions"]),
+            reference_words=int(record["reference_words"]),
+        ),
+    )
+
+
 def pool(results: Iterable[UtteranceResult], key: str) -> dict[str, EditCounts]:
     """Pool edit counts by an attribute name, so WER is error-weighted."""
     grouped: dict[str, EditCounts] = defaultdict(_edit_counts_class())

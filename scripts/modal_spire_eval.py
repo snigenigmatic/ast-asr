@@ -86,6 +86,11 @@ image = (
         remote_path=f"{PROJECT_ROOT}/scripts/spire_eval_entry.py",
         copy=True,
     )
+    .add_local_file(
+        "scripts/spire_compare_entry.py",
+        remote_path=f"{PROJECT_ROOT}/scripts/spire_compare_entry.py",
+        copy=True,
+    )
 )
 
 VOLUMES = {
@@ -195,65 +200,39 @@ def compare_spire_arms(
     resamples: int = 10_000,
     seed: int = 2026,
 ) -> dict[str, object]:
-    """Paired speaker-clustered bootstrap between two completed evaluations."""
-    import sys
+    """Paired speaker-clustered bootstrap between two completed evaluations.
 
-    sys.path.insert(0, f"{PROJECT_ROOT}/scripts")
-    import spire_crosscorpus as contract
+    The work runs through `uv run` because ast_asr is installed in the project
+    virtualenv, not in the container interpreter.
+    """
+    eval_root = Path(SPIRE_DIR) / "eval"
+    output = eval_root / f"compare-{control_run_name}-vs-{treatment_run_name}.json"
+    if output.exists():
+        raise FileExistsError(f"refusing to overwrite comparison: {output}")
 
-    from ast_asr.metrics import EditCounts
-
-    def _load(run_name: str) -> list:
-        path = Path(SPIRE_DIR) / "eval" / run_name / "predictions.jsonl"
-        if not path.is_file():
-            raise FileNotFoundError(f"missing predictions: {path}")
-        results = []
-        for line in path.read_text(encoding="utf-8").splitlines():
-            record = json.loads(line)
-            results.append(
-                contract.UtteranceResult(
-                    uid=record["uid"],
-                    speaker_id=record["speaker_id"],
-                    family=record["family"],
-                    gender=record["gender"],
-                    counts=EditCounts(
-                        substitutions=record["substitutions"],
-                        deletions=record["deletions"],
-                        insertions=record["insertions"],
-                        reference_words=record["reference_words"],
-                    ),
-                )
-            )
-        return results
-
-    control = _load(control_run_name)
-    treatment = _load(treatment_run_name)
-    report = {
-        "artifact_kind": "spire_crosscorpus_paired_comparison",
-        "control_run": control_run_name,
-        "treatment_run": treatment_run_name,
-        "control_endpoints": contract.summarize_arm(control),
-        "treatment_endpoints": contract.summarize_arm(treatment),
-        "bootstrap": contract.paired_speaker_bootstrap(
-            control,
-            treatment,
-            resamples=resamples,
-            seed=seed,
-        ),
-    }
-    report["worst_family_interval_includes_harm"] = contract.interval_includes_harm(
-        report["bootstrap"]["worst_family_wer_delta"]
+    subprocess.run(
+        [
+            "uv",
+            "run",
+            "--frozen",
+            "python",
+            "scripts/spire_compare_entry.py",
+            "--eval-root",
+            str(eval_root),
+            "--control-run-name",
+            control_run_name,
+            "--treatment-run-name",
+            treatment_run_name,
+            "--output",
+            str(output),
+            "--resamples",
+            str(resamples),
+            "--seed",
+            str(seed),
+        ],
+        cwd=PROJECT_ROOT,
+        check=True,
     )
-    destination = (
-        Path(SPIRE_DIR)
-        / "eval"
-        / f"compare-{control_run_name}-vs-{treatment_run_name}.json"
-    )
-    if destination.exists():
-        raise FileExistsError(f"refusing to overwrite comparison: {destination}")
-    destination.write_text(
-        json.dumps(report, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    report = json.loads(output.read_text(encoding="utf-8"))
     spire_volume.commit()
     return report
