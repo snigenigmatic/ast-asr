@@ -74,7 +74,7 @@ image = (
     .add_local_dir("src", remote_path=f"{PROJECT_ROOT}/src", copy=True)
     .add_local_dir("configs", remote_path=f"{PROJECT_ROOT}/configs", copy=True)
     .run_commands(
-        f"cd {PROJECT_ROOT} && uv sync --frozen --offline --no-build-isolation"
+        f"cd {PROJECT_ROOT} && uv sync --frozen --no-dev --offline --no-build-isolation"
     )
     .add_local_file(
         "scripts/spire_crosscorpus.py",
