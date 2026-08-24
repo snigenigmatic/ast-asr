@@ -11,6 +11,50 @@ After this checkpoint was drafted, `codex/fair-cispo-tiny` moved on (tip `c5a7ba
 - **`fair-cispo-work` is 12 commits behind codex → rebase onto latest codex before continuing.**
 - Sources of truth: `research-state.yaml`, `experiments/H6-replication/result-20260812.md` on codex.
 
+## SPIRE evaluation: smoke PASSED, 4 matched-pair arms launched (2026-08-20)
+
+**Materialization COMPLETE.** `spire-val-20260820` reproduced the audit numbers exactly (5,214 utterances,
+198/198 speakers, 15.3192 h, families {Dravidian, Indo-Aryan}) — an independent agreement between the
+metadata-streaming and full-download paths. Volume `ast-asr-spire` now holds `/val/wav`, `/val/manifest.csv`
+(sha256 `7a7c0021d1a9c0c395a274cad40212d47630c80c9e442267010f6d185358b39f`), `/val/preparation-report.json`.
+
+**GPU smoke PASSED** (`spire-eval-smoke-zeroshot-20260820`, `--limit 40`, exit 0): overall WER 0.1693 over
+40 utterances / 756 reference words. NOTE: those 40 rows are only **2 speakers, one family, one gender**, so
+`family_gap` is 0.0 by construction. It validates plumbing, NOT science.
+
+**Four matched-pair arms launched detached** (5,214 utterances each, greedy FP32, L4):
+
+| Eval run name | Arm | Checkpoint run / output |
+| --- | --- | --- |
+| `spire-eval-h5-beta0-20260820` | `h5-beta0-s2026` | `profile-h5-refkl-beta0-r1-s2026-20260812` / `h5-beta0-fr-cispo` |
+| `spire-eval-h5-beta004-20260820` | `h5-beta004-s2026` | `profile-h5-refkl-beta004-s2026-20260812` / `h5-beta004-fr-cispo` |
+| `spire-eval-h6-beta0-20260820` | `h6-beta0-s2027` | `profile-h6-refkl-beta0-s2027-20260812` / `h6-beta0-fr-cispo` |
+| `spire-eval-h6-beta004-20260820` | `h6-beta004-s2027` | `profile-h6-refkl-beta004-s2027-20260812` / `h6-beta004-fr-cispo` |
+
+All use `--checkpoint-name checkpoint-last-safe`. Coordinates and traps are in
+`experiments/SPIRE-crosscorpus/arms.md` — **the H5 beta-zero control is the `-r1-` run**; the non-r1
+directory has no adapter output.
+
+### When they finish
+1. **Verify provenance before reporting any number.** Each `metrics.json` records
+   `adapter_checkpoint_revision`; it must equal the revision published in
+   `experiments/H6-replication/result-20260812.md` (table in `arms.md`). A mismatch means stop.
+2. Run the two paired speaker-clustered bootstraps:
+```powershell
+$env:PYTHONIOENCODING='utf-8'
+uvx modal run scripts/modal_spire_eval.py::compare_spire_arms `
+  --control-run-name spire-eval-h5-beta0-20260820 `
+  --treatment-run-name spire-eval-h5-beta004-20260820
+uvx modal run scripts/modal_spire_eval.py::compare_spire_arms `
+  --control-run-name spire-eval-h6-beta0-20260820 `
+  --treatment-run-name spire-eval-h6-beta004-20260820
+```
+3. Fetch results: `uvx modal volume get ast-asr-spire /eval/<run>/metrics.json -`
+4. **The scientific question:** in-domain, beta=0.04 improved seed 2026's worst group by 2.22 pp but
+   worsened seed 2027's by 0.40 pp. If the cross-corpus deltas disagree in sign across seeds too, the
+   non-replication is a property of the method rather than of the Svarah profile-cluster folds. Write the
+   result up as `experiments/SPIRE-crosscorpus/result-<date>.md` either way.
+
 ## SPIRE cross-corpus: audit PASSED, materialization launched (2026-08-20)
 
 **Audit `spire-val-audit-20260820`** (app `ap-MnNC7dxDvoHL7QDdupLKWb`, 86 s end-to-end, metadata-only
