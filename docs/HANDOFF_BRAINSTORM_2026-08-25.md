@@ -12,6 +12,43 @@ Several lines of that handoff arrived truncated; where I inferred intent I say s
 
 ---
 
+## 0. Why this project is being redone [V — from `docs/legacy/PAPER_SUGGESTIONS.md`]
+
+A paper was already **submitted to ACL SRW and rejected**. The criticism was
+structural and, per the author's own assessment, correct: it was a protocol-only
+survey with no empirical results, on a problem reviewers considered already
+recognised. A second criticism was that the prose read as machine-written (heavy
+em-dash use). **Everything since is the response to that rejection**, which is why
+the live strategic question is "audit versus method" rather than "which method".
+
+The rewrite plan ranked its intended contributions as:
+
+1. **The GRL failure mode** — gradient-reversal adversarial de-biasing *widens*
+   accent disparity when the minority group (Sino-Tibetan) is out-of-distribution
+   for the adversary. Judged the cleanest, most reviewer-proof finding because it is
+   a concrete falsifiable negative result.
+2. **The fairness protocol actually applied** to an Indian-English corpus
+   (dDP, dEO, d_noise, Poisson significance).
+3. **The CISPO baseline** — reported as a baseline pending a corrected reward.
+4. **The noise-robustness gap** — Sino-Tibetan +16.9 pp WER under white noise vs
+   +6.6 pp Dravidian; clean-condition and noise-condition fairness are distinct axes.
+
+### Two traps in that document
+
+**Trap 1 — different model.** Those v5-era numbers (zero-shot WER 18.4%, CISPO
+16.4%, dDP p 0.020 -> 0.078) are **Whisper-small**. The entire FR-CISPO programme
+and every SPIRE number in this handoff are **`whisper-tiny`**. The two threads are
+not numerically comparable, and `docs/prior-results-benchmark.md` explains why the
+16.4% figure is not a citable comparison point at all.
+
+**Trap 2 — a hedge that is now a finding.** The rewrite plan honestly hedged that
+the v5 improvement "may be attributable to the balanced sampler rather than the
+GRPO fairness objective." The SPIRE cross-corpus result (section 5) settles this:
+the explicit fairness term is inert while the pipeline as a whole produces large
+gains. That hedge can be promoted to a supported claim.
+
+Full documents, with a staleness warning, are in `docs/legacy/`.
+
 ## 1. The problem, in one paragraph
 
 Automatic speech recognition (ASR) is trained mostly on Western English and
@@ -41,14 +78,19 @@ Key documents on `fair-cispo-work`:
 - `SESSION_CHECKPOINT_2026-08-12.md` — running status log with commands.
 - `experiments/SPIRE-crosscorpus/` — `protocol.md`, `arms.md`, `audit-20260820.md`,
   `result-20260824.md`, `result-20260825.md`.
-- `experiments/{H1,H5,H6,H7}-*/` — protocols, results, and failure records (on codex).
-- `research-state.yaml` (on codex) — **the live source of truth for hypothesis states.**
+- `experiments/{H1,H5,H6,H7}-*/` — protocols, results, and failure records.
+- `research-state.yaml` — **the live source of truth for hypothesis states.**
+- `docs/legacy/` — the pre-rejection paper plan and bug diagnosis, with a staleness note.
+
+**A remote agent should use `fair-cispo-work` and nothing else.** It is a strict
+superset of every other branch's committed work (15 commits ahead of remote codex,
+0 behind), so every file referenced in this document is reachable from it.
 
 ## 3. History: what was fixed and why it matters [V]
 
 An early run ("v5", commit `7fbdcd6`) reported WER 18.4% → 16.4% and looked like a
 fairness win. Two real bugs were later found (documented in
-`RL_TRAINING_FIXES.md`):
+`docs/legacy/RL_TRAINING_FIXES.md`):
 
 1. **The fairness reward cancelled itself.** Under group-relative advantage
    normalization the family-need weight divides out exactly, so the intended
